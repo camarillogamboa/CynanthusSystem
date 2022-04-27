@@ -1,0 +1,1 @@
+--module-path ".:lib/" --module cynanthus.control/edu.cynanthus.control.Main std-out

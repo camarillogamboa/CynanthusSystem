@@ -1,0 +1,1 @@
+--module-path ".;lib/" --module cynanthus.stris/edu.cynanthus.stris.Main std-out

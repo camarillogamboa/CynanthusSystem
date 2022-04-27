@@ -1,0 +1,1 @@
+--module-path ".;lib/" --module cynanthus.sordidus/edu.cynanthus.sordidus.Main std-out

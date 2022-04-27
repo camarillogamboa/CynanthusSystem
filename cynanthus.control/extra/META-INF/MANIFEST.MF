@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Main-Class: edu.cynanthus.control.Main
+Class-Path: hibernate-validator-6.2.3.Final.jar jboss-logging-3.4.1.Fina
+ l.jar gson-2.9.0.jar jakarta.validation-api-2.0.2.jar classmate-1.5.1.j
+ ar
+

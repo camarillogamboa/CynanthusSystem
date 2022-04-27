@@ -1,0 +1,1 @@
+-cp cynanthus.auri.server.jar;lib/* edu.cynanthus.auri.server.CynanthusAuriServer

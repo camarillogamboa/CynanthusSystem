@@ -1,0 +1,1 @@
+--module-path ".:lib/" --module cynanthus.auri.server/edu.cynanthus.auri.server.CynanthusAuriServer
