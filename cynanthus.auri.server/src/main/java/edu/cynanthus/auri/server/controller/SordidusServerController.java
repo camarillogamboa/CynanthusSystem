@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/cynanthus/auri/server/")
-public class SordidusServerController extends CynanthusServerController<SordidusConfig> implements SordidusServerService {
+public class SordidusServerController
+    extends CynanthusServerController<SordidusConfig> implements SordidusServerService {
 
     public SordidusServerController(
         @Qualifier("basicSordidusServerService") SordidusServerService sordidusServerService
