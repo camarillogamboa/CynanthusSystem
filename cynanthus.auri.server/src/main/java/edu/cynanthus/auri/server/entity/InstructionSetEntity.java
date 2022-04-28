@@ -1,6 +1,5 @@
 package edu.cynanthus.auri.server.entity;
 
-import edu.cynanthus.bean.Bean;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 import org.hibernate.annotations.NaturalId;
@@ -13,7 +12,7 @@ import java.util.List;
  */
 @Entity(name = "InstructionSet")
 @Table(schema = "cynanthus", name = "instruction_set")
-public class InstructionSetEntity extends InstructionSet implements Bean {
+public class InstructionSetEntity extends InstructionSet {
 
     /**
      * Permite obtener id.

@@ -1,6 +1,5 @@
 package edu.cynanthus.auri.server.entity;
 
-import edu.cynanthus.bean.Bean;
 import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.ServerType;
 import org.hibernate.annotations.NaturalId;
@@ -12,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity(name = "ServerInfo")
 @Table(schema = "cynanthus", name = "server_info")
-public class ServerInfoEntity extends ServerInfo implements Bean {
+public class ServerInfoEntity extends ServerInfo {
 
     /**
      * Permite obtener id.

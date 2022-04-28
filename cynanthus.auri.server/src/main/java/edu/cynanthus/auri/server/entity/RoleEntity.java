@@ -1,6 +1,5 @@
 package edu.cynanthus.auri.server.entity;
 
-import edu.cynanthus.bean.Bean;
 import edu.cynanthus.domain.Role;
 import edu.cynanthus.domain.RoleType;
 
@@ -12,7 +11,7 @@ import java.util.Objects;
  */
 @Entity(name = "Role")
 @Table(schema = "cynanthus", name = "role")
-public class RoleEntity extends Role implements Bean {
+public class RoleEntity extends Role {
 
     /**
      * El Id user.
