@@ -20,17 +20,38 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * El tipo Basic user service.
+ */
 class BasicUserService extends BasicBeanService<Integer, User, UserEntity> implements UserService {
 
+    /**
+     * El User jpa.
+     */
     private final UserRepository userJpa;
+    /**
+     * El Role jpa.
+     */
     private final RoleRepository roleJpa;
 
+    /**
+     * Instancia un nuevo Basic user service.
+     *
+     * @param userJpa el user jpa
+     * @param roleJpa el role jpa
+     */
     BasicUserService(UserRepository userJpa, RoleRepository roleJpa) {
         super(userJpa);
         this.userJpa = userJpa;
         this.roleJpa = Objects.requireNonNull(roleJpa);
     }
 
+    /**
+     * Create user.
+     *
+     * @param user el user
+     * @return el user
+     */
     @Override
     public User create(User user) {
         checkNotNull(user);
@@ -38,6 +59,12 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return saveUserInfo(user, userJpa.save((UserEntity) user));
     }
 
+    /**
+     * Read user.
+     *
+     * @param user el user
+     * @return el user
+     */
     @Override
     public User read(User user) {
         checkNotNull(user);
@@ -46,6 +73,11 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return result;
     }
 
+    /**
+     * Read list.
+     *
+     * @return el list
+     */
     @Override
     public List<? extends User> read() {
         List<? extends User> users = super.read();
@@ -55,6 +87,12 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return users;
     }
 
+    /**
+     * Update user.
+     *
+     * @param user el user
+     * @return el user
+     */
     @Override
     public User update(User user) {
         checkNotNull(user);
@@ -71,6 +109,12 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return saveUserInfo(user, entity);
     }
 
+    /**
+     * Delete user.
+     *
+     * @param user el user
+     * @return el user
+     */
     @Override
     public User delete(User user) {
         checkNotNull(user);
@@ -79,11 +123,22 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return result;
     }
 
+    /**
+     * Find roles.
+     *
+     * @param user el user
+     */
     private void findRoles(User user) {
         List<? extends Role> roles = roleJpa.findAllByIdUser(user.getId());
         user.setRoles(roles.stream().map(Role::clone).collect(Collectors.toList()));
     }
 
+    /**
+     * Find optional.
+     *
+     * @param user el user
+     * @return el optional
+     */
     Optional<UserEntity> find(User user) {
         if (BeanValidation.validate(user, IdCandidate.class).isEmpty())
             return userJpa.findById(user.getId());
@@ -96,6 +151,12 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         );
     }
 
+    /**
+     * Safe find user entity.
+     *
+     * @param bean el bean
+     * @return el user entity
+     */
     @Override
     UserEntity safeFind(User bean) {
         return find(bean).orElseThrow(() -> new ServiceException(
@@ -105,12 +166,24 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         ));
     }
 
+    /**
+     * Check not null.
+     *
+     * @param bean el bean
+     */
     @Override
     void checkNotNull(User bean) {
         if (bean == null)
             throw new ServiceException("El elemento User no debe ser nulo", ExceptionType.NULL_POINTER);
     }
 
+    /**
+     * Save user info user.
+     *
+     * @param user   el user
+     * @param entity el entity
+     * @return el user
+     */
     private User saveUserInfo(User user, UserEntity entity) {
         List<Role> roles = new LinkedList<>();
 

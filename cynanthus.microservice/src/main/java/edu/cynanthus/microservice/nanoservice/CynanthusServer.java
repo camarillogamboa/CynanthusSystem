@@ -24,18 +24,12 @@ public class CynanthusServer<T extends Config> extends ConfigurationServer<T> {
     /**
      * Instancia un nuevo Cynanthus server.
      *
-     * @param id                   el id
-     * @param context              el context
-     * @param configObjectSupplier el config object supplier
-     * @param fieldAliasFinder     el field alias finder
+     * @param id               el id
+     * @param context          el context
+     * @param fieldAliasFinder el field alias finder
      */
-    public CynanthusServer(
-        String id,
-        Context context,
-        Supplier<T> configObjectSupplier,
-        Function<Field, String> fieldAliasFinder
-    ) {
-        super(id, context, configObjectSupplier, fieldAliasFinder);
+    public CynanthusServer(String id, Context context, Function<Field, String> fieldAliasFinder) {
+        super(id, context, fieldAliasFinder);
 
         Map<Integer, Supplier<InputStream>> errorMessageProvider = httpErrorManager.getErrorMessageProvider();
 
@@ -65,12 +59,11 @@ public class CynanthusServer<T extends Config> extends ConfigurationServer<T> {
     /**
      * Instancia un nuevo Cynanthus server.
      *
-     * @param id                   el id
-     * @param context              el context
-     * @param configObjectSupplier el config object supplier
+     * @param id      el id
+     * @param context el context
      */
-    public CynanthusServer(String id, Context context, Supplier<T> configObjectSupplier) {
-        this(id, context, configObjectSupplier, FieldAliasFinder.INSTANCE);
+    public CynanthusServer(String id, Context context) {
+        this(id, context, FieldAliasFinder.INSTANCE);
     }
 
     /**
@@ -79,7 +72,7 @@ public class CynanthusServer<T extends Config> extends ConfigurationServer<T> {
      * @param string el string
      * @return el string
      */
-    @RequestHandler(context = "/", method = RequestMethod.GET)
+    @RequestHandler(context = "/available", method = RequestMethod.GET)
     public String isAvailable(String string) {
         return getClass().getSimpleName() + " disponible.";
     }

@@ -38,7 +38,7 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
      * @param controlNodes el control nodes
      */
     public StrisServer(String id, Context context, Map<String, ConnectableControlNode> controlNodes) {
-        super(id, context, StrisConfig::new);
+        super(id, context);
         this.controlNodes = Objects.requireNonNull(controlNodes);
     }
 
@@ -83,7 +83,7 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
      * @return el control node [ ]
      * @throws HttpException el http exception
      */
-    @RequestHandler(context = "/node/control", method = RequestMethod.GET, roles = SystemRole.ROLE_AGENT)
+    @RequestHandler(context = "/node", method = RequestMethod.GET, roles = SystemRole.ROLE_AGENT)
     public ControlNode[] getControlNodes(String selector) throws HttpException {
         if (selector.isEmpty() || selector.isBlank() || selector.equals("*"))
             return controlNodes.values().stream().map(ControlNode::clone).toArray(ControlNode[]::new);

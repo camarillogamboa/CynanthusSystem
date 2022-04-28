@@ -22,21 +22,54 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
+/**
+ * El tipo Basic cynanthus server service.
+ *
+ * @param <T> el parámetro de tipo
+ */
 class BasicCynanthusServerService<T extends Config> implements CynanthusServerService<T> {
 
+    /**
+     * La constante PATH_PREFIX.
+     */
     private static final String PATH_PREFIX = "http://";
 
+    /**
+     * El Server info service.
+     */
     private final ServerInfoService serverInfoService;
+    /**
+     * El Root path.
+     */
     private final String rootPath;
 
+    /**
+     * El Config class.
+     */
     private final Class<T> configClass;
 
+    /**
+     * El Http client.
+     */
     final HttpClient httpClient;
 
+    /**
+     * El Request user.
+     */
     final SystemUser requestUser;
 
+    /**
+     * El Headers.
+     */
     private final Map<String, String[]> headers;
 
+    /**
+     * Instancia un nuevo Basic cynanthus server service.
+     *
+     * @param serverInfoService el server info service
+     * @param rootPath          el root path
+     * @param configClass       el config class
+     */
     BasicCynanthusServerService(ServerInfoService serverInfoService, String rootPath, Class<T> configClass) {
         this.serverInfoService = Objects.requireNonNull(serverInfoService);
         this.rootPath = Objects.requireNonNull(rootPath);
@@ -56,6 +89,12 @@ class BasicCynanthusServerService<T extends Config> implements CynanthusServerSe
         headers.put("Credentials", credentials);
     }
 
+    /**
+     * Permite obtener config of.
+     *
+     * @param serverInfo el server info
+     * @return el config of
+     */
     @Override
     public T getConfigOf(ServerInfo serverInfo) {
         serverInfo = serverInfoService.read(serverInfo);
@@ -84,12 +123,25 @@ class BasicCynanthusServerService<T extends Config> implements CynanthusServerSe
         }
     }
 
+    /**
+     * Update config of string.
+     *
+     * @param serverInfo el server info
+     * @param config     el config
+     * @return el string
+     */
     @Override
     public String updateConfigOf(ServerInfo serverInfo, Config config) {
         serverInfo = serverInfoService.read(serverInfo);
         return null;
     }
 
+    /**
+     * Get log files of string [ ].
+     *
+     * @param serverInfo el server info
+     * @return el string [ ]
+     */
     @Override
     public String[] getLogFilesOf(ServerInfo serverInfo) {
         serverInfo = serverInfoService.read(serverInfo);
@@ -97,6 +149,13 @@ class BasicCynanthusServerService<T extends Config> implements CynanthusServerSe
         return new String[0];
     }
 
+    /**
+     * Permite obtener log content of.
+     *
+     * @param serverInfo  el server info
+     * @param logFileName el log file name
+     * @return el log content of
+     */
     @Override
     public String getLogContentOf(ServerInfo serverInfo, String logFileName) {
         serverInfo = serverInfoService.read(serverInfo);
@@ -104,6 +163,12 @@ class BasicCynanthusServerService<T extends Config> implements CynanthusServerSe
         return null;
     }
 
+    /**
+     * Is available boolean.
+     *
+     * @param serverInfo el server info
+     * @return el boolean
+     */
     @Override
     public Boolean isAvailable(ServerInfo serverInfo) {
         serverInfo = serverInfoService.read(serverInfo);
@@ -111,10 +176,23 @@ class BasicCynanthusServerService<T extends Config> implements CynanthusServerSe
         return false;
     }
 
+    /**
+     * Build path string.
+     *
+     * @param serverInfo el server info
+     * @param subPath    el sub path
+     * @return el string
+     */
     String buildPath(ServerInfo serverInfo, String subPath) {
         return PATH_PREFIX + serverInfo.getAddress() + ":" + serverInfo.getPort() + rootPath + subPath;
     }
 
+    /**
+     * Insert headers http request . builder.
+     *
+     * @param builder el builder
+     * @return el http request . builder
+     */
     HttpRequest.Builder insertHeaders(HttpRequest.Builder builder) {
         for (Map.Entry<String, String[]> header : headers.entrySet()) {
             builder = builder.header(header.getKey(), SSV.toSSVFormat(header.getValue(), " "));

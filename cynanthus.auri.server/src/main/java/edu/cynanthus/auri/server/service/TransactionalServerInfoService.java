@@ -7,10 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+/**
+ * El tipo Transactional server info service.
+ */
 @Service
 @Qualifier("transactionalServerInfoService")
 public class TransactionalServerInfoService extends TransactionalBeanService<ServerInfo> implements ServerInfoService {
 
+    /**
+     * Instancia un nuevo Transactional server info service.
+     *
+     * @param serverInfoRepository el server info repository
+     */
     @Autowired
     public TransactionalServerInfoService(ServerInfoRepository serverInfoRepository) {
         super(new BasicServerInfoService(serverInfoRepository));

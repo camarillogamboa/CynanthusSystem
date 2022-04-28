@@ -34,7 +34,7 @@ public final class SordidusServer extends CynanthusServer<SordidusConfig> {
      * @param sampleSetBuffer el sample set buffer
      */
     public SordidusServer(String id, Context context, List<SampleSet> sampleSetBuffer) {
-        super(id, context, SordidusConfig::new);
+        super(id, context);
         this.sampleSetBuffer = Objects.requireNonNull(sampleSetBuffer);
     }
 

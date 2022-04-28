@@ -45,9 +45,7 @@ public final class HttpPacketExchangeHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         Map<String, String[]> headers = new TreeMap<>(String::compareTo);
 
-        exchange.getRequestHeaders().forEach((k, v) -> {
-            headers.put(k, v.toArray(String[]::new));
-        });
+        exchange.getRequestHeaders().forEach((k, v) -> headers.put(k, v.toArray(String[]::new)));
 
         RequestMethod requestMethod = RequestMethod.valueOf(exchange.getRequestMethod());
 

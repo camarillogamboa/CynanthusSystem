@@ -12,6 +12,7 @@ import edu.cynanthus.common.security.SystemRole;
 import edu.cynanthus.common.security.SystemUser;
 import edu.cynanthus.microservice.ArchiveableContext;
 import edu.cynanthus.microservice.Context;
+import edu.cynanthus.microservice.SystemUserManagement;
 import edu.cynanthus.microservice.net.http.server.engine.RequestHandler;
 
 import java.io.File;
@@ -19,7 +20,6 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 
 /**
@@ -30,46 +30,30 @@ import java.util.logging.Level;
 public class ConfigurationServer<T extends Config> extends WebServer {
 
     /**
-     * El Config object supplier.
-     */
-    private final Supplier<T> configObjectSupplier;
-    /**
      * El Identifier generator.
      */
-    private final Function<Field, String> identifierGenerator;
+    private final Function<Field, String> fieldAliasFinder;
 
     /**
      * Instancia un nuevo Configuration server.
      *
-     * @param id                   el id
-     * @param context              el context
-     * @param configObjectSupplier el config object supplier
-     * @param fieldAliasFinder     el field alias finder
+     * @param id               el id
+     * @param context          el context
+     * @param fieldAliasFinder el field alias finder
      */
-    public ConfigurationServer(
-        String id,
-        Context context,
-        Supplier<T> configObjectSupplier,
-        Function<Field, String> fieldAliasFinder
-    ) {
+    public ConfigurationServer(String id, Context context, Function<Field, String> fieldAliasFinder) {
         super(id, context);
-        this.configObjectSupplier = Objects.requireNonNull(configObjectSupplier);
-        this.identifierGenerator = Objects.requireNonNull(fieldAliasFinder);
+        this.fieldAliasFinder = Objects.requireNonNull(fieldAliasFinder);
     }
 
     /**
      * Instancia un nuevo Configuration server.
      *
-     * @param id                   el id
-     * @param context              el context
-     * @param configObjectSupplier el config object supplier
+     * @param id      el id
+     * @param context el context
      */
-    public ConfigurationServer(
-        String id,
-        Context context,
-        Supplier<T> configObjectSupplier
-    ) {
-        this(id, context, configObjectSupplier, FieldAliasFinder.INSTANCE);
+    public ConfigurationServer(String id, Context context) {
+        this(id, context, FieldAliasFinder.INSTANCE);
     }
 
     /**
@@ -77,13 +61,17 @@ public class ConfigurationServer<T extends Config> extends WebServer {
      *
      * @param string el string
      * @return el config
+     * @throws HttpException el http exception
      */
     @RequestHandler(context = "/config", method = RequestMethod.GET, roles = SystemRole.ROLE_AGENT)
-    public final T getConfig(String string) {
-        T configObject = configObjectSupplier.get();
-        context.copyPropertiesTo(configObject, identifierGenerator);
-        httpSecurityManager.logUserAction(Level.INFO, "Consultó la configuración del programa");
-        return configObject;
+    public final T getConfig(String string) throws HttpException {
+        try {
+            T configObject = context.getPropertiesAsConfigObject();
+            httpSecurityManager.logUserAction(Level.INFO, "Consultó la configuración del programa");
+            return configObject;
+        } catch (Exception e) {
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -95,9 +83,8 @@ public class ConfigurationServer<T extends Config> extends WebServer {
      */
     @RequestHandler(context = "/config", method = RequestMethod.PUT, roles = SystemRole.ROLE_AGENT)
     public final String updateConfig(T configObject) throws HttpException {
-        System.out.println(configObject);
         if (configObject != null && BeanValidation.isValid(configObject)) {
-            context.updatePropertiesFrom(configObject, identifierGenerator);
+            context.updatePropertiesFrom(configObject, fieldAliasFinder);
             httpSecurityManager.logUserAction(Level.INFO, "Cambió la configuración del programa");
             return "ok";
         }
@@ -146,13 +133,15 @@ public class ConfigurationServer<T extends Config> extends WebServer {
     /**
      * Update user string.
      *
-     * @param systemUser el system user
+     * @param systemUsers el system user
      * @return el string
      * @throws HttpException el http exception
      */
     @RequestHandler(context = "/user", method = RequestMethod.PUT, roles = SystemRole.ROLE_AGENT)
-    public final String updateUser(SystemUser systemUser) throws HttpException {
-        System.out.println();
+    public final String updateUser(SystemUser[] systemUsers) throws HttpException {
+        SystemUserManagement userManagement = context.getUserManagement();
+
+        userManagement.saveSystemUsers();
         return "ok";
     }
 

@@ -7,10 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+/**
+ * El tipo Basic sordidus server service.
+ */
 @Service
 public class BasicSordidusServerService
     extends BasicCynanthusServerService<SordidusConfig> implements SordidusServerService {
 
+    /**
+     * Instancia un nuevo Basic sordidus server service.
+     *
+     * @param serverInfoService el server info service
+     */
     @Autowired
     public BasicSordidusServerService(
         @Qualifier("transactionalServerInfoService") ServerInfoService serverInfoService

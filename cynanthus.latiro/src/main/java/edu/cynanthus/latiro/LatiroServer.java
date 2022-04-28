@@ -48,7 +48,7 @@ public final class LatiroServer extends CynanthusServer<LatiroConfig> {
         List<Sample> sampleBuffer,
         Map<String, StorableSensingNode> storableNodes
     ) {
-        super(id, context, LatiroConfig::new);
+        super(id, context);
         this.sampleBuffer = Objects.requireNonNull(sampleBuffer);
         this.storableNodes = Objects.requireNonNull(storableNodes);
     }
@@ -97,7 +97,7 @@ public final class LatiroServer extends CynanthusServer<LatiroConfig> {
      * @return el sensing node [ ]
      * @throws HttpException el http exception
      */
-    @RequestHandler(context = "/node/sensing", method = RequestMethod.GET, roles = SystemRole.ROLE_AGENT)
+    @RequestHandler(context = "/node", method = RequestMethod.GET, roles = SystemRole.ROLE_AGENT)
     public SensingNode[] getSensingNodes(String selector) throws HttpException {
         if (selector.isEmpty() || selector.isBlank() || selector.equals("*"))
             return storableNodes.values().stream().map(SensingNode::clone).toArray(SensingNode[]::new);

@@ -4,8 +4,17 @@ import edu.cynanthus.domain.NodeInfo;
 
 import java.util.List;
 
+/**
+ * La interface Node info service.
+ */
 public interface NodeInfoService extends BeanService<NodeInfo> {
 
-    List<? extends NodeInfo> readByIdServerInfo(Integer idServerInfo);
+    /**
+     * Read all by id server info list.
+     *
+     * @param idServerInfo el id server info
+     * @return el list
+     */
+    List<? extends NodeInfo> readAllByIdServerInfo(Integer idServerInfo);
 
 }

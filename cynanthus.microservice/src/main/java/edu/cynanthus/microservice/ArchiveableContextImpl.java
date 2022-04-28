@@ -330,6 +330,20 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
     }
 
     /**
+     * Permite obtener properties as config object.
+     *
+     * @param <T> el parámetro de tipo
+     * @return el properties as config object
+     * @throws Exception el exception
+     */
+    @Override
+    public <T extends Config> T getPropertiesAsConfigObject() throws Exception {
+        T configObject = (T) configClass.getConstructor().newInstance();
+        copyPropertiesTo(configObject);
+        return configObject;
+    }
+
+    /**
      * Load resource input stream.
      *
      * @param name el name

@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * El tipo Control node.
  */
-public class ControlNode extends Node {
+public class ControlNode extends Node implements RuntimeNode {
 
     /**
      * El Available.

@@ -13,16 +13,33 @@ import edu.cynanthus.domain.ServerInfo;
 
 import java.util.Optional;
 
+/**
+ * El tipo Basic server info service.
+ */
 class BasicServerInfoService
     extends BasicBeanService<Integer, ServerInfo, ServerInfoEntity> implements ServerInfoService {
 
+    /**
+     * El Jpa.
+     */
     private final ServerInfoRepository jpa;
 
+    /**
+     * Instancia un nuevo Basic server info service.
+     *
+     * @param jpa el jpa
+     */
     BasicServerInfoService(ServerInfoRepository jpa) {
         super(jpa);
         this.jpa = jpa;
     }
 
+    /**
+     * Create server info.
+     *
+     * @param serverInfo el server info
+     * @return el server info
+     */
     @Override
     public ServerInfo create(ServerInfo serverInfo) {
         checkNotNull(serverInfo);
@@ -30,12 +47,24 @@ class BasicServerInfoService
         return jpa.save((ServerInfoEntity) serverInfo);
     }
 
+    /**
+     * Read server info.
+     *
+     * @param serverInfo el server info
+     * @return el server info
+     */
     @Override
     public ServerInfo read(ServerInfo serverInfo) {
         checkNotNull(serverInfo);
         return safeFind(serverInfo);
     }
 
+    /**
+     * Update server info.
+     *
+     * @param serverInfo el server info
+     * @return el server info
+     */
     @Override
     public ServerInfo update(ServerInfo serverInfo) {
         checkNotNull(serverInfo);
@@ -50,6 +79,12 @@ class BasicServerInfoService
         return jpa.save(entity);
     }
 
+    /**
+     * Delete server info.
+     *
+     * @param serverInfo el server info
+     * @return el server info
+     */
     @Override
     public ServerInfo delete(ServerInfo serverInfo) {
         checkNotNull(serverInfo);
@@ -58,12 +93,23 @@ class BasicServerInfoService
         return result;
     }
 
+    /**
+     * Check not null.
+     *
+     * @param bean el bean
+     */
     @Override
     void checkNotNull(ServerInfo bean) {
         if (bean == null)
             throw new ServiceException("El elemento ServerInfo no debe ser nulo", ExceptionType.NULL_POINTER);
     }
 
+    /**
+     * Find optional.
+     *
+     * @param serverInfo el server info
+     * @return el optional
+     */
     @Override
     Optional<ServerInfoEntity> find(ServerInfo serverInfo) {
         if (BeanValidation.validate(serverInfo, IdCandidate.class).isEmpty())
@@ -77,6 +123,12 @@ class BasicServerInfoService
         );
     }
 
+    /**
+     * Safe find server info entity.
+     *
+     * @param bean el bean
+     * @return el server info entity
+     */
     @Override
     ServerInfoEntity safeFind(ServerInfo bean) {
         return find(bean).orElseThrow(() -> new ServiceException(

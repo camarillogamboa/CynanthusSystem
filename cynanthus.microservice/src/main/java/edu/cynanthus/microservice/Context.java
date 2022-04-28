@@ -95,6 +95,15 @@ public interface Context {
     }
 
     /**
+     * Permite obtener properties as config object.
+     *
+     * @param <T> el parámetro de tipo
+     * @return el properties as config object
+     * @throws Exception el exception
+     */
+    <T extends Config> T getPropertiesAsConfigObject() throws Exception;
+
+    /**
      * Load resource input stream.
      *
      * @param name el name

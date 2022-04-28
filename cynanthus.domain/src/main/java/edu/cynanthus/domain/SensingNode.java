@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * El tipo Sensing node.
  */
-public class SensingNode extends Sample {
+public class SensingNode extends Sample implements RuntimeNode {
 
     /**
      * El Available.

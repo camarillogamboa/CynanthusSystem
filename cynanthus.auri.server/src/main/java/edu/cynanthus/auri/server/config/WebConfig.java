@@ -19,9 +19,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * El tipo Web config.
+ */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    /**
+     * Gson gson.
+     *
+     * @return el gson
+     */
     @Bean
     public Gson gson() {
         GsonBuilder builder = new GsonBuilder();
@@ -32,6 +40,11 @@ public class WebConfig implements WebMvcConfigurer {
         return builder.create();
     }
 
+    /**
+     * Configure message converters.
+     *
+     * @param converters el converters
+     */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.removeIf(itm -> itm.getSupportedMediaTypes().contains(MediaType.APPLICATION_JSON));
