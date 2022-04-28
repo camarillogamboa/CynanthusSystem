@@ -17,7 +17,7 @@ import java.util.List;
  * El tipo Stris server controller.
  */
 @RestController
-@RequestMapping("/cynanthus/auri/server")
+@RequestMapping("/cynanthus/auri/server/stris")
 public class StrisServerController extends CynanthusServerController<StrisConfig> implements StrisServerService {
 
     /**

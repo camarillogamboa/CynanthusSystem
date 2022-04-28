@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * El tipo Sordidus server controller.
  */
 @RestController
-@RequestMapping("/cynanthus/auri/server")
+@RequestMapping("/cynanthus/auri/server/sordidus")
 public class SordidusServerController
     extends CynanthusServerController<SordidusConfig> implements SordidusServerService {
 

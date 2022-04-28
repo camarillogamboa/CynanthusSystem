@@ -19,7 +19,7 @@ import java.util.List;
  * El tipo Latiro server controller.
  */
 @RestController
-@RequestMapping("/cynanthus/auri/server")
+@RequestMapping("/cynanthus/auri/server/latiro")
 public class LatiroServerController extends CynanthusServerController<LatiroConfig> implements LatiroServerService {
 
     /**
