@@ -67,5 +67,4 @@ public class LatiroServerController extends CynanthusServerController<LatiroConf
         return getSensingNodesOf(serverInfo, selector);
     }
 
-
 }
