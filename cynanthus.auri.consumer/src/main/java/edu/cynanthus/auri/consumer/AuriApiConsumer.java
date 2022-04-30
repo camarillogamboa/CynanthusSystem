@@ -24,9 +24,9 @@ class AuriApiConsumer {
         this.webServiceConsumer = new WebServiceConsumer(clientInfo);
     }
 
-    <T> T consumeApi(ApiConsumer apiConsumer, Type type) {
+    <T> T consumeApi(WebConsumer webConsumer, Type type) {
         try {
-            HttpResponse<InputStream> response = apiConsumer.consume(webServiceConsumer);
+            HttpResponse<InputStream> response = webConsumer.consume(webServiceConsumer);
 
             try (Reader reader = new InputStreamReader(response.body())) {
                 if (HttpStatus.isCorrect(response.statusCode())) {

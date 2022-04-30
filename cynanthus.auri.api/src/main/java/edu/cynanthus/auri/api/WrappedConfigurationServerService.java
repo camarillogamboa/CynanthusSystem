@@ -45,7 +45,7 @@ public class WrappedConfigurationServerService<T extends Config> implements Conf
      * @return el string
      */
     @Override
-    public String updateConfigOf(ServerInfo serverInfo, Config config) {
+    public String updateConfigOf(ServerInfo serverInfo, T config) {
         return configurationServerService.updateConfigOf(serverInfo, config);
     }
 

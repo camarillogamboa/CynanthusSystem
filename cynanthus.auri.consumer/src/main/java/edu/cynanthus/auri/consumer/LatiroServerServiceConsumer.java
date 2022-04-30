@@ -1,7 +1,6 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.LatiroServerService;
-import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.net.ClientInfo;
 import edu.cynanthus.domain.GeneralNode;
 import edu.cynanthus.domain.SensingNode;
@@ -22,7 +21,7 @@ public class LatiroServerServiceConsumer extends AuriApiConsumer implements Lati
     }
 
     @Override
-    public String updateConfigOf(ServerInfo serverInfo, Config config) {
+    public String updateConfigOf(ServerInfo serverInfo, LatiroConfig config) {
         return null;
     }
 

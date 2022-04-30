@@ -1,7 +1,6 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.SordidusServerService;
-import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.net.ClientInfo;
 import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.config.SordidusConfig;
@@ -18,7 +17,7 @@ public class SordidusServerServiceConsumer extends AuriApiConsumer implements So
     }
 
     @Override
-    public String updateConfigOf(ServerInfo serverInfo, Config config) {
+    public String updateConfigOf(ServerInfo serverInfo, SordidusConfig config) {
         return null;
     }
 

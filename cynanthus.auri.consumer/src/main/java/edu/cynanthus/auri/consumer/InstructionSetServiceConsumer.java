@@ -50,7 +50,7 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     public Instruction deleteInstruction(Integer id) {
         checkId(id);
         return consumeApi(webServiceConsumer ->
-            webServiceConsumer.DELETE("/instruction/" + id),
+                webServiceConsumer.DELETE("/instruction/" + id),
             Instruction.class
         );
     }

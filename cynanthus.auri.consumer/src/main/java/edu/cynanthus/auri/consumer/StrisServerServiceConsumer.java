@@ -1,7 +1,6 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.StrisServerService;
-import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.net.ClientInfo;
 import edu.cynanthus.domain.ControlNode;
 import edu.cynanthus.domain.GeneralNode;
@@ -23,7 +22,7 @@ class StrisServerServiceConsumer extends AuriApiConsumer implements StrisServerS
     }
 
     @Override
-    public String updateConfigOf(ServerInfo serverInfo, Config config) {
+    public String updateConfigOf(ServerInfo serverInfo, StrisConfig config) {
         return null;
     }
 

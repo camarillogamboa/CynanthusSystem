@@ -25,7 +25,7 @@ public interface ConfigurationServerService<T extends Config> {
      * @param config     el config
      * @return el string
      */
-    String updateConfigOf(ServerInfo serverInfo, Config config);
+    String updateConfigOf(ServerInfo serverInfo, T config);
 
     /**
      * Get log files of string [ ].

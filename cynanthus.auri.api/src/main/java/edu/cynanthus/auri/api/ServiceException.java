@@ -32,8 +32,8 @@ public class ServiceException extends RuntimeException {
         this.records = Objects.requireNonNull(records);
     }
 
-    public ServiceException(String message, ExceptionType exceptionType, List<ExceptionRecord> records,Throwable th) {
-        super(Objects.requireNonNull(message),Objects.requireNonNull(th));
+    public ServiceException(String message, ExceptionType exceptionType, List<ExceptionRecord> records, Throwable th) {
+        super(Objects.requireNonNull(message), Objects.requireNonNull(th));
         this.exceptionType = Objects.requireNonNull(exceptionType);
         this.records = Objects.requireNonNull(records);
     }
@@ -49,7 +49,7 @@ public class ServiceException extends RuntimeException {
     }
 
     public ServiceException(String message, ExceptionType exceptionType, Throwable th) {
-        this(message, exceptionType, new LinkedList<>(),th);
+        this(message, exceptionType, new LinkedList<>(), th);
     }
 
     /**
