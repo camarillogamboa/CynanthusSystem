@@ -58,7 +58,7 @@ public class CynanthusServerController<T extends Config> extends WrappedCynanthu
     @Override
     @PutMapping("/{id:\\d+}/config")
     @ResponseBody
-    public String updateConfigOf(ServerInfo serverInfo, @RequestBody T config) {
+    public Boolean updateConfigOf(ServerInfo serverInfo, @RequestBody T config) {
         return super.updateConfigOf(serverInfo, config);
     }
 
@@ -71,7 +71,7 @@ public class CynanthusServerController<T extends Config> extends WrappedCynanthu
      */
     @PutMapping("/{name:" + Patterns.NAME + "}/config")
     @ResponseBody
-    public String updateConfigOfByName(ServerInfo serverInfo, @RequestBody T config) {
+    public Boolean updateConfigOfByName(ServerInfo serverInfo, @RequestBody T config) {
         return updateConfigOf(serverInfo, config);
     }
 

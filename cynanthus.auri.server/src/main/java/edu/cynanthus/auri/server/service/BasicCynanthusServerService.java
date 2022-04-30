@@ -131,7 +131,7 @@ class BasicCynanthusServerService<T extends Config> implements CynanthusServerSe
      * @return el string
      */
     @Override
-    public String updateConfigOf(ServerInfo serverInfo, Config config) {
+    public Boolean updateConfigOf(ServerInfo serverInfo, Config config) {
         serverInfo = serverInfoService.read(serverInfo);
         return null;
     }

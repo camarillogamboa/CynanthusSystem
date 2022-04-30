@@ -19,18 +19,12 @@ abstract class BeanServiceConsumer<T extends Bean> extends DataServiceConsumer<T
 
     @Override
     public List<? extends T> read() {
-        return consumeApi(
-            webServiceConsumer -> webServiceConsumer.GET(resourcePath),
-            listType
-        );
+        return consumeApi(webConsumer -> webConsumer.GET(resourcePath), listType);
     }
 
     @Override
     public List<? extends T> delete() {
-        return consumeApi(
-            webServiceConsumer -> webServiceConsumer.GET(resourcePath),
-            listType
-        );
+        return consumeApi(webConsumer -> webConsumer.GET(resourcePath), listType);
     }
 
 }

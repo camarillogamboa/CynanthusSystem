@@ -10,35 +10,10 @@ import edu.cynanthus.domain.config.StrisConfig;
 
 import java.util.List;
 
-class StrisServerServiceConsumer extends AuriApiConsumer implements StrisServerService {
+class StrisServerServiceConsumer extends CynanthusServerServiceConsumer<StrisConfig> implements StrisServerService {
 
     StrisServerServiceConsumer(ClientInfo clientInfo) {
-        super(clientInfo);
-    }
-
-    @Override
-    public StrisConfig getConfigOf(ServerInfo serverInfo) {
-        return null;
-    }
-
-    @Override
-    public String updateConfigOf(ServerInfo serverInfo, StrisConfig config) {
-        return null;
-    }
-
-    @Override
-    public String[] getLogFilesOf(ServerInfo serverInfo) {
-        return new String[0];
-    }
-
-    @Override
-    public String getLogContentOf(ServerInfo serverInfo, String logFileName) {
-        return null;
-    }
-
-    @Override
-    public Boolean isAvailable(ServerInfo serverInfo) {
-        return null;
+        super(clientInfo, "/cynanthus/auri/server/stris", StrisConfig.class);
     }
 
     @Override

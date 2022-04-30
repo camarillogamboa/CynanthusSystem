@@ -4,7 +4,9 @@ import edu.cynanthus.auri.api.ConfigurationServerService;
 import edu.cynanthus.auri.api.ExceptionType;
 import edu.cynanthus.auri.api.ServiceException;
 import edu.cynanthus.bean.Config;
+import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.resource.StreamUtil;
 import edu.cynanthus.domain.ServerInfo;
 
 import java.lang.reflect.Type;
@@ -12,34 +14,60 @@ import java.lang.reflect.Type;
 class ConfigurationServerServiceConsumer<T extends Config>
     extends AuriApiConsumer implements ConfigurationServerService<T> {
 
+    protected final String resourcePath;
+
     private final Type configType;
 
-    private ConfigurationServerServiceConsumer(ClientInfo clientInfo, Type configType) {
+    ConfigurationServerServiceConsumer(ClientInfo clientInfo, String resourcePath, Type configType) {
         super(clientInfo);
+        this.resourcePath = resourcePath;
         this.configType = configType;
     }
 
     @Override
     public T getConfigOf(ServerInfo serverInfo) {
         checkServerInfo(serverInfo);
-        return null;
+        return consumeApi(
+            webConsumer -> webConsumer.GET(resourcePath + "/" + getServerId(serverInfo) + "/config"),
+            configType
+        );
     }
 
     @Override
-    public String updateConfigOf(ServerInfo serverInfo, T config) {
+    public Boolean updateConfigOf(ServerInfo serverInfo, T config) {
         checkServerInfo(serverInfo);
         checkConfig(config);
-        return null;
+        return consumeApi(
+            webConsumer -> webConsumer.PUT(
+                resourcePath + "/" + getServerId(serverInfo) + "/config",
+                () -> StreamUtil.asInputStream(JsonProvider.toJson(config))
+            ),
+            Boolean.class
+        );
     }
 
     @Override
     public String[] getLogFilesOf(ServerInfo serverInfo) {
-        return new String[0];
+        checkServerInfo(serverInfo);
+        return consumeApi(
+            webConsumer -> webConsumer.GET(resourcePath + "/" + getServerId(serverInfo) + "/log"),
+            String[].class
+        );
     }
 
     @Override
     public String getLogContentOf(ServerInfo serverInfo, String logFileName) {
-        return null;
+        checkServerInfo(serverInfo);
+        if (logFileName == null)
+            throw new ServiceException(
+                "Se requiere un nombre de archivo de registro",
+                ExceptionType.REQUIRED_DATA
+            );
+
+        return consumeApi(
+            webConsumer -> webConsumer.GET(resourcePath + "/" + getServerId(serverInfo) + "/log/" + logFileName),
+            String.class
+        );
     }
 
     void checkConfig(T config) {

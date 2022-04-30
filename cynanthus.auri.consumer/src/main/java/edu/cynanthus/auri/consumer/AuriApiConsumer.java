@@ -7,7 +7,7 @@ import edu.cynanthus.auri.api.ServiceException;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.ClientInfo;
 import edu.cynanthus.common.net.http.HttpStatus;
-import edu.cynanthus.common.net.http.client.WebServiceConsumer;
+import edu.cynanthus.common.net.http.client.WebConsumer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,15 +18,15 @@ import java.net.http.HttpResponse;
 
 class AuriApiConsumer {
 
-    private final WebServiceConsumer webServiceConsumer;
+    private final WebConsumer webConsumer;
 
     AuriApiConsumer(ClientInfo clientInfo) {
-        this.webServiceConsumer = new WebServiceConsumer(clientInfo);
+        this.webConsumer = new WebConsumer(clientInfo);
     }
 
-    <T> T consumeApi(WebConsumer webConsumer, Type type) {
+    <T> T consumeApi(WebServiceConsumer webServiceConsumer, Type type) {
         try {
-            HttpResponse<InputStream> response = webConsumer.consume(webServiceConsumer);
+            HttpResponse<InputStream> response = webServiceConsumer.consume(webConsumer);
 
             try (Reader reader = new InputStreamReader(response.body())) {
                 if (HttpStatus.isCorrect(response.statusCode())) {

@@ -8,7 +8,7 @@ import edu.cynanthus.domain.ServerInfo;
  *
  * @param <T> el parámetro de tipo
  */
-public interface ConfigurationServerService<T extends Config> {
+public interface ConfigurationServerService<T extends Config> extends AuriService {
 
     /**
      * Permite obtener config of.
@@ -25,7 +25,7 @@ public interface ConfigurationServerService<T extends Config> {
      * @param config     el config
      * @return el string
      */
-    String updateConfigOf(ServerInfo serverInfo, T config);
+    Boolean updateConfigOf(ServerInfo serverInfo, T config);
 
     /**
      * Get log files of string [ ].

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * El tipo Service exception.
+ * El tipo AuriService exception.
  */
 public class ServiceException extends RuntimeException {
 
@@ -20,7 +20,7 @@ public class ServiceException extends RuntimeException {
     private final List<ExceptionRecord> records;
 
     /**
-     * Instancia un nuevo Service exception.
+     * Instancia un nuevo AuriService exception.
      *
      * @param message       el message
      * @param exceptionType el exception type
@@ -39,7 +39,7 @@ public class ServiceException extends RuntimeException {
     }
 
     /**
-     * Instancia un nuevo Service exception.
+     * Instancia un nuevo AuriService exception.
      *
      * @param message       el message
      * @param exceptionType el exception type

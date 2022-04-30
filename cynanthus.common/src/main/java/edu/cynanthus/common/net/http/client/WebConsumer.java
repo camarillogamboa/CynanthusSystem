@@ -9,16 +9,16 @@ import java.net.http.HttpResponse;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 
-public class WebServiceConsumer extends HttpRequester {
+public class WebConsumer extends HttpRequester {
 
     protected final ClientInfo clientInfo;
 
-    public WebServiceConsumer(HttpClient httpClient, ClientInfo clientInfo) {
+    public WebConsumer(HttpClient httpClient, ClientInfo clientInfo) {
         super(httpClient);
         this.clientInfo = Objects.requireNonNull(clientInfo);
     }
 
-    public WebServiceConsumer(ClientInfo clientInfo) {
+    public WebConsumer(ClientInfo clientInfo) {
         this(HttpClient.newHttpClient(), clientInfo);
     }
 

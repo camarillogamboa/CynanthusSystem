@@ -29,7 +29,7 @@ class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements N
             );
 
         return consumeApi(
-            webServiceConsumer -> webServiceConsumer.GET("/of/" + idServerInfo),
+            webConsumer -> webConsumer.GET(resourcePath + "/of/" + idServerInfo),
             new TypeToken<List<NodeInfo>>() {}.getType()
         );
     }

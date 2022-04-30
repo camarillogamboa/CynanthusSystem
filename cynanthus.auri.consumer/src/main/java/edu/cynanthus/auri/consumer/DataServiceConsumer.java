@@ -24,7 +24,7 @@ abstract class DataServiceConsumer<T> extends AuriApiConsumer implements DataSer
     public T create(T data) {
         checkNotNull(data);
         return consumeApi(
-            webServiceConsumer -> webServiceConsumer.POST(
+            webConsumer -> webConsumer.POST(
                 resourcePath,
                 () -> StreamUtil.asInputStream(JsonProvider.toJson(data))
             ),
@@ -35,15 +35,14 @@ abstract class DataServiceConsumer<T> extends AuriApiConsumer implements DataSer
     @Override
     public T read(T data) {
         checkNotNull(data);
-        String path = resourcePath + "/" + getId(data);
-        return consumeApi(webServiceConsumer -> webServiceConsumer.GET(path), dataType);
+        return consumeApi(webConsumer -> webConsumer.GET(resourcePath + "/" + getId(data)), dataType);
     }
 
     @Override
     public T update(T data) {
         checkNotNull(data);
         return consumeApi(
-            webServiceConsumer -> webServiceConsumer.PUT(
+            webConsumer -> webConsumer.PUT(
                 resourcePath,
                 () -> StreamUtil.asInputStream(JsonProvider.toJson(data))
             ),
@@ -54,8 +53,7 @@ abstract class DataServiceConsumer<T> extends AuriApiConsumer implements DataSer
     @Override
     public T delete(T data) {
         checkNotNull(data);
-        String path = resourcePath + "/" + getId(data);
-        return consumeApi(webServiceConsumer -> webServiceConsumer.DELETE(path), dataType);
+        return consumeApi(webConsumer -> webConsumer.DELETE(resourcePath + "/" + getId(data)), dataType);
     }
 
     void checkNotNull(T bean) {
