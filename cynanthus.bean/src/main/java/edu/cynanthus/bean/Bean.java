@@ -3,7 +3,7 @@ package edu.cynanthus.bean;
 import java.io.Serializable;
 
 /**
- * La interface Bean.
+ * La interface de Bean.
  */
 public interface Bean extends Serializable {
 

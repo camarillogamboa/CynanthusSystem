@@ -51,16 +51,6 @@ final class HttpClientContextImpl extends HttpClientInfoImpl implements HttpClie
     }
 
     /**
-     * Build path string.
-     *
-     * @return el string
-     */
-    @Override
-    public String buildPath() {
-        return "http://" + getServerName() + ":" + getServerPort() + getServerContext();
-    }
-
-    /**
      * Permite obtener http client.
      *
      * @return el http client

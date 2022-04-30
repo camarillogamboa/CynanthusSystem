@@ -22,6 +22,15 @@ public interface HttpClientInfo extends ClientInfo {
     void setServerContext(String context);
 
     /**
+     * Build path string.
+     *
+     * @return el string
+     */
+    default String buildPath() {
+        return "http://" + getServerName() + ":" + getServerPort() + getServerContext();
+    }
+
+    /**
      * Create http client info.
      *
      * @param serverName    el server name

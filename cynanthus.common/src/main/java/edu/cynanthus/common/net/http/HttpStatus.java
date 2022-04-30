@@ -498,4 +498,24 @@ public interface HttpStatus {
      */
     int NETWORK_AUTHENTICATION_REQUIRED = 511;
 
+    static boolean isInformative(int status) {
+        return status >= 100 && status < 200;
+    }
+
+    static boolean isCorrect(int status) {
+        return status >= 200 && status < 300;
+    }
+
+    static boolean isRedirect(int status) {
+        return status >= 300 && status < 400;
+    }
+
+    static boolean isClientError(int status) {
+        return status >= 400 && status < 500;
+    }
+
+    static boolean isServerError(int status) {
+        return status >= 500 && status < 600;
+    }
+
 }

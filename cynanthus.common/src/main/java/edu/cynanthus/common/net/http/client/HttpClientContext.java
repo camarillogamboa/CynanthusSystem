@@ -17,13 +17,6 @@ import java.util.function.Function;
 public interface HttpClientContext extends HttpClientInfo {
 
     /**
-     * Build path string.
-     *
-     * @return el string
-     */
-    String buildPath();
-
-    /**
      * Permite obtener http client.
      *
      * @return el http client

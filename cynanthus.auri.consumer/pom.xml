@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.cynanthus.system</groupId>
-    <artifactId>cynanthus.auri.client</artifactId>
+    <artifactId>cynanthus.auri.consumer</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -17,6 +17,11 @@
         <dependency>
             <groupId>edu.cynanthus.system</groupId>
             <artifactId>cynanthus.auri.api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.cynanthus.system</groupId>
+            <artifactId>cynanthus.common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
