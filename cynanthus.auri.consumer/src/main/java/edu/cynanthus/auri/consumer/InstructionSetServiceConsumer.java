@@ -10,9 +10,9 @@ import edu.cynanthus.domain.InstructionSet;
 
 import java.util.List;
 
-class InstructionSetServiceClient extends BeanServiceClient<InstructionSet> implements InstructionSetService {
+class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> implements InstructionSetService {
 
-    InstructionSetServiceClient(ClientInfo clientInfo) {
+    InstructionSetServiceConsumer(ClientInfo clientInfo) {
         super(
             clientInfo,
             "/cynanthus/auri/set",

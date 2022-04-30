@@ -9,8 +9,8 @@ import edu.cynanthus.domain.ServerInfo;
 
 import java.util.List;
 
-class ServerInfoServiceClient extends BeanServiceClient<ServerInfo> implements ServerInfoService {
-    ServerInfoServiceClient(ClientInfo clientInfo) {
+class ServerInfoServiceConsumer extends BeanServiceConsumer<ServerInfo> implements ServerInfoService {
+    ServerInfoServiceConsumer(ClientInfo clientInfo) {
         super(
             clientInfo,
             "/cynanthus/auri/server",

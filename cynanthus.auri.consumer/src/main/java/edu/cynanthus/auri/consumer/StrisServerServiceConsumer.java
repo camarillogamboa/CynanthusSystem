@@ -11,9 +11,9 @@ import edu.cynanthus.domain.config.StrisConfig;
 
 import java.util.List;
 
-class StrisServerServiceClient extends AuriApiClient implements StrisServerService {
+class StrisServerServiceConsumer extends AuriApiConsumer implements StrisServerService {
 
-    StrisServerServiceClient(ClientInfo clientInfo) {
+    StrisServerServiceConsumer(ClientInfo clientInfo) {
         super(clientInfo);
     }
 

@@ -10,9 +10,9 @@ import edu.cynanthus.domain.config.LatiroConfig;
 
 import java.util.List;
 
-public class LatiroServerServiceClient extends AuriApiClient implements LatiroServerService {
+public class LatiroServerServiceConsumer extends AuriApiConsumer implements LatiroServerService {
 
-    LatiroServerServiceClient(ClientInfo clientInfo) {
+    LatiroServerServiceConsumer(ClientInfo clientInfo) {
         super(clientInfo);
     }
 

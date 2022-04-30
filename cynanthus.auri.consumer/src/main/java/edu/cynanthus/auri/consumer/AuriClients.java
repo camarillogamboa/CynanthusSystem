@@ -8,31 +8,31 @@ public final class AuriClients {
     private AuriClients() {}
 
     public static ServerInfoService createServerInfoServiceClient(ClientInfo clientInfo) {
-        return new ServerInfoServiceClient(clientInfo);
+        return new ServerInfoServiceConsumer(clientInfo);
     }
 
     public static NodeInfoService createNodeInfoServiceClient(ClientInfo clientInfo) {
-        return new NodeInfoServiceClient(clientInfo);
+        return new NodeInfoServiceConsumer(clientInfo);
     }
 
     public static InstructionSetService createInstructionSetServiceClient(ClientInfo clientInfo) {
-        return new InstructionSetServiceClient(clientInfo);
+        return new InstructionSetServiceConsumer(clientInfo);
     }
 
     public static UserService createUserServiceClient(ClientInfo clientInfo) {
-        return new UserServiceClient(clientInfo);
+        return new UserServiceConsumer(clientInfo);
     }
 
     public static SordidusServerService createSordidusServerServiceClient(ClientInfo clientInfo) {
-        return new SordidusServerServiceClient(clientInfo);
+        return new SordidusServerServiceConsumer(clientInfo);
     }
 
     public static LatiroServerService createLatiroServerServiceClient(ClientInfo clientInfo) {
-        return new LatiroServerServiceClient(clientInfo);
+        return new LatiroServerServiceConsumer(clientInfo);
     }
 
     public static StrisServerService createStrisServerServiceClient(ClientInfo clientInfo) {
-        return new StrisServerServiceClient(clientInfo);
+        return new StrisServerServiceConsumer(clientInfo);
     }
 
 }

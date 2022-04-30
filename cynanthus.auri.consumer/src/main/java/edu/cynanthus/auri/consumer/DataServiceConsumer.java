@@ -9,12 +9,12 @@ import edu.cynanthus.common.resource.StreamUtil;
 
 import java.lang.reflect.Type;
 
-abstract class DataServiceClient<T> extends AuriApiClient implements DataService<T> {
+abstract class DataServiceConsumer<T> extends AuriApiConsumer implements DataService<T> {
 
     protected final String resourcePath;
     private final Type dataType;
 
-    DataServiceClient(ClientInfo clientInfo, String resourcePath, Type dataType) {
+    DataServiceConsumer(ClientInfo clientInfo, String resourcePath, Type dataType) {
         super(clientInfo);
         this.resourcePath = resourcePath;
         this.dataType = dataType;

@@ -16,11 +16,11 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.net.http.HttpResponse;
 
-class AuriApiClient {
+class AuriApiConsumer {
 
     private final WebServiceConsumer webServiceConsumer;
 
-    AuriApiClient(ClientInfo clientInfo) {
+    AuriApiConsumer(ClientInfo clientInfo) {
         this.webServiceConsumer = new WebServiceConsumer(clientInfo);
     }
 

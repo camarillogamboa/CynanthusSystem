@@ -9,9 +9,9 @@ import edu.cynanthus.domain.User;
 
 import java.util.List;
 
-class UserServiceClient extends BeanServiceClient<User> implements UserService {
+class UserServiceConsumer extends BeanServiceConsumer<User> implements UserService {
 
-    UserServiceClient(ClientInfo clientInfo) {
+    UserServiceConsumer(ClientInfo clientInfo) {
         super(
             clientInfo,
             "/cynanthus/auri/user",

@@ -8,11 +8,11 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 
-abstract class BeanServiceClient<T extends Bean> extends DataServiceClient<T> implements BeanService<T> {
+abstract class BeanServiceConsumer<T extends Bean> extends DataServiceConsumer<T> implements BeanService<T> {
 
     private final Type listType;
 
-    BeanServiceClient(ClientInfo clientInfo, String resourcePath, Type dataType, Type listType) {
+    BeanServiceConsumer(ClientInfo clientInfo, String resourcePath, Type dataType, Type listType) {
         super(clientInfo, resourcePath, dataType);
         this.listType = Objects.requireNonNull(listType);
     }

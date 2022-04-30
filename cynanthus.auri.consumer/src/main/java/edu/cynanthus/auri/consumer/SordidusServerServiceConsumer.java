@@ -6,9 +6,9 @@ import edu.cynanthus.common.net.ClientInfo;
 import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.config.SordidusConfig;
 
-public class SordidusServerServiceClient extends AuriApiClient implements SordidusServerService {
+public class SordidusServerServiceConsumer extends AuriApiConsumer implements SordidusServerService {
 
-    SordidusServerServiceClient(ClientInfo clientInfo) {
+    SordidusServerServiceConsumer(ClientInfo clientInfo) {
         super(clientInfo);
     }
 

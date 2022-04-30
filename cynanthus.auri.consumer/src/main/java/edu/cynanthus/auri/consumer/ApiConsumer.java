@@ -9,7 +9,6 @@ import java.net.http.HttpResponse;
 
 @FunctionalInterface
 interface ApiConsumer {
-
     HttpResponse<InputStream> consume(WebServiceConsumer webServiceConsumer)
         throws ServiceException, IOException, InterruptedException;
 
