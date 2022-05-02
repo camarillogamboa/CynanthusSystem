@@ -19,12 +19,12 @@ abstract class BeanServiceConsumer<T extends Bean> extends DataServiceConsumer<T
 
     @Override
     public List<? extends T> read() {
-        return consumeService(lazyRequest -> lazyRequest.GET(resourcePath), listType);
+        return consume(lazyRequest -> lazyRequest.GET(resourcePath), listType);
     }
 
     @Override
     public List<? extends T> delete() {
-        return consumeService(lazyRequest -> lazyRequest.GET(resourcePath), listType);
+        return consume(lazyRequest -> lazyRequest.GET(resourcePath), listType);
     }
 
 }

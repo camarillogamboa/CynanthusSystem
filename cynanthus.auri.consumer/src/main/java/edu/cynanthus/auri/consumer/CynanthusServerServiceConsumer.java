@@ -17,7 +17,7 @@ class CynanthusServerServiceConsumer<T extends Config>
     @Override
     public Boolean isAvailable(ServerInfo serverInfo) {
         checkServerInfo(serverInfo);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/available"),
             Boolean.class
         );

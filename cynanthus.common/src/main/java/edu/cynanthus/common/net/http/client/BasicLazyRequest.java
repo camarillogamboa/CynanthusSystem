@@ -12,13 +12,13 @@ import java.util.function.Supplier;
 
 class BasicLazyRequest implements LazyRequest {
 
-    private final HttpClient httpClient;
+    final HttpClient httpClient;
 
-    private Consumer<HttpRequest.Builder> builderConsumer;
+    Consumer<HttpRequest.Builder> builderConsumer;
 
     BasicLazyRequest(HttpClient httpClient) {
         this.httpClient = httpClient;
-        this.builderConsumer = builder -> {};
+        this.builderConsumer = nuilder -> {};
     }
 
     @Override
@@ -94,6 +94,13 @@ class BasicLazyRequest implements LazyRequest {
     @Override
     public HttpResponse<String> doRequestAndGetString() throws IOException, InterruptedException {
         return doRequest(HttpResponse.BodyHandlers.ofString());
+    }
+
+    @Override
+    public LazyRequest clone() {
+        BasicLazyRequest basicLazyRequest = new BasicLazyRequest(httpClient);
+        basicLazyRequest.builderConsumer = builderConsumer;
+        return basicLazyRequest;
     }
 
 }

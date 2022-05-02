@@ -1,26 +1,26 @@
 package edu.cynanthus.common.net.http.client;
 
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.ConnectionPoint;
 
 import java.net.http.HttpClient;
 import java.util.Objects;
 
 public class RequestingClient extends HttpRequester {
 
-    private final ClientInfo clientInfo;
+    private final ConnectionPoint connectionPoint;
 
-    public RequestingClient(HttpClient httpClient, ClientInfo clientInfo) {
+    public RequestingClient(HttpClient httpClient, ConnectionPoint connectionPoint) {
         super(httpClient);
-        this.clientInfo = Objects.requireNonNull(clientInfo);
+        this.connectionPoint = Objects.requireNonNull(connectionPoint);
     }
 
-    public RequestingClient(ClientInfo clientInfo) {
-        this(HttpClient.newHttpClient(), clientInfo);
+    public RequestingClient(ConnectionPoint connectionPoint) {
+        this(HttpClient.newHttpClient(), connectionPoint);
     }
 
     @Override
     public LazyRequest lazyRequest() {
-        return new LazyClientRequest(httpClient, clientInfo);
+        return new LazyClientRequest(httpClient, connectionPoint);
     }
 
 }

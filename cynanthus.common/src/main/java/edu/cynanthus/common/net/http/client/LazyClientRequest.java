@@ -1,21 +1,21 @@
 package edu.cynanthus.common.net.http.client;
 
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.ConnectionPoint;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 
 class LazyClientRequest extends BasicLazyRequest {
 
-    private final ClientInfo clientInfo;
+    final ConnectionPoint connectionPoint;
 
-    LazyClientRequest(HttpClient httpClient, ClientInfo clientInfo) {
+    LazyClientRequest(HttpClient httpClient, ConnectionPoint connectionPoint) {
         super(httpClient);
-        this.clientInfo = clientInfo;
+        this.connectionPoint = connectionPoint;
     }
 
     String buildPath() {
-        return "http://" + clientInfo.getServerName() + ":" + clientInfo.getServerPort();
+        return "http://" + connectionPoint.getServerName() + ":" + connectionPoint.getServerPort();
     }
 
     @Override
@@ -36,6 +36,13 @@ class LazyClientRequest extends BasicLazyRequest {
     @Override
     public LazyRequest DELETE(String uri) {
         return super.DELETE(buildPath() + uri);
+    }
+
+    @Override
+    public LazyRequest clone() {
+        LazyClientRequest lazyClientRequest = new LazyClientRequest(httpClient, connectionPoint);
+        lazyClientRequest.builderConsumer = builderConsumer;
+        return lazyClientRequest;
     }
 
 }

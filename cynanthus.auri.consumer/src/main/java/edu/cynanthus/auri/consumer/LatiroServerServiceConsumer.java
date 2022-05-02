@@ -20,7 +20,7 @@ class LatiroServerServiceConsumer extends CynanthusServerServiceConsumer<LatiroC
     public List<GeneralNode<SensingNode>> getSensingNodesOf(ServerInfo serverInfo, String selector) {
         checkServerInfo(serverInfo);
         String param = selector == null || selector.isBlank() || selector.isEmpty() ? "*" : selector;
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/node/" + param),
             new TypeToken<List<GeneralNode<SensingNode>>>() {}.getType()
         );

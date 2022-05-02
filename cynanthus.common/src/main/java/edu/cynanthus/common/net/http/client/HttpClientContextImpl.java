@@ -20,7 +20,7 @@ import java.util.function.Function;
 /**
  * El tipo Http client context.
  */
-final class HttpClientContextImpl extends HttpClientInfoImpl implements HttpClientContext {
+final class HttpClientContextImpl extends HttpConnectionPointImpl implements HttpClientContext {
 
     /**
      * El Http client.

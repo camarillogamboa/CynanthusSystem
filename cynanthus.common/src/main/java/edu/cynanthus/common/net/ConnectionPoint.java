@@ -3,7 +3,7 @@ package edu.cynanthus.common.net;
 /**
  * La interface Client info.
  */
-public interface ClientInfo {
+public interface ConnectionPoint {
 
     /**
      * Permite obtener server name.

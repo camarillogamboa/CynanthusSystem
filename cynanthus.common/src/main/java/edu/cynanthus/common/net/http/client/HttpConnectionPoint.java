@@ -1,11 +1,11 @@
 package edu.cynanthus.common.net.http.client;
 
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.ConnectionPoint;
 
 /**
  * La interface Http client info.
  */
-public interface HttpClientInfo extends ClientInfo {
+public interface HttpConnectionPoint extends ConnectionPoint {
 
     /**
      * Permite obtener server context.
@@ -38,8 +38,8 @@ public interface HttpClientInfo extends ClientInfo {
      * @param serverContext el server context
      * @return el http client info
      */
-    static HttpClientInfo create(String serverName, int serverPort, String serverContext) {
-        return new HttpClientInfoImpl(serverName, serverPort, serverContext);
+    static HttpConnectionPoint create(String serverName, int serverPort, String serverContext) {
+        return new HttpConnectionPointImpl(serverName, serverPort, serverContext);
     }
 
 }

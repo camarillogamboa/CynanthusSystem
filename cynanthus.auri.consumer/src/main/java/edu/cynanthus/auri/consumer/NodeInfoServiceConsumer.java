@@ -28,7 +28,7 @@ class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements N
                 ExceptionType.REQUIRED_DATA
             );
 
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.GET(resourcePath + "/of/" + idServerInfo),
             new TypeToken<List<NodeInfo>>() {}.getType()
         );

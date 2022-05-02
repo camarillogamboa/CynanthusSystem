@@ -16,20 +16,22 @@ import java.lang.reflect.Type;
 import java.net.http.HttpResponse;
 import java.util.function.Consumer;
 
-class ServiceConsumer {
+class GeneralConsumer {
 
     private final LazyRequest lazyRequest;
 
-    ServiceConsumer(LazyRequest lazyRequest) {
+    GeneralConsumer(LazyRequest lazyRequest) {
         this.lazyRequest = lazyRequest;
     }
 
-    <T> T consumeService(Consumer<LazyRequest> lazyRequestConsumer, Type type) {
+    <T> T consume(Consumer<LazyRequest> lazyRequestConsumer, Type type) {
         try {
 
-            lazyRequestConsumer.accept(lazyRequest);
+            LazyRequest lazyRequestCopy = lazyRequest.clone();
 
-            HttpResponse<InputStream> response = lazyRequest.doRequestAndGetInputStream();
+            lazyRequestConsumer.accept(lazyRequestCopy);
+
+            HttpResponse<InputStream> response = lazyRequestCopy.doRequestAndGetInputStream();
 
             try (Reader reader = new InputStreamReader(response.body())) {
                 if (HttpStatus.isCorrect(response.statusCode())) return JsonProvider.fromJson(reader, type);

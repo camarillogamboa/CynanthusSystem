@@ -9,7 +9,7 @@ import edu.cynanthus.common.resource.StreamUtil;
 
 import java.lang.reflect.Type;
 
-abstract class DataServiceConsumer<T> extends ServiceConsumer implements DataService<T> {
+abstract class DataServiceConsumer<T> extends GeneralConsumer implements DataService<T> {
 
     protected final String resourcePath;
     private final Type dataType;
@@ -23,7 +23,7 @@ abstract class DataServiceConsumer<T> extends ServiceConsumer implements DataSer
     @Override
     public T create(T data) {
         checkNotNull(data);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.POST(
                 resourcePath,
                 () -> StreamUtil.asInputStream(JsonProvider.toJson(data))
@@ -35,13 +35,13 @@ abstract class DataServiceConsumer<T> extends ServiceConsumer implements DataSer
     @Override
     public T read(T data) {
         checkNotNull(data);
-        return consumeService(lazyRequest -> lazyRequest.GET(resourcePath + "/" + getId(data)), dataType);
+        return consume(lazyRequest -> lazyRequest.GET(resourcePath + "/" + getId(data)), dataType);
     }
 
     @Override
     public T update(T data) {
         checkNotNull(data);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.PUT(
                 resourcePath,
                 () -> StreamUtil.asInputStream(JsonProvider.toJson(data))
@@ -53,7 +53,7 @@ abstract class DataServiceConsumer<T> extends ServiceConsumer implements DataSer
     @Override
     public T delete(T data) {
         checkNotNull(data);
-        return consumeService(lazyRequest -> lazyRequest.DELETE(resourcePath + "/" + getId(data)), dataType);
+        return consume(lazyRequest -> lazyRequest.DELETE(resourcePath + "/" + getId(data)), dataType);
     }
 
     void checkNotNull(T bean) {

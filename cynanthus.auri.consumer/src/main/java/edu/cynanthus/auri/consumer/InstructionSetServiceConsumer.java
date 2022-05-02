@@ -24,14 +24,14 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     @Override
     public Instruction readInstruction(Integer id) {
         checkId(id);
-        return consumeService(lazyRequest -> lazyRequest.GET("/instruction/" + id), Instruction.class);
+        return consume(lazyRequest -> lazyRequest.GET("/instruction/" + id), Instruction.class);
     }
 
     @Override
     public Instruction readInstruction(Integer idSet, String name) {
         checkIdSet(idSet);
         checkName(name);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.GET("/instruction/" + idSet + "/" + name), Instruction.class
         );
     }
@@ -40,7 +40,7 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     public Instruction readInstruction(String setName, String name) {
         checkSetName(setName);
         checkName(name);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.GET("/instruction/" + setName + "/" + name),
             Instruction.class
         );
@@ -49,14 +49,14 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     @Override
     public Instruction deleteInstruction(Integer id) {
         checkId(id);
-        return consumeService(lazyRequest -> lazyRequest.DELETE("/instruction/" + id), Instruction.class);
+        return consume(lazyRequest -> lazyRequest.DELETE("/instruction/" + id), Instruction.class);
     }
 
     @Override
     public Instruction deleteInstruction(Integer idSet, String name) {
         checkIdSet(idSet);
         checkName(name);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.DELETE("/instruction/" + idSet + "/" + name),
             Instruction.class
         );
@@ -66,7 +66,7 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     public Instruction deleteInstruction(String setName, String name) {
         checkSetName(setName);
         checkName(name);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.DELETE("/instruction/" + setName + "/" + name),
             Instruction.class
         );

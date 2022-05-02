@@ -38,4 +38,6 @@ public interface LazyRequest {
 
     HttpResponse<String> doRequestAndGetString() throws IOException, InterruptedException;
 
+    LazyRequest clone();
+
 }

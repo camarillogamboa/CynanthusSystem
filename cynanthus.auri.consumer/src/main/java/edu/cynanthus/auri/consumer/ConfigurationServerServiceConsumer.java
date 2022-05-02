@@ -12,7 +12,7 @@ import edu.cynanthus.domain.ServerInfo;
 import java.lang.reflect.Type;
 
 class ConfigurationServerServiceConsumer<T extends Config>
-    extends ServiceConsumer implements ConfigurationServerService<T> {
+    extends GeneralConsumer implements ConfigurationServerService<T> {
 
     protected final String resourcePath;
 
@@ -27,7 +27,7 @@ class ConfigurationServerServiceConsumer<T extends Config>
     @Override
     public T getConfigOf(ServerInfo serverInfo) {
         checkServerInfo(serverInfo);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/config"),
             configType
         );
@@ -37,7 +37,7 @@ class ConfigurationServerServiceConsumer<T extends Config>
     public Boolean updateConfigOf(ServerInfo serverInfo, T config) {
         checkServerInfo(serverInfo);
         checkConfig(config);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.PUT(
                 resourcePath + "/" + getServerId(serverInfo) + "/config",
                 () -> StreamUtil.asInputStream(JsonProvider.toJson(config))
@@ -49,7 +49,7 @@ class ConfigurationServerServiceConsumer<T extends Config>
     @Override
     public String[] getLogFilesOf(ServerInfo serverInfo) {
         checkServerInfo(serverInfo);
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/log"),
             String[].class
         );
@@ -64,7 +64,7 @@ class ConfigurationServerServiceConsumer<T extends Config>
                 ExceptionType.REQUIRED_DATA
             );
 
-        return consumeService(
+        return consume(
             lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/log/" + logFileName),
             String.class
         );

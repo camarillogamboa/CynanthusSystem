@@ -14,7 +14,7 @@ import java.util.function.Function;
 /**
  * La interface Http client context.
  */
-public interface HttpClientContext extends HttpClientInfo {
+public interface HttpClientContext extends HttpConnectionPoint {
 
     /**
      * Permite obtener http client.

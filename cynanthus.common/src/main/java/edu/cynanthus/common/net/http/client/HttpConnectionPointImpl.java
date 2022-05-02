@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * El tipo Http client info.
  */
-class HttpClientInfoImpl implements HttpClientInfo {
+class HttpConnectionPointImpl implements HttpConnectionPoint {
 
     /**
      * El Server name.
@@ -27,7 +27,7 @@ class HttpClientInfoImpl implements HttpClientInfo {
      * @param serverPort    el server port
      * @param serverContext el server context
      */
-    HttpClientInfoImpl(String serverName, int serverPort, String serverContext) {
+    HttpConnectionPointImpl(String serverName, int serverPort, String serverContext) {
         setServerName(serverName);
         setServerPort(serverPort);
         setServerContext(serverContext);
@@ -104,7 +104,7 @@ class HttpClientInfoImpl implements HttpClientInfo {
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        HttpClientInfoImpl that = (HttpClientInfoImpl) o;
+        HttpConnectionPointImpl that = (HttpConnectionPointImpl) o;
         return serverPort == that.serverPort &&
             Objects.equals(serverName, that.serverName) &&
             Objects.equals(serverContext, that.serverContext);
