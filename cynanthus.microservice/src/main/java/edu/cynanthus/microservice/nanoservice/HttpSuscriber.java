@@ -91,8 +91,8 @@ public abstract class HttpSuscriber<T> extends ProcessNanoService {
             fieldAliasFinder
         );
 
-        serverName.addAsObserver(httpClientContext::setServerName);
-        serverPort.addAsObserver(httpClientContext::setServerPort);
+        serverName.addAsObserver(httpClientContext::setHostName);
+        serverPort.addAsObserver(httpClientContext::setHostPort);
 
         this.headers = new TreeMap<>(String::compareTo);
         String[] credentials = context.getUserManagement().getMainUser().getCredentials();

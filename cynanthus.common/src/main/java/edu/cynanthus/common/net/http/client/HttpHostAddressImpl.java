@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * El tipo Http client info.
  */
-class HttpConnectionPointImpl implements HttpConnectionPoint {
+class HttpHostAddressImpl implements HttpHostAddress {
 
     /**
      * El Server name.
@@ -27,9 +27,9 @@ class HttpConnectionPointImpl implements HttpConnectionPoint {
      * @param serverPort    el server port
      * @param serverContext el server context
      */
-    HttpConnectionPointImpl(String serverName, int serverPort, String serverContext) {
-        setServerName(serverName);
-        setServerPort(serverPort);
+    HttpHostAddressImpl(String serverName, int serverPort, String serverContext) {
+        setHostName(serverName);
+        setHostPort(serverPort);
         setServerContext(serverContext);
     }
 
@@ -39,7 +39,7 @@ class HttpConnectionPointImpl implements HttpConnectionPoint {
      * @return el server name
      */
     @Override
-    public final String getServerName() {
+    public final String getHostName() {
         return serverName;
     }
 
@@ -49,7 +49,7 @@ class HttpConnectionPointImpl implements HttpConnectionPoint {
      * @return el server port
      */
     @Override
-    public final int getServerPort() {
+    public final int getHostPort() {
         return serverPort;
     }
 
@@ -69,7 +69,7 @@ class HttpConnectionPointImpl implements HttpConnectionPoint {
      * @param servername el servername
      */
     @Override
-    public final void setServerName(String servername) {
+    public final void setHostName(String servername) {
         this.serverName = Objects.requireNonNull(servername);
     }
 
@@ -79,7 +79,7 @@ class HttpConnectionPointImpl implements HttpConnectionPoint {
      * @param serverPort el server port
      */
     @Override
-    public final void setServerPort(int serverPort) {
+    public final void setHostPort(int serverPort) {
         if (serverPort >= 0) this.serverPort = serverPort;
         else throw new IllegalArgumentException("Negative port number");
     }
@@ -104,7 +104,7 @@ class HttpConnectionPointImpl implements HttpConnectionPoint {
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        HttpConnectionPointImpl that = (HttpConnectionPointImpl) o;
+        HttpHostAddressImpl that = (HttpHostAddressImpl) o;
         return serverPort == that.serverPort &&
             Objects.equals(serverName, that.serverName) &&
             Objects.equals(serverContext, that.serverContext);

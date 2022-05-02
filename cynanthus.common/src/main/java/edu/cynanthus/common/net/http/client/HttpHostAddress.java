@@ -1,11 +1,11 @@
 package edu.cynanthus.common.net.http.client;
 
-import edu.cynanthus.common.net.ConnectionPoint;
+import edu.cynanthus.common.net.HostAddress;
 
 /**
  * La interface Http client info.
  */
-public interface HttpConnectionPoint extends ConnectionPoint {
+public interface HttpHostAddress extends HostAddress {
 
     /**
      * Permite obtener server context.
@@ -27,7 +27,7 @@ public interface HttpConnectionPoint extends ConnectionPoint {
      * @return el string
      */
     default String buildPath() {
-        return "http://" + getServerName() + ":" + getServerPort() + getServerContext();
+        return "http://" + getHostName() + ":" + getHostPort() + getServerContext();
     }
 
     /**
@@ -38,8 +38,8 @@ public interface HttpConnectionPoint extends ConnectionPoint {
      * @param serverContext el server context
      * @return el http client info
      */
-    static HttpConnectionPoint create(String serverName, int serverPort, String serverContext) {
-        return new HttpConnectionPointImpl(serverName, serverPort, serverContext);
+    static HttpHostAddress create(String serverName, int serverPort, String serverContext) {
+        return new HttpHostAddressImpl(serverName, serverPort, serverContext);
     }
 
 }

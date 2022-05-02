@@ -1,9 +1,7 @@
 package edu.cynanthus.auri.consumer;
 
-import edu.cynanthus.auri.api.AuriService;
-import edu.cynanthus.auri.api.NodeInfoService;
-import edu.cynanthus.auri.api.ServerInfoService;
-import edu.cynanthus.common.net.ConnectionPoint;
+import edu.cynanthus.auri.api.*;
+import edu.cynanthus.common.net.HostAddress;
 
 import java.util.Map;
 
@@ -13,12 +11,34 @@ public interface AuriServiceConsumer<T extends AuriService> {
 
     T prepare(String headerName, String headerValue);
 
-    static AuriServiceConsumer<ServerInfoService> createServerInfoServiceConsumer(ConnectionPoint connectionPoint) {
-        return new AuriServiceConsumerImpl<>(connectionPoint, ServerInfoServiceConsumer::new);
+    static AuriServiceConsumer<ServerInfoService> createServerInfoServiceConsumer(HostAddress hostAddress) {
+        return new AuriServiceConsumerImpl<>(hostAddress, ServerInfoServiceConsumer::new);
     }
 
-    static AuriServiceConsumer<NodeInfoService> createNodeInfoServiceConsumer(ConnectionPoint connectionPoint) {
-        return new AuriServiceConsumerImpl<>(connectionPoint, NodeInfoServiceConsumer::new);
+    static AuriServiceConsumer<NodeInfoService> createNodeInfoServiceConsumer(HostAddress hostAddress) {
+        return new AuriServiceConsumerImpl<>(hostAddress, NodeInfoServiceConsumer::new);
+    }
+
+    static AuriServiceConsumer<InstructionSetService> createInstructionSetServiceConsumer(
+        HostAddress hostAddress
+    ) {
+        return new AuriServiceConsumerImpl<>(hostAddress, InstructionSetServiceConsumer::new);
+    }
+
+    static AuriServiceConsumer<UserService> createUserServiceConsumer(HostAddress hostAddress) {
+        return new AuriServiceConsumerImpl<>(hostAddress, UserServiceConsumer::new);
+    }
+
+    static AuriServiceConsumer<SordidusServerService> createSordidusServerServiceConsumer(HostAddress hostAddress) {
+        return new AuriServiceConsumerImpl<>(hostAddress, SordidusServerServiceConsumer::new);
+    }
+
+    static AuriServiceConsumer<LatiroServerService> createLatiroServerServiceConsumer(HostAddress hostAddress) {
+        return new AuriServiceConsumerImpl<>(hostAddress, LatiroServerServiceConsumer::new);
+    }
+
+    static AuriServiceConsumer<StrisServerService> createStrisServerServiceConsumer(HostAddress hostAddress) {
+        return new AuriServiceConsumerImpl<>(hostAddress, StrisServerServiceConsumer::new);
     }
 
 }

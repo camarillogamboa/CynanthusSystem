@@ -1,7 +1,7 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.AuriService;
-import edu.cynanthus.common.net.ConnectionPoint;
+import edu.cynanthus.common.net.HostAddress;
 import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.common.net.http.client.RequestingClient;
 
@@ -13,8 +13,8 @@ class AuriServiceConsumerImpl<T extends AuriService> implements AuriServiceConsu
     private final RequestingClient requestingClient;
     private final Function<LazyRequest, T> factory;
 
-    AuriServiceConsumerImpl(ConnectionPoint connectionPoint, Function<LazyRequest, T> factory) {
-        requestingClient = new RequestingClient(connectionPoint);
+    AuriServiceConsumerImpl(HostAddress hostAddress, Function<LazyRequest, T> factory) {
+        requestingClient = new RequestingClient(hostAddress);
         this.factory = factory;
     }
 
