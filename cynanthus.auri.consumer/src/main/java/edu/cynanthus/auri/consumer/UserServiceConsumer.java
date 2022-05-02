@@ -4,16 +4,16 @@ import com.google.gson.reflect.TypeToken;
 import edu.cynanthus.auri.api.ExceptionType;
 import edu.cynanthus.auri.api.ServiceException;
 import edu.cynanthus.auri.api.UserService;
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.User;
 
 import java.util.List;
 
 class UserServiceConsumer extends BeanServiceConsumer<User> implements UserService {
 
-    UserServiceConsumer(ClientInfo clientInfo) {
+    UserServiceConsumer(LazyRequest lazyRequest) {
         super(
-            clientInfo,
+            lazyRequest,
             "/cynanthus/auri/user",
             User.class,
             new TypeToken<List<User>>() {}.getType()

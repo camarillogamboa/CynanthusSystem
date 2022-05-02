@@ -4,18 +4,18 @@ import edu.cynanthus.auri.api.DataService;
 import edu.cynanthus.auri.api.ExceptionType;
 import edu.cynanthus.auri.api.ServiceException;
 import edu.cynanthus.common.json.JsonProvider;
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.common.resource.StreamUtil;
 
 import java.lang.reflect.Type;
 
-abstract class DataServiceConsumer<T> extends AuriApiConsumer implements DataService<T> {
+abstract class DataServiceConsumer<T> extends ServiceConsumer implements DataService<T> {
 
     protected final String resourcePath;
     private final Type dataType;
 
-    DataServiceConsumer(ClientInfo clientInfo, String resourcePath, Type dataType) {
-        super(clientInfo);
+    DataServiceConsumer(LazyRequest lazyRequest, String resourcePath, Type dataType) {
+        super(lazyRequest);
         this.resourcePath = resourcePath;
         this.dataType = dataType;
     }
@@ -23,8 +23,8 @@ abstract class DataServiceConsumer<T> extends AuriApiConsumer implements DataSer
     @Override
     public T create(T data) {
         checkNotNull(data);
-        return consumeApi(
-            webConsumer -> webConsumer.POST(
+        return consumeService(
+            lazyRequest -> lazyRequest.POST(
                 resourcePath,
                 () -> StreamUtil.asInputStream(JsonProvider.toJson(data))
             ),
@@ -35,14 +35,14 @@ abstract class DataServiceConsumer<T> extends AuriApiConsumer implements DataSer
     @Override
     public T read(T data) {
         checkNotNull(data);
-        return consumeApi(webConsumer -> webConsumer.GET(resourcePath + "/" + getId(data)), dataType);
+        return consumeService(lazyRequest -> lazyRequest.GET(resourcePath + "/" + getId(data)), dataType);
     }
 
     @Override
     public T update(T data) {
         checkNotNull(data);
-        return consumeApi(
-            webConsumer -> webConsumer.PUT(
+        return consumeService(
+            lazyRequest -> lazyRequest.PUT(
                 resourcePath,
                 () -> StreamUtil.asInputStream(JsonProvider.toJson(data))
             ),
@@ -53,7 +53,7 @@ abstract class DataServiceConsumer<T> extends AuriApiConsumer implements DataSer
     @Override
     public T delete(T data) {
         checkNotNull(data);
-        return consumeApi(webConsumer -> webConsumer.DELETE(resourcePath + "/" + getId(data)), dataType);
+        return consumeService(lazyRequest -> lazyRequest.DELETE(resourcePath + "/" + getId(data)), dataType);
     }
 
     void checkNotNull(T bean) {

@@ -4,15 +4,15 @@ import com.google.gson.reflect.TypeToken;
 import edu.cynanthus.auri.api.ExceptionType;
 import edu.cynanthus.auri.api.ServerInfoService;
 import edu.cynanthus.auri.api.ServiceException;
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.ServerInfo;
 
 import java.util.List;
 
 class ServerInfoServiceConsumer extends BeanServiceConsumer<ServerInfo> implements ServerInfoService {
-    ServerInfoServiceConsumer(ClientInfo clientInfo) {
+    ServerInfoServiceConsumer(LazyRequest lazyRequest) {
         super(
-            clientInfo,
+            lazyRequest,
             "/cynanthus/auri/server",
             ServerInfo.class,
             new TypeToken<List<ServerInfo>>() {}.getType()

@@ -1,7 +1,7 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.StrisServerService;
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.ControlNode;
 import edu.cynanthus.domain.GeneralNode;
 import edu.cynanthus.domain.Indication;
@@ -12,8 +12,8 @@ import java.util.List;
 
 class StrisServerServiceConsumer extends CynanthusServerServiceConsumer<StrisConfig> implements StrisServerService {
 
-    StrisServerServiceConsumer(ClientInfo clientInfo) {
-        super(clientInfo, "/cynanthus/auri/server/stris", StrisConfig.class);
+    StrisServerServiceConsumer(LazyRequest lazyRequest) {
+        super(lazyRequest, "/cynanthus/auri/server/stris", StrisConfig.class);
     }
 
     @Override

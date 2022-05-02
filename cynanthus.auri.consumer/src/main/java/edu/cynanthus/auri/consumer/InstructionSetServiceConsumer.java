@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import edu.cynanthus.auri.api.ExceptionType;
 import edu.cynanthus.auri.api.InstructionSetService;
 import edu.cynanthus.auri.api.ServiceException;
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 
@@ -12,9 +12,9 @@ import java.util.List;
 
 class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> implements InstructionSetService {
 
-    InstructionSetServiceConsumer(ClientInfo clientInfo) {
+    InstructionSetServiceConsumer(LazyRequest lazyRequest) {
         super(
-            clientInfo,
+            lazyRequest,
             "/cynanthus/auri/set",
             InstructionSet.class,
             new TypeToken<List<InstructionSet>>() {}.getType()
@@ -24,15 +24,15 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     @Override
     public Instruction readInstruction(Integer id) {
         checkId(id);
-        return consumeApi(webServiceConsumer -> webServiceConsumer.GET("/instruction/" + id), Instruction.class);
+        return consumeService(lazyRequest -> lazyRequest.GET("/instruction/" + id), Instruction.class);
     }
 
     @Override
     public Instruction readInstruction(Integer idSet, String name) {
         checkIdSet(idSet);
         checkName(name);
-        return consumeApi(
-            webServiceConsumer -> webServiceConsumer.GET("/instruction/" + idSet + "/" + name), Instruction.class
+        return consumeService(
+            lazyRequest -> lazyRequest.GET("/instruction/" + idSet + "/" + name), Instruction.class
         );
     }
 
@@ -40,8 +40,8 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     public Instruction readInstruction(String setName, String name) {
         checkSetName(setName);
         checkName(name);
-        return consumeApi(
-            webServiceConsumer -> webServiceConsumer.GET("/instruction/" + setName + "/" + name),
+        return consumeService(
+            lazyRequest -> lazyRequest.GET("/instruction/" + setName + "/" + name),
             Instruction.class
         );
     }
@@ -49,18 +49,15 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     @Override
     public Instruction deleteInstruction(Integer id) {
         checkId(id);
-        return consumeApi(webServiceConsumer ->
-                webServiceConsumer.DELETE("/instruction/" + id),
-            Instruction.class
-        );
+        return consumeService(lazyRequest -> lazyRequest.DELETE("/instruction/" + id), Instruction.class);
     }
 
     @Override
     public Instruction deleteInstruction(Integer idSet, String name) {
         checkIdSet(idSet);
         checkName(name);
-        return consumeApi(
-            webServiceConsumer -> webServiceConsumer.DELETE("/instruction/" + idSet + "/" + name),
+        return consumeService(
+            lazyRequest -> lazyRequest.DELETE("/instruction/" + idSet + "/" + name),
             Instruction.class
         );
     }
@@ -69,8 +66,8 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     public Instruction deleteInstruction(String setName, String name) {
         checkSetName(setName);
         checkName(name);
-        return consumeApi(
-            webServiceConsumer -> webServiceConsumer.DELETE("/instruction/" + setName + "/" + name),
+        return consumeService(
+            lazyRequest -> lazyRequest.DELETE("/instruction/" + setName + "/" + name),
             Instruction.class
         );
     }

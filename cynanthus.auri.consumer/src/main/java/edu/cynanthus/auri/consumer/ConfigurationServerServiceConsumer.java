@@ -5,21 +5,21 @@ import edu.cynanthus.auri.api.ExceptionType;
 import edu.cynanthus.auri.api.ServiceException;
 import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.json.JsonProvider;
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.common.resource.StreamUtil;
 import edu.cynanthus.domain.ServerInfo;
 
 import java.lang.reflect.Type;
 
 class ConfigurationServerServiceConsumer<T extends Config>
-    extends AuriApiConsumer implements ConfigurationServerService<T> {
+    extends ServiceConsumer implements ConfigurationServerService<T> {
 
     protected final String resourcePath;
 
     private final Type configType;
 
-    ConfigurationServerServiceConsumer(ClientInfo clientInfo, String resourcePath, Type configType) {
-        super(clientInfo);
+    ConfigurationServerServiceConsumer(LazyRequest lazyRequest, String resourcePath, Type configType) {
+        super(lazyRequest);
         this.resourcePath = resourcePath;
         this.configType = configType;
     }
@@ -27,8 +27,8 @@ class ConfigurationServerServiceConsumer<T extends Config>
     @Override
     public T getConfigOf(ServerInfo serverInfo) {
         checkServerInfo(serverInfo);
-        return consumeApi(
-            webConsumer -> webConsumer.GET(resourcePath + "/" + getServerId(serverInfo) + "/config"),
+        return consumeService(
+            lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/config"),
             configType
         );
     }
@@ -37,8 +37,8 @@ class ConfigurationServerServiceConsumer<T extends Config>
     public Boolean updateConfigOf(ServerInfo serverInfo, T config) {
         checkServerInfo(serverInfo);
         checkConfig(config);
-        return consumeApi(
-            webConsumer -> webConsumer.PUT(
+        return consumeService(
+            lazyRequest -> lazyRequest.PUT(
                 resourcePath + "/" + getServerId(serverInfo) + "/config",
                 () -> StreamUtil.asInputStream(JsonProvider.toJson(config))
             ),
@@ -49,8 +49,8 @@ class ConfigurationServerServiceConsumer<T extends Config>
     @Override
     public String[] getLogFilesOf(ServerInfo serverInfo) {
         checkServerInfo(serverInfo);
-        return consumeApi(
-            webConsumer -> webConsumer.GET(resourcePath + "/" + getServerId(serverInfo) + "/log"),
+        return consumeService(
+            lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/log"),
             String[].class
         );
     }
@@ -64,8 +64,8 @@ class ConfigurationServerServiceConsumer<T extends Config>
                 ExceptionType.REQUIRED_DATA
             );
 
-        return consumeApi(
-            webConsumer -> webConsumer.GET(resourcePath + "/" + getServerId(serverInfo) + "/log/" + logFileName),
+        return consumeService(
+            lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/log/" + logFileName),
             String.class
         );
     }

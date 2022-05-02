@@ -4,16 +4,16 @@ import com.google.gson.reflect.TypeToken;
 import edu.cynanthus.auri.api.ExceptionType;
 import edu.cynanthus.auri.api.NodeInfoService;
 import edu.cynanthus.auri.api.ServiceException;
-import edu.cynanthus.common.net.ClientInfo;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.NodeInfo;
 
 import java.util.List;
 
 class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements NodeInfoService {
 
-    NodeInfoServiceConsumer(ClientInfo clientInfo) {
+    NodeInfoServiceConsumer(LazyRequest lazyRequest) {
         super(
-            clientInfo,
+            lazyRequest,
             "/cynanthus/auri/node/info",
             NodeInfo.class,
             new TypeToken<List<NodeInfo>>() {}.getType()
@@ -28,8 +28,8 @@ class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements N
                 ExceptionType.REQUIRED_DATA
             );
 
-        return consumeApi(
-            webConsumer -> webConsumer.GET(resourcePath + "/of/" + idServerInfo),
+        return consumeService(
+            lazyRequest -> lazyRequest.GET(resourcePath + "/of/" + idServerInfo),
             new TypeToken<List<NodeInfo>>() {}.getType()
         );
     }
