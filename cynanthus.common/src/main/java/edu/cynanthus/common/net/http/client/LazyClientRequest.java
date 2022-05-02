@@ -19,23 +19,23 @@ class LazyClientRequest extends BasicLazyRequest {
     }
 
     @Override
-    public LazyRequest POST(String uri, HttpRequest.BodyPublisher bodyPublisher) {
-        return super.POST(buildPath() + uri, bodyPublisher);
+    public LazyRequest POST(String path, HttpRequest.BodyPublisher bodyPublisher) {
+        return super.POST(buildPath() + path, bodyPublisher);
     }
 
     @Override
-    public LazyRequest GET(String uri) {
-        return super.GET(buildPath() + uri);
+    public LazyRequest GET(String path) {
+        return super.GET(buildPath() + path);
     }
 
     @Override
-    public LazyRequest PUT(String uri, HttpRequest.BodyPublisher bodyPublisher) {
-        return super.PUT(buildPath() + uri, bodyPublisher);
+    public LazyRequest PUT(String path, HttpRequest.BodyPublisher bodyPublisher) {
+        return super.PUT(buildPath() + path, bodyPublisher);
     }
 
     @Override
-    public LazyRequest DELETE(String uri) {
-        return super.DELETE(buildPath() + uri);
+    public LazyRequest DELETE(String path) {
+        return super.DELETE(buildPath() + path);
     }
 
     @Override

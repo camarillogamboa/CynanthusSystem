@@ -1,7 +1,12 @@
 package edu.cynanthus.auri.consumer;
 
+import com.google.gson.reflect.TypeToken;
+import edu.cynanthus.auri.api.ExceptionType;
+import edu.cynanthus.auri.api.ServiceException;
 import edu.cynanthus.auri.api.StrisServerService;
+import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.client.LazyRequest;
+import edu.cynanthus.common.resource.StreamUtil;
 import edu.cynanthus.domain.ControlNode;
 import edu.cynanthus.domain.GeneralNode;
 import edu.cynanthus.domain.Indication;
@@ -18,12 +23,28 @@ class StrisServerServiceConsumer extends CynanthusServerServiceConsumer<StrisCon
 
     @Override
     public Boolean performIndication(ServerInfo serverInfo, Indication indication) {
-        return null;
+        checkServerInfo(serverInfo);
+        if (indication == null) throw new ServiceException(
+            "Se requiere un objeto Indication",
+            ExceptionType.REQUIRED_DATA
+        );
+
+        return consume(
+            lazyRequest -> lazyRequest.POST(
+                "/" + getServerId(serverInfo) + "/indication",
+                () -> StreamUtil.asInputStream(JsonProvider.toJson(indication))
+            ),
+            Boolean.class
+        );
     }
 
     @Override
     public List<GeneralNode<ControlNode>> getControlNodesOf(ServerInfo serverInfo, String selector) {
-        return null;
+        checkServerInfo(serverInfo);
+        return consume(
+            lazyRequest -> lazyRequest.GET("/"+getServerId(serverInfo)+"/node/"+selector),
+            new TypeToken<List<GeneralNode<ControlNode>>>(){}.getType()
+        );
     }
 
 }

@@ -1,24 +1,26 @@
 package edu.cynanthus.auri.api;
 
+import java.util.Objects;
+
 /**
  * El tipo Wrapped data service.
  *
  * @param <T> el parámetro de tipo
  */
-public class WrappedDataService<T> implements DataService<T> {
+public class WrappedCrudService<T> implements CrudService<T> {
 
     /**
      * El Data service.
      */
-    private final DataService<T> dataService;
+    private final CrudService<T> crudService;
 
     /**
      * Instancia un nuevo Wrapped data service.
      *
-     * @param dataService el data service
+     * @param crudService el data service
      */
-    public WrappedDataService(DataService<T> dataService) {
-        this.dataService = dataService;
+    public WrappedCrudService(CrudService<T> crudService) {
+        this.crudService = Objects.requireNonNull(crudService);
     }
 
     /**
@@ -29,7 +31,7 @@ public class WrappedDataService<T> implements DataService<T> {
      */
     @Override
     public T create(T data) {
-        return dataService.create(data);
+        return crudService.create(data);
     }
 
     /**
@@ -40,7 +42,7 @@ public class WrappedDataService<T> implements DataService<T> {
      */
     @Override
     public T read(T data) {
-        return dataService.read(data);
+        return crudService.read(data);
     }
 
     /**
@@ -51,7 +53,7 @@ public class WrappedDataService<T> implements DataService<T> {
      */
     @Override
     public T update(T data) {
-        return dataService.update(data);
+        return crudService.update(data);
     }
 
     /**
@@ -62,7 +64,7 @@ public class WrappedDataService<T> implements DataService<T> {
      */
     @Override
     public T delete(T data) {
-        return dataService.delete(data);
+        return crudService.delete(data);
     }
 
 }

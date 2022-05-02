@@ -5,7 +5,7 @@ package edu.cynanthus.auri.api;
  *
  * @param <T> el parámetro de tipo
  */
-public interface DataService<T> extends AuriService {
+public interface CrudService<T> extends AuriService {
 
     /**
      * Create t.

@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 
-abstract class BeanServiceConsumer<T extends Bean> extends DataServiceConsumer<T> implements BeanService<T> {
+abstract class BeanServiceConsumer<T extends Bean> extends CrudServiceConsumer<T> implements BeanService<T> {
 
     private final Type listType;
 

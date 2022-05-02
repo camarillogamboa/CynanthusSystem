@@ -16,21 +16,21 @@ public interface LazyRequest {
 
     LazyRequest addHeader(String name, String value);
 
-    LazyRequest POST(String uri, HttpRequest.BodyPublisher bodyPublisher);
+    LazyRequest POST(String path, HttpRequest.BodyPublisher bodyPublisher);
 
-    LazyRequest POST(String uri, Supplier<? extends InputStream> inputStreamSupplier);
+    LazyRequest POST(String path, Supplier<? extends InputStream> inputStreamSupplier);
 
-    LazyRequest POST(String uri, String body);
+    LazyRequest POST(String path, String body);
 
-    LazyRequest GET(String uri);
+    LazyRequest GET(String path);
 
-    LazyRequest PUT(String uri, HttpRequest.BodyPublisher bodyPublisher);
+    LazyRequest PUT(String path, HttpRequest.BodyPublisher bodyPublisher);
 
-    LazyRequest PUT(String uri, Supplier<? extends InputStream> inputStreamSupplier);
+    LazyRequest PUT(String path, Supplier<? extends InputStream> inputStreamSupplier);
 
-    LazyRequest PUT(String uri, String body);
+    LazyRequest PUT(String path, String body);
 
-    LazyRequest DELETE(String uri);
+    LazyRequest DELETE(String path);
 
     <T> HttpResponse<T> doRequest(HttpResponse.BodyHandler<T> bodyHandler) throws IOException, InterruptedException;
 

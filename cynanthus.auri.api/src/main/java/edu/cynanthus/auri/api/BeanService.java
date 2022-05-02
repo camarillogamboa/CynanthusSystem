@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @param <T> el parámetro de tipo
  */
-public interface BeanService<T extends Bean> extends DataService<T> {
+public interface BeanService<T extends Bean> extends CrudService<T> {
 
     /**
      * Read list.

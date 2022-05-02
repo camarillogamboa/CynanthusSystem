@@ -1,6 +1,6 @@
 package edu.cynanthus.auri.consumer;
 
-import edu.cynanthus.auri.api.DataService;
+import edu.cynanthus.auri.api.CrudService;
 import edu.cynanthus.auri.api.ExceptionType;
 import edu.cynanthus.auri.api.ServiceException;
 import edu.cynanthus.common.json.JsonProvider;
@@ -9,12 +9,12 @@ import edu.cynanthus.common.resource.StreamUtil;
 
 import java.lang.reflect.Type;
 
-abstract class DataServiceConsumer<T> extends GeneralConsumer implements DataService<T> {
+abstract class CrudServiceConsumer<T> extends GeneralConsumer implements CrudService<T> {
 
     protected final String resourcePath;
     private final Type dataType;
 
-    DataServiceConsumer(LazyRequest lazyRequest, String resourcePath, Type dataType) {
+    CrudServiceConsumer(LazyRequest lazyRequest, String resourcePath, Type dataType) {
         super(lazyRequest);
         this.resourcePath = resourcePath;
         this.dataType = dataType;

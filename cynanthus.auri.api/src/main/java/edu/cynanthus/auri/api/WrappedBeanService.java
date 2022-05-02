@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @param <T> el parámetro de tipo
  */
-public class WrappedBeanService<T extends Bean> extends WrappedDataService<T> implements BeanService<T> {
+public class WrappedBeanService<T extends Bean> extends WrappedCrudService<T> implements BeanService<T> {
 
     /**
      * El Bean service.

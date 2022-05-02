@@ -47,43 +47,43 @@ class BasicLazyRequest implements LazyRequest {
     }
 
     @Override
-    public LazyRequest POST(String uri, HttpRequest.BodyPublisher bodyPublisher) {
-        return building(builder -> builder.uri(URI.create(uri)).POST(bodyPublisher));
+    public LazyRequest POST(String path, HttpRequest.BodyPublisher bodyPublisher) {
+        return building(builder -> builder.uri(URI.create(path)).POST(bodyPublisher));
     }
 
     @Override
-    public LazyRequest POST(String uri, Supplier<? extends InputStream> inputStreamSupplier) {
-        return POST(uri, HttpRequest.BodyPublishers.ofInputStream(inputStreamSupplier));
+    public LazyRequest POST(String path, Supplier<? extends InputStream> inputStreamSupplier) {
+        return POST(path, HttpRequest.BodyPublishers.ofInputStream(inputStreamSupplier));
     }
 
     @Override
-    public LazyRequest POST(String uri, String body) {
-        return POST(uri, HttpRequest.BodyPublishers.ofString(body));
+    public LazyRequest POST(String path, String body) {
+        return POST(path, HttpRequest.BodyPublishers.ofString(body));
     }
 
     @Override
-    public LazyRequest GET(String uri) {
-        return building(builder -> builder.uri(URI.create(uri)).GET());
+    public LazyRequest GET(String path) {
+        return building(builder -> builder.uri(URI.create(path)).GET());
     }
 
     @Override
-    public LazyRequest PUT(String uri, HttpRequest.BodyPublisher bodyPublisher) {
-        return building(builder -> builder.uri(URI.create(uri)).POST(bodyPublisher));
+    public LazyRequest PUT(String path, HttpRequest.BodyPublisher bodyPublisher) {
+        return building(builder -> builder.uri(URI.create(path)).POST(bodyPublisher));
     }
 
     @Override
-    public LazyRequest PUT(String uri, Supplier<? extends InputStream> inputStreamSupplier) {
-        return PUT(uri, HttpRequest.BodyPublishers.ofInputStream(inputStreamSupplier));
+    public LazyRequest PUT(String path, Supplier<? extends InputStream> inputStreamSupplier) {
+        return PUT(path, HttpRequest.BodyPublishers.ofInputStream(inputStreamSupplier));
     }
 
     @Override
-    public LazyRequest PUT(String uri, String body) {
-        return PUT(uri, HttpRequest.BodyPublishers.ofString(body));
+    public LazyRequest PUT(String path, String body) {
+        return PUT(path, HttpRequest.BodyPublishers.ofString(body));
     }
 
     @Override
-    public LazyRequest DELETE(String uri) {
-        return building(builder -> builder.uri(URI.create(uri)).DELETE());
+    public LazyRequest DELETE(String path) {
+        return building(builder -> builder.uri(URI.create(path)).DELETE());
     }
 
     @Override
