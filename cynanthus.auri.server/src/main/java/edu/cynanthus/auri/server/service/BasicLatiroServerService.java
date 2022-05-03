@@ -1,44 +1,50 @@
 package edu.cynanthus.auri.server.service;
 
+import com.google.gson.reflect.TypeToken;
 import edu.cynanthus.auri.api.LatiroServerService;
+import edu.cynanthus.auri.api.NodeInfoService;
 import edu.cynanthus.auri.api.ServerInfoService;
-import edu.cynanthus.domain.GeneralNode;
-import edu.cynanthus.domain.SensingNode;
-import edu.cynanthus.domain.ServerInfo;
+import edu.cynanthus.domain.*;
 import edu.cynanthus.domain.config.LatiroConfig;
+import net.bytebuddy.description.method.MethodDescription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
-/**
- * El tipo Basic latiro server service.
- */
 @Service
 public class BasicLatiroServerService extends BasicCynanthusServerService<LatiroConfig> implements LatiroServerService {
 
-    /**
-     * Instancia un nuevo Basic latiro server service.
-     *
-     * @param serverInfoService el server info service
-     */
+    private final NodeInfoService nodeInfoService;
+
     @Autowired
     public BasicLatiroServerService(
-        @Qualifier("transactionalServerInfoService") ServerInfoService serverInfoService
+        @Qualifier("transactionalServerInfoService") ServerInfoService serverInfoService,
+        @Qualifier("transactionalNodeInfoService") NodeInfoService nodeInfoService
     ) {
-        super(serverInfoService, "/cynanthus/latiro", LatiroConfig.class);
+        super(serverInfoService, "/cynanthus/latiro", LatiroConfig.class, ServerType.STREAM_DATA);
+        this.nodeInfoService = Objects.requireNonNull(nodeInfoService);
     }
 
-    /**
-     * Permite obtener sensing nodes of.
-     *
-     * @param serverInfo el server info
-     * @param selector   el selector
-     * @return el sensing nodes of
-     */
     @Override
     public List<GeneralNode<SensingNode>> getSensingNodesOf(ServerInfo serverInfo, String selector) {
+        ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
+        checkType(fullServerInfo);
+
+        List<? extends NodeInfo> nodeInfos = nodeInfoService.readAllByIdServerInfo(fullServerInfo.getId());
+
+        List<SensingNode> sensingNodes = consume(lazyRequest ->
+            lazyRequest.GET(buildUri(fullServerInfo,"/node")),
+            new TypeToken<List<SensingNode>>(){}.getType()
+        );
+
+        Map<String,NodeInfo> nodeInfoMap = new TreeMap<>(String::compareTo);
+        Map<String,SensingNode> sensingNodeMap = new TreeMap<>(String::compareTo);
+
         return null;
     }
 

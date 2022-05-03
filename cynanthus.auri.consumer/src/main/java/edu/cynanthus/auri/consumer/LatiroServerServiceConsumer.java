@@ -8,9 +8,12 @@ import edu.cynanthus.domain.SensingNode;
 import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.config.LatiroConfig;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 class LatiroServerServiceConsumer extends CynanthusServerServiceConsumer<LatiroConfig> implements LatiroServerService {
+
+    private static final Type GENARAL_NODE_LIST_TYPE = new TypeToken<List<GeneralNode<SensingNode>>>() {}.getType();
 
     LatiroServerServiceConsumer(LazyRequest lazyRequest) {
         super(lazyRequest, "/cynanthus/auri/server/latiro", LatiroConfig.class);
@@ -22,7 +25,7 @@ class LatiroServerServiceConsumer extends CynanthusServerServiceConsumer<LatiroC
         String param = selector == null || selector.isBlank() || selector.isEmpty() ? "*" : selector;
         return consume(
             lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/node/" + param),
-            new TypeToken<List<GeneralNode<SensingNode>>>() {}.getType()
+            GENARAL_NODE_LIST_TYPE
         );
     }
 

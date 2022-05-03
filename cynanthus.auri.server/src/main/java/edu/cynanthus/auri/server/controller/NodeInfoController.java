@@ -9,23 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * El tipo Node info controller.
- */
 @RestController
 @RequestMapping("/cynanthus/auri/node/info")
 public class NodeInfoController extends BeanController<NodeInfo> implements NodeInfoService {
 
-    /**
-     * El Node info service.
-     */
     private final NodeInfoService nodeInfoService;
 
-    /**
-     * Instancia un nuevo Node info controller.
-     *
-     * @param nodeInfoService el node info service
-     */
     @Autowired
     public NodeInfoController(
         @Qualifier(value = "transactionalNodeInfoService") NodeInfoService nodeInfoService
@@ -34,24 +23,12 @@ public class NodeInfoController extends BeanController<NodeInfo> implements Node
         this.nodeInfoService = nodeInfoService;
     }
 
-    /**
-     * Read by mac node info.
-     *
-     * @param bean el bean
-     * @return el node info
-     */
     @GetMapping("/{mac:" + Patterns.MAC + "}")
     @ResponseBody
     public NodeInfo readByMac(NodeInfo bean) {
         return super.read(bean);
     }
 
-    /**
-     * Read all by id server info list.
-     *
-     * @param idServerInfo el id server info
-     * @return el list
-     */
     @Override
     @GetMapping("/of/{idServerInfo:\\d+}")
     @ResponseBody

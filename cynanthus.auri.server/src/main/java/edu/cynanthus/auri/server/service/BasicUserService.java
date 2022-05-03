@@ -1,8 +1,9 @@
 package edu.cynanthus.auri.server.service;
 
-import edu.cynanthus.auri.api.ExceptionType;
-import edu.cynanthus.auri.api.ServiceException;
 import edu.cynanthus.auri.api.UserService;
+import edu.cynanthus.auri.api.error.InvalidDataException;
+import edu.cynanthus.auri.api.error.NoExistingElementException;
+import edu.cynanthus.auri.api.error.NullPointerServiceException;
 import edu.cynanthus.auri.server.entity.RoleEntity;
 import edu.cynanthus.auri.server.entity.UserEntity;
 import edu.cynanthus.auri.server.repository.RoleRepository;
@@ -20,38 +21,17 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * El tipo Basic user service.
- */
 class BasicUserService extends BasicBeanService<Integer, User, UserEntity> implements UserService {
 
-    /**
-     * El User jpa.
-     */
     private final UserRepository userJpa;
-    /**
-     * El Role jpa.
-     */
     private final RoleRepository roleJpa;
 
-    /**
-     * Instancia un nuevo Basic user service.
-     *
-     * @param userJpa el user jpa
-     * @param roleJpa el role jpa
-     */
     BasicUserService(UserRepository userJpa, RoleRepository roleJpa) {
         super(userJpa);
         this.userJpa = userJpa;
         this.roleJpa = Objects.requireNonNull(roleJpa);
     }
 
-    /**
-     * Create user.
-     *
-     * @param user el user
-     * @return el user
-     */
     @Override
     public User create(User user) {
         checkNotNull(user);
@@ -59,12 +39,6 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return saveUserInfo(user, userJpa.save((UserEntity) user));
     }
 
-    /**
-     * Read user.
-     *
-     * @param user el user
-     * @return el user
-     */
     @Override
     public User read(User user) {
         checkNotNull(user);
@@ -73,11 +47,6 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return result;
     }
 
-    /**
-     * Read list.
-     *
-     * @return el list
-     */
     @Override
     public List<? extends User> read() {
         List<? extends User> users = super.read();
@@ -87,12 +56,6 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return users;
     }
 
-    /**
-     * Update user.
-     *
-     * @param user el user
-     * @return el user
-     */
     @Override
     public User update(User user) {
         checkNotNull(user);
@@ -109,12 +72,6 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return saveUserInfo(user, entity);
     }
 
-    /**
-     * Delete user.
-     *
-     * @param user el user
-     * @return el user
-     */
     @Override
     public User delete(User user) {
         checkNotNull(user);
@@ -123,67 +80,35 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         return result;
     }
 
-    /**
-     * Find roles.
-     *
-     * @param user el user
-     */
     private void findRoles(User user) {
         List<? extends Role> roles = roleJpa.findAllByIdUser(user.getId());
         user.setRoles(roles.stream().map(Role::clone).collect(Collectors.toList()));
     }
 
-    /**
-     * Find optional.
-     *
-     * @param user el user
-     * @return el optional
-     */
     Optional<UserEntity> find(User user) {
         if (BeanValidation.validate(user, IdCandidate.class).isEmpty())
             return userJpa.findById(user.getId());
         else if (BeanValidation.validate(user, NaturalIdCandidate.class).isEmpty())
             return userJpa.findByUsername(user.getUsername());
 
-        throw new ServiceException(
-            "Se requiere un identificador válido del User",
-            ExceptionType.INVALID_ID
-        );
+        throw new InvalidDataException("Se requiere un identificador válido del User");
     }
 
-    /**
-     * Safe find user entity.
-     *
-     * @param bean el bean
-     * @return el user entity
-     */
     @Override
     UserEntity safeFind(User bean) {
-        return find(bean).orElseThrow(() -> new ServiceException(
+        return find(bean).orElseThrow(() -> new NoExistingElementException(
             "Registro User{" +
                 (bean.getId() != null ? bean.getId() : bean.getUsername()) +
-                "} no existe", ExceptionType.NO_EXISTING_ELEMENT
+                "} no existe"
         ));
     }
 
-    /**
-     * Check not null.
-     *
-     * @param bean el bean
-     */
     @Override
     void checkNotNull(User bean) {
         if (bean == null)
-            throw new ServiceException("El elemento User no debe ser nulo", ExceptionType.NULL_POINTER);
+            throw new NullPointerServiceException("El elemento User no debe ser nulo");
     }
 
-    /**
-     * Save user info user.
-     *
-     * @param user   el user
-     * @param entity el entity
-     * @return el user
-     */
     private User saveUserInfo(User user, UserEntity entity) {
         List<Role> roles = new LinkedList<>();
 

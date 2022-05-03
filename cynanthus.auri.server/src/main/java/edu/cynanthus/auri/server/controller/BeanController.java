@@ -8,28 +8,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * El tipo Bean controller.
- *
- * @param <T> el parámetro de tipo
- */
 public class BeanController<T extends Bean> extends WrappedBeanService<T> {
 
-    /**
-     * Instancia un nuevo Bean controller.
-     *
-     * @param beanService el bean service
-     */
     BeanController(BeanService<T> beanService) {
         super(beanService);
     }
 
-    /**
-     * Create t.
-     *
-     * @param bean el bean
-     * @return el t
-     */
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,11 +22,6 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
         return super.create(bean);
     }
 
-    /**
-     * Read list.
-     *
-     * @return el list
-     */
     @Override
     @GetMapping
     @ResponseBody
@@ -50,12 +29,6 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
         return super.read();
     }
 
-    /**
-     * Read t.
-     *
-     * @param bean el bean
-     * @return el t
-     */
     @Override
     @GetMapping("/{id:\\d+}")
     @ResponseBody
@@ -63,12 +36,6 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
         return super.read(bean);
     }
 
-    /**
-     * Update t.
-     *
-     * @param bean el bean
-     * @return el t
-     */
     @Override
     @PutMapping
     @ResponseBody
@@ -76,23 +43,12 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
         return super.update(bean);
     }
 
-    /**
-     * Delete list.
-     *
-     * @return el list
-     */
     @Override
     @ResponseBody
     public List<? extends T> delete() {
         return super.delete();
     }
 
-    /**
-     * Delete t.
-     *
-     * @param data el data
-     * @return el t
-     */
     @Override
     @DeleteMapping("/{id:\\d+}")
     @ResponseBody

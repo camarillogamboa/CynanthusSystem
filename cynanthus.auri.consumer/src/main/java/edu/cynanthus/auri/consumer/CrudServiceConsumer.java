@@ -1,8 +1,7 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.CrudService;
-import edu.cynanthus.auri.api.ExceptionType;
-import edu.cynanthus.auri.api.ServiceException;
+import edu.cynanthus.auri.api.error.NullPointerServiceException;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.common.resource.StreamUtil;
@@ -58,9 +57,8 @@ abstract class CrudServiceConsumer<T> extends GeneralConsumer implements CrudSer
 
     void checkNotNull(T bean) {
         if (bean == null)
-            throw new ServiceException(
-                "Se requiere una instancia de " + dataType + " para realizar esta acción",
-                ExceptionType.NULL_POINTER
+            throw new NullPointerServiceException(
+                "Se requiere una instancia de " + dataType + " para realizar esta acción"
             );
     }
 

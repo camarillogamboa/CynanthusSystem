@@ -1,23 +1,26 @@
 package edu.cynanthus.auri.consumer;
 
 import com.google.gson.reflect.TypeToken;
-import edu.cynanthus.auri.api.ExceptionType;
 import edu.cynanthus.auri.api.InstructionSetService;
-import edu.cynanthus.auri.api.ServiceException;
+import edu.cynanthus.auri.api.error.InvalidDataException;
+import edu.cynanthus.auri.api.error.NullPointerServiceException;
 import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> implements InstructionSetService {
+
+    private static final Type INSTRUCTION_SET_LIST_TYPE = new TypeToken<List<InstructionSet>>() {}.getType();
 
     InstructionSetServiceConsumer(LazyRequest lazyRequest) {
         super(
             lazyRequest,
             "/cynanthus/auri/set",
             InstructionSet.class,
-            new TypeToken<List<InstructionSet>>() {}.getType()
+            INSTRUCTION_SET_LIST_TYPE
         );
     }
 
@@ -74,36 +77,33 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
 
     private void checkId(Integer id) {
         if (id == null)
-            throw new ServiceException("Se requiere un identificador de instrucción", ExceptionType.REQUIRED_DATA);
+            throw new NullPointerServiceException("Se requiere un identificador de instrucción");
     }
 
     private void checkIdSet(Integer idSet) {
         if (idSet == null)
-            throw new ServiceException(
-                "Se requiere un identificador de conjunto de instrucciones",
-                ExceptionType.REQUIRED_DATA
+            throw new NullPointerServiceException(
+                "Se requiere un identificador de conjunto de instrucciones"
             );
     }
 
     private void checkSetName(String setName) {
-        if (setName == null) throw new ServiceException(
-            "Se requiere un nombre de conjunto de instrucciones",
-            ExceptionType.REQUIRED_DATA
+        if (setName == null) throw new NullPointerServiceException(
+            "Se requiere un nombre de conjunto de instrucciones"
         );
     }
 
     private void checkName(String name) {
         if (name == null)
-            throw new ServiceException("Se requiere un nombre de instruccón", ExceptionType.REQUIRED_DATA);
+            throw new NullPointerServiceException("Se requiere un nombre de instruccón");
     }
 
     @Override
     Object getId(InstructionSet bean) {
         if (bean.getId() != null) return bean.getId();
         else if (bean.getName() != null) return bean.getName();
-        else throw new ServiceException(
-                "Se requiere un identificador válido para realizar esta acción",
-                ExceptionType.REQUIRED_DATA
+        else throw new InvalidDataException(
+                "Se requiere un identificador válido para realizar esta acción"
             );
     }
 

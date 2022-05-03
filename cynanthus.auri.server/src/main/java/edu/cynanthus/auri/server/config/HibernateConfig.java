@@ -6,17 +6,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
-/**
- * El tipo Hibernate config.
- */
 @Configuration
 public class HibernateConfig implements HibernatePropertiesCustomizer {
 
-    /**
-     * Customize.
-     *
-     * @param hibernateProperties el hibernate properties
-     */
     @Override
     public void customize(Map<String, Object> hibernateProperties) {
         hibernateProperties.put(

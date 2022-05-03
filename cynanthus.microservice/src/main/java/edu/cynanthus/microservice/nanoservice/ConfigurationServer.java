@@ -82,11 +82,11 @@ public class ConfigurationServer<T extends Config> extends WebServer {
      * @throws HttpException el http exception
      */
     @RequestHandler(context = "/config", method = RequestMethod.PUT, roles = SystemRole.ROLE_AGENT)
-    public final String updateConfig(T configObject) throws HttpException {
+    public final Boolean updateConfig(T configObject) throws HttpException {
         if (configObject != null && BeanValidation.isValid(configObject)) {
             context.updatePropertiesFrom(configObject, fieldAliasFinder);
             httpSecurityManager.logUserAction(Level.INFO, "Cambió la configuración del programa");
-            return "ok";
+            return true;
         }
         throw new HttpException(HttpStatus.BAD_REQUEST);
     }
@@ -138,11 +138,11 @@ public class ConfigurationServer<T extends Config> extends WebServer {
      * @throws HttpException el http exception
      */
     @RequestHandler(context = "/user", method = RequestMethod.PUT, roles = SystemRole.ROLE_AGENT)
-    public final String updateUser(SystemUser[] systemUsers) throws HttpException {
+    public final Boolean updateUser(SystemUser[] systemUsers) throws HttpException {
         SystemUserManagement userManagement = context.getUserManagement();
 
         userManagement.saveSystemUsers();
-        return "ok";
+        return true;
     }
 
 }

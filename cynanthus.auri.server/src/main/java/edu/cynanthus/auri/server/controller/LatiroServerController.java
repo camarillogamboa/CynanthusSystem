@@ -15,23 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/**
- * El tipo Latiro server controller.
- */
 @RestController
 @RequestMapping("/cynanthus/auri/server/latiro")
 public class LatiroServerController extends CynanthusServerController<LatiroConfig> implements LatiroServerService {
 
-    /**
-     * El Latiro server service.
-     */
     private final LatiroServerService latiroServerService;
 
-    /**
-     * Instancia un nuevo Latiro server controller.
-     *
-     * @param latiroServerService el latiro server service
-     */
     @Autowired
     public LatiroServerController(
         @Qualifier("basicLatiroServerService") LatiroServerService latiroServerService
@@ -40,13 +29,6 @@ public class LatiroServerController extends CynanthusServerController<LatiroConf
         this.latiroServerService = latiroServerService;
     }
 
-    /**
-     * Permite obtener sensing nodes of.
-     *
-     * @param serverInfo el server info
-     * @param selector   el selector
-     * @return el sensing nodes of
-     */
     @Override
     @GetMapping("/{id:\\d+}/node/{selector}")
     @ResponseBody
@@ -54,13 +36,6 @@ public class LatiroServerController extends CynanthusServerController<LatiroConf
         return latiroServerService.getSensingNodesOf(serverInfo, selector);
     }
 
-    /**
-     * Permite obtener sensing nodes of by name.
-     *
-     * @param serverInfo el server info
-     * @param selector   el selector
-     * @return el sensing nodes of by name
-     */
     @GetMapping("/{name:" + Patterns.NAME + "}/node/{selector}")
     @ResponseBody
     public List<GeneralNode<SensingNode>> getSensingNodesOfByName(ServerInfo serverInfo, String selector) {

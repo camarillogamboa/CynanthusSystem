@@ -1,9 +1,7 @@
 package edu.cynanthus.auri.consumer;
 
 import com.google.gson.JsonSyntaxException;
-import edu.cynanthus.auri.api.ExceptionRecord;
-import edu.cynanthus.auri.api.ExceptionType;
-import edu.cynanthus.auri.api.ServiceException;
+import edu.cynanthus.auri.api.error.*;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.HttpStatus;
 import edu.cynanthus.common.net.http.client.LazyRequest;
@@ -24,7 +22,7 @@ class GeneralConsumer {
         this.lazyRequest = lazyRequest;
     }
 
-    <T> T consume(Consumer<LazyRequest> lazyRequestConsumer, Type type) {
+    <T> T consume(Consumer<LazyRequest> lazyRequestConsumer, Type returnType) {
         try {
 
             LazyRequest lazyRequestCopy = lazyRequest.clone();
@@ -34,25 +32,26 @@ class GeneralConsumer {
             HttpResponse<InputStream> response = lazyRequestCopy.doRequestAndGetInputStream();
 
             try (Reader reader = new InputStreamReader(response.body())) {
-                if (HttpStatus.isCorrect(response.statusCode())) return JsonProvider.fromJson(reader, type);
+                if (HttpStatus.isCorrect(response.statusCode())) return JsonProvider.fromJson(reader, returnType);
                 else {
-                    ExceptionRecord exceptionRecord = JsonProvider.fromJson(reader, ExceptionRecord.class);
+                    MessageNode exceptionRecord = JsonProvider.fromJson(reader, MessageNode.class);
 
-                    throw new ServiceException(
+                    throw new RemoteServiceException(
                         exceptionRecord.getMessage(),
-                        exceptionRecord.getExceptionType(),
-                        exceptionRecord.getSubErrors()
+                        exceptionRecord.getExceptionNodes()
                     );
                 }
             }
         } catch (IOException ex) {
-            throw new ServiceException("Error de IO", ExceptionType.IO, ex);
+            throw new IOServiceException("Error de IO", ex);
         } catch (InterruptedException ex) {
-            throw new ServiceException("Proceso interrumpido", ExceptionType.INTERRUPTED, ex);
+            throw new InvalidDataException("Proceso interrumpido", ex);
         } catch (JsonSyntaxException ex) {
-            throw new ServiceException("Error en los datos de respuesta", ExceptionType.INVALID_DATA, ex);
+            throw new ServiceException("Error en los datos de respuesta", ex);
+        } catch (ServiceException ex) {
+            throw ex;
         } catch (Exception ex) {
-            throw new ServiceException("Excepción al realizar la petición", ExceptionType.INVALID_DATA);
+            throw new ServiceException("Excepción al realizar la petición", ex);
         }
     }
 
