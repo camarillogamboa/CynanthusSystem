@@ -1,45 +1,23 @@
 package edu.cynanthus.auri.server.controller;
 
 import edu.cynanthus.auri.api.LatiroServerService;
-import edu.cynanthus.bean.Patterns;
-import edu.cynanthus.domain.GeneralNode;
 import edu.cynanthus.domain.SensingNode;
-import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.config.LatiroConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/cynanthus/auri/server/latiro")
-public class LatiroServerController extends CynanthusServerController<LatiroConfig> implements LatiroServerService {
-
-    private final LatiroServerService latiroServerService;
+public class LatiroServerController
+    extends TreeServerController<LatiroConfig, SensingNode> implements LatiroServerService {
 
     @Autowired
     public LatiroServerController(
         @Qualifier("basicLatiroServerService") LatiroServerService latiroServerService
     ) {
         super(latiroServerService);
-        this.latiroServerService = latiroServerService;
-    }
-
-    @Override
-    @GetMapping("/{id:\\d+}/node/{selector}")
-    @ResponseBody
-    public List<GeneralNode<SensingNode>> getSensingNodesOf(ServerInfo serverInfo, String selector) {
-        return latiroServerService.getSensingNodesOf(serverInfo, selector);
-    }
-
-    @GetMapping("/{name:" + Patterns.NAME + "}/node/{selector}")
-    @ResponseBody
-    public List<GeneralNode<SensingNode>> getSensingNodesOfByName(ServerInfo serverInfo, String selector) {
-        return getSensingNodesOf(serverInfo, selector);
     }
 
 }

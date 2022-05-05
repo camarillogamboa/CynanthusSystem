@@ -5,7 +5,6 @@ import edu.cynanthus.auri.server.repository.RoleRepository;
 import edu.cynanthus.auri.server.repository.UserRepository;
 import edu.cynanthus.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service

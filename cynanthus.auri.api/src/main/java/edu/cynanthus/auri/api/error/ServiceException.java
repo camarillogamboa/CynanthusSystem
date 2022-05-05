@@ -16,24 +16,42 @@ public class ServiceException extends RuntimeException {
     /**
      * Instancia un nuevo AuriService exception.
      *
-     * @param message el message
-     * @param nodes   el records
+     * @param message   el message
+     * @param throwable el throwable
+     * @param nodes     el records
      */
     public ServiceException(String message, Throwable throwable, List<MessageNode> nodes) {
         super(message, throwable);
         this.nodes = nodes;
     }
 
+    /**
+     * Instancia un nuevo Service exception.
+     *
+     * @param message   el message
+     * @param throwable el throwable
+     */
     public ServiceException(String message, Throwable throwable) {
         super(message, throwable);
         this.nodes = new LinkedList<>();
     }
 
+    /**
+     * Instancia un nuevo Service exception.
+     *
+     * @param message el message
+     * @param nodes   el nodes
+     */
     public ServiceException(String message, List<MessageNode> nodes) {
         super(message);
         this.nodes = nodes;
     }
 
+    /**
+     * Instancia un nuevo Service exception.
+     *
+     * @param message el message
+     */
     public ServiceException(String message) {
         super(message);
         this.nodes = new LinkedList<>();

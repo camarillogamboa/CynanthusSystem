@@ -6,7 +6,6 @@ import edu.cynanthus.auri.server.repository.InstructionSetRepository;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -2,8 +2,8 @@ package edu.cynanthus.auri.server.service;
 
 import edu.cynanthus.auri.api.CynanthusServerService;
 import edu.cynanthus.auri.api.ServerInfoService;
+import edu.cynanthus.auri.api.error.InvalidOperationException;
 import edu.cynanthus.auri.api.error.NullPointerServiceException;
-import edu.cynanthus.auri.api.error.ServiceException;
 import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.HttpStatus;
@@ -38,7 +38,7 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
     @Override
     public T getConfigOf(ServerInfo serverInfo) {
         ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
-        checkType(fullServerInfo);
+        checkServerType(fullServerInfo);
         return consume(lazyRequest -> lazyRequest.GET(buildUri(fullServerInfo, "/config")), configClass);
     }
 
@@ -48,7 +48,7 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
             throw new NullPointerServiceException("Se requiere un objeto de configuración");
 
         ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
-        checkType(fullServerInfo);
+        checkServerType(fullServerInfo);
         return consume(lazyRequest ->
                 lazyRequest.PUT(
                     buildUri(fullServerInfo, "/config"),
@@ -61,7 +61,7 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
     @Override
     public String[] getLogFilesOf(ServerInfo serverInfo) {
         ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
-        checkType(fullServerInfo);
+        checkServerType(fullServerInfo);
         return consume(lazyRequest -> lazyRequest.GET(buildUri(fullServerInfo, "/log/files")), String[].class);
     }
 
@@ -71,7 +71,7 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
             throw new NullPointerServiceException("Se requiere el nombre del archivo de registro");
 
         ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
-        checkType(fullServerInfo);
+        checkServerType(fullServerInfo);
         return consume(
             lazyRequest -> lazyRequest.GET(buildUri(fullServerInfo, "/log/" + logFileName)),
             String[].class
@@ -81,7 +81,7 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
     @Override
     public Boolean isAvailable(ServerInfo serverInfo) {
         ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
-        checkType(fullServerInfo);
+        checkServerType(fullServerInfo);
 
         LazyRequest lazyRequest = getLazyRequest();
 
@@ -95,9 +95,9 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
         }
     }
 
-    void checkType(ServerInfo serverInfo) {
+    void checkServerType(ServerInfo serverInfo) {
         if (!serverInfo.getServerType().equals(serverType))
-            throw new ServiceException(
+            throw new InvalidOperationException(
                 "Este servicio es únicamente para objetos ServerInfo de tipo "
                     + serverType + " y el ServerInfo \"" + serverInfo.getName() + "\" no es de ese tipo"
             );

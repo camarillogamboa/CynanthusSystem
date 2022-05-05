@@ -4,7 +4,6 @@ import edu.cynanthus.auri.api.NodeInfoService;
 import edu.cynanthus.auri.server.repository.NodeInfoRepository;
 import edu.cynanthus.domain.NodeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

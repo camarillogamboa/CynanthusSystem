@@ -47,6 +47,11 @@ public class SensingNode extends Sample implements RuntimeNode {
     public SensingNode() {
     }
 
+    @Override
+    public String getMac() {
+        return getNode() != null ? getNode().getMac() : null;
+    }
+
     /**
      * Is available boolean.
      *
