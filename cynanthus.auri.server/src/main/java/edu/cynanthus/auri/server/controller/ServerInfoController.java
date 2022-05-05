@@ -20,13 +20,13 @@ public class ServerInfoController extends BeanController<ServerInfo> implements 
 
     @GetMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    public ServerInfo readByName(ServerInfo bean) {
+    public ServerInfo readByName(@PathVariable("name") ServerInfo bean) {
         return read(bean);
     }
 
     @DeleteMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    public ServerInfo deleteByName(ServerInfo bean) {
+    public ServerInfo deleteByName(@PathVariable("name") ServerInfo bean) {
         return delete(bean);
     }
 

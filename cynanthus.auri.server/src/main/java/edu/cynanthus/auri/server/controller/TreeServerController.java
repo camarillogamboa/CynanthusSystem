@@ -7,6 +7,7 @@ import edu.cynanthus.domain.GeneralNode;
 import edu.cynanthus.domain.RuntimeNode;
 import edu.cynanthus.domain.ServerInfo;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -24,13 +25,19 @@ class TreeServerController<T extends Config, N extends RuntimeNode>
     @Override
     @GetMapping("/{id:\\d+}/node/{selector}")
     @ResponseBody
-    public List<GeneralNode<N>> getGeneralNodesOf(ServerInfo serverInfo, String selector) {
+    public List<GeneralNode<N>> getGeneralNodesOf(
+        @PathVariable("id") ServerInfo serverInfo,
+        @PathVariable String selector
+    ) {
         return treeServerService.getGeneralNodesOf(serverInfo, selector);
     }
 
     @GetMapping("/{name:" + Patterns.NAME + "}/node/{selector}")
     @ResponseBody
-    public List<GeneralNode<N>> getGeneralNodesOfByName(ServerInfo serverInfo, String selector) {
+    public List<GeneralNode<N>> getGeneralNodesOfByName(
+        @PathVariable("name") ServerInfo serverInfo,
+        @PathVariable String selector
+    ) {
         return getGeneralNodesOf(serverInfo, selector);
     }
 

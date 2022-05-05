@@ -29,26 +29,29 @@ public class StrisServerController
     @Override
     @PostMapping("/{id:\\d+}/indication")
     @ResponseBody
-    public Boolean performIndication(ServerInfo serverInfo, @RequestBody Indication indication) {
+    public Boolean performIndication(@PathVariable("id") ServerInfo serverInfo, @RequestBody Indication indication) {
         return strisServerService.performIndication(serverInfo, indication);
     }
 
     @PostMapping("/{name:" + Patterns.NAME + "}/indication/")
     @ResponseBody
-    public Boolean performIndicationByName(ServerInfo serverInfo, @RequestBody Indication indication) {
+    public Boolean performIndicationByName(
+        @PathVariable("name") ServerInfo serverInfo,
+        @RequestBody Indication indication
+    ) {
         return performIndication(serverInfo, indication);
     }
 
     @Override
     @GetMapping("/indication/to/{id:\\d+}/with/{instructionName:" + Patterns.NAME + "}")
     @ResponseBody
-    public Boolean performIndication(NodeInfo nodeInfo, String instructionName) {
+    public Boolean performIndication(@PathVariable("id") NodeInfo nodeInfo, @PathVariable String instructionName) {
         return strisServerService.performIndication(nodeInfo, instructionName);
     }
 
     @GetMapping("/indication/to/{name:" + Patterns.MAC + "}/with/{instructionName:" + Patterns.NAME + "}")
     @ResponseBody
-    public Boolean performIndicationByName(NodeInfo nodeInfo, String instructionName) {
+    public Boolean performIndicationByName(@PathVariable("name") NodeInfo nodeInfo, String instructionName) {
         return performIndication(nodeInfo, instructionName);
     }
 

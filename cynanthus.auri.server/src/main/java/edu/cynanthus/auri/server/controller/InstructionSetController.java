@@ -24,13 +24,13 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
 
     @GetMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    public InstructionSet readByName(InstructionSet bean) {
+    public InstructionSet readByName(@PathVariable("name") InstructionSet bean) {
         return read(bean);
     }
 
     @DeleteMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    public InstructionSet deleteByName(InstructionSet bean) {
+    public InstructionSet deleteByName(@PathVariable("name") InstructionSet bean) {
         return delete(bean);
     }
 

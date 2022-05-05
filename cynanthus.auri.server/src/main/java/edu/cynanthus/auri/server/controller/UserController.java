@@ -20,13 +20,13 @@ public class UserController extends BeanController<User> implements UserService 
 
     @GetMapping("/{username:" + Patterns.IDENTIFIER + "}")
     @ResponseBody
-    public User readByUsername(User bean) {
+    public User readByUsername(@PathVariable("username") User bean) {
         return read(bean);
     }
 
     @DeleteMapping("/{username:" + Patterns.IDENTIFIER + "}")
     @ResponseBody
-    public User deleteByUsername(User bean) {
+    public User deleteByUsername(@PathVariable("username") User bean) {
         return delete(bean);
     }
 

@@ -16,65 +16,65 @@ public class CynanthusServerController<T extends Config> extends WrappedCynanthu
     @Override
     @GetMapping("/{id:\\d+}/config")
     @ResponseBody
-    public T getConfigOf(ServerInfo serverInfo) {
+    public T getConfigOf(@PathVariable("id") ServerInfo serverInfo) {
         return super.getConfigOf(serverInfo);
     }
 
     @GetMapping("{name:" + Patterns.NAME + "}/config")
     @ResponseBody
-    public T getConfigOfByName(ServerInfo serverInfo) {
+    public T getConfigOfByName(@PathVariable("name") ServerInfo serverInfo) {
         return getConfigOf(serverInfo);
     }
 
     @Override
     @PutMapping("/{id:\\d+}/config")
     @ResponseBody
-    public Boolean updateConfigOf(ServerInfo serverInfo, @RequestBody T config) {
+    public Boolean updateConfigOf(@PathVariable("id") ServerInfo serverInfo, @RequestBody T config) {
         return super.updateConfigOf(serverInfo, config);
     }
 
     @PutMapping("/{name:" + Patterns.NAME + "}/config")
     @ResponseBody
-    public Boolean updateConfigOfByName(ServerInfo serverInfo, @RequestBody T config) {
+    public Boolean updateConfigOfByName(@PathVariable("name") ServerInfo serverInfo, @RequestBody T config) {
         return updateConfigOf(serverInfo, config);
     }
 
     @Override
     @GetMapping("/{id:\\d+}/log")
     @ResponseBody
-    public String[] getLogFilesOf(ServerInfo serverInfo) {
+    public String[] getLogFilesOf(@PathVariable("id") ServerInfo serverInfo) {
         return super.getLogFilesOf(serverInfo);
     }
 
     @GetMapping("{name:" + Patterns.NAME + "}/log")
     @ResponseBody
-    public String[] getLogFilesOfByName(ServerInfo serverInfo) {
+    public String[] getLogFilesOfByName(@PathVariable("name") ServerInfo serverInfo) {
         return getLogFilesOf(serverInfo);
     }
 
     @Override
     @GetMapping("/{id:\\d+}/log/{logFileName}")
     @ResponseBody
-    public String getLogContentOf(ServerInfo serverInfo, @PathVariable String logFileName) {
+    public String getLogContentOf(@PathVariable("id") ServerInfo serverInfo, @PathVariable String logFileName) {
         return super.getLogContentOf(serverInfo, logFileName);
     }
 
-    @GetMapping("{id:" + Patterns.NAME + "}/log/{logFileName}")
+    @GetMapping("{name:" + Patterns.NAME + "}/log/{logFileName}")
     @ResponseBody
-    public String getLogContentOfByName(ServerInfo serverInfo, @PathVariable String logFileName) {
+    public String getLogContentOfByName(@PathVariable("name") ServerInfo serverInfo, @PathVariable String logFileName) {
         return getLogContentOf(serverInfo, logFileName);
     }
 
     @Override
     @GetMapping("{id:\\d+}/available")
     @ResponseBody
-    public Boolean isAvailable(ServerInfo serverInfo) {
+    public Boolean isAvailable(@PathVariable("id") ServerInfo serverInfo) {
         return super.isAvailable(serverInfo);
     }
 
     @GetMapping("/{name:" + Patterns.NAME + "}/available")
     @ResponseBody
-    public Boolean isAvailableByName(ServerInfo serverInfo) {
+    public Boolean isAvailableByName(@PathVariable("name") ServerInfo serverInfo) {
         return isAvailable(serverInfo);
     }
 

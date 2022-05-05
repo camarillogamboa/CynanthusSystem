@@ -32,7 +32,7 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @Override
     @GetMapping("/{id:\\d+}")
     @ResponseBody
-    public T read(T bean) {
+    public T read(@PathVariable("id") T bean) {
         return super.read(bean);
     }
 
@@ -52,7 +52,7 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @Override
     @DeleteMapping("/{id:\\d+}")
     @ResponseBody
-    public T delete(T data) {
+    public T delete(@PathVariable("id") T data) {
         return super.delete(data);
     }
 

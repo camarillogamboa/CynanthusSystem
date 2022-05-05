@@ -25,7 +25,7 @@ public class NodeInfoController extends BeanController<NodeInfo> implements Node
 
     @GetMapping("/{mac:" + Patterns.MAC + "}")
     @ResponseBody
-    public NodeInfo readByMac(NodeInfo bean) {
+    public NodeInfo readByMac(@PathVariable("mac") NodeInfo bean) {
         return super.read(bean);
     }
 
