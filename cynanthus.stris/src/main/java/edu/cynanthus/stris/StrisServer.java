@@ -50,7 +50,7 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
      * @throws HttpException el http exception
      */
     @RequestHandler(context = "/indication", method = RequestMethod.POST, roles = SystemRole.ROLE_AGENT)
-    public String performIndication(Indication indication) throws HttpException {
+    public Boolean performIndication(Indication indication) throws HttpException {
         if (indication != null && BeanValidation.validateRequired(indication)) {
             ConnectableControlNode controlNode = controlNodes.get(indication.getMac());
             if (controlNode != null) {
@@ -73,7 +73,7 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
                 }
             } else throw new HttpException(HttpStatus.NOT_FOUND);
         } else throw new HttpException(HttpStatus.BAD_REQUEST);
-        return "ok";
+        return true;
     }
 
     /**
