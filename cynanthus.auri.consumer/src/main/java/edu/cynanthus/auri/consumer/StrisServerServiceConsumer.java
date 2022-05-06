@@ -6,7 +6,6 @@ import edu.cynanthus.auri.api.error.InvalidDataException;
 import edu.cynanthus.auri.api.error.NullPointerServiceException;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.client.LazyRequest;
-import edu.cynanthus.common.resource.StreamUtil;
 import edu.cynanthus.domain.*;
 import edu.cynanthus.domain.config.StrisConfig;
 
@@ -32,7 +31,7 @@ class StrisServerServiceConsumer
         return consume(
             lazyRequest -> lazyRequest.POST(
                 resourcePath + "/" + getServerId(serverInfo) + "/indication",
-                () -> StreamUtil.asInputStream(JsonProvider.toJson(indication))
+                () -> JsonProvider.toJsonInputStream(indication)
             ),
             Boolean.class
         );

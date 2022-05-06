@@ -11,6 +11,10 @@ public interface AuriServiceConsumer<T extends AuriService> {
 
     T prepare(String headerName, String headerValue);
 
+    static AuriServiceConsumer<AuthService> createAuthServiceConsumer(HostAddress hostAddress) {
+        return new AuriServiceConsumerImpl<>(hostAddress, AuthServiceConsumer::new);
+    }
+
     static AuriServiceConsumer<ServerInfoService> createServerInfoServiceConsumer(HostAddress hostAddress) {
         return new AuriServiceConsumerImpl<>(hostAddress, ServerInfoServiceConsumer::new);
     }

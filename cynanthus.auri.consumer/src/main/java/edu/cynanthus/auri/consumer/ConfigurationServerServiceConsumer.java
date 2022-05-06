@@ -6,7 +6,6 @@ import edu.cynanthus.auri.api.error.NullPointerServiceException;
 import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.client.LazyRequest;
-import edu.cynanthus.common.resource.StreamUtil;
 import edu.cynanthus.domain.ServerInfo;
 
 import java.lang.reflect.Type;
@@ -40,7 +39,7 @@ class ConfigurationServerServiceConsumer<T extends Config>
         return consume(
             lazyRequest -> lazyRequest.PUT(
                 resourcePath + "/" + getServerId(serverInfo) + "/config",
-                () -> StreamUtil.asInputStream(JsonProvider.toJson(config))
+                () -> JsonProvider.toJsonInputStream(config)
             ),
             Boolean.class
         );

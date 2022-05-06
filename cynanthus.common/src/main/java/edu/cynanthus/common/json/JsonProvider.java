@@ -2,8 +2,10 @@ package edu.cynanthus.common.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import edu.cynanthus.common.resource.StreamUtil;
 import edu.cynanthus.common.security.SystemUser;
 
+import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
 
@@ -44,6 +46,16 @@ public final class JsonProvider {
      */
     public static String toJson(Object object) {
         return getInstance().toJson(object);
+    }
+
+    /**
+     * To json imput stream input stream.
+     *
+     * @param object el object
+     * @return el input stream
+     */
+    public static InputStream toJsonInputStream(Object object){
+        return StreamUtil.asInputStream(toJson(object));
     }
 
     /**
