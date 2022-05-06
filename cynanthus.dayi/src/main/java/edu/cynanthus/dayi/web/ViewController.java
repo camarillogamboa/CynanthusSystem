@@ -4,6 +4,7 @@ import edu.cynanthus.auri.api.*;
 import edu.cynanthus.auri.consumer.AuriServiceConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/cynanthus/dayi")
 public class ViewController {
 
+    private final AuriServiceConsumer<AuthService> authServiceConsumer;
     private final AuriServiceConsumer<ServerInfoService> serverInfoServiceConsumer;
     private final AuriServiceConsumer<NodeInfoService> nodeInfoServiceConsumer;
     private final AuriServiceConsumer<InstructionSetService> instructionSetserviceConsumer;
@@ -21,6 +23,7 @@ public class ViewController {
 
     @Autowired
     public ViewController(
+        AuriServiceConsumer<AuthService> authServiceConsumer,
         AuriServiceConsumer<ServerInfoService> serverInfoServiceConsumer,
         AuriServiceConsumer<NodeInfoService> nodeInfoServiceConsumer,
         AuriServiceConsumer<InstructionSetService> instructionSetserviceConsumer,
@@ -29,6 +32,7 @@ public class ViewController {
         AuriServiceConsumer<LatiroServerService> latiroServerServiceConsumer,
         AuriServiceConsumer<StrisServerService> strisServerServiceConsumer
     ) {
+        this.authServiceConsumer = authServiceConsumer;
         this.serverInfoServiceConsumer = serverInfoServiceConsumer;
         this.nodeInfoServiceConsumer = nodeInfoServiceConsumer;
         this.instructionSetserviceConsumer = instructionSetserviceConsumer;
@@ -39,7 +43,7 @@ public class ViewController {
     }
 
     @GetMapping
-    public String index(){
+    public String index(Model model) {
 
         return "index";
     }

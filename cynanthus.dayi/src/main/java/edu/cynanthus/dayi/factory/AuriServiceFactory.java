@@ -1,4 +1,4 @@
-package edu.cynanthus.dayi.config;
+package edu.cynanthus.dayi.factory;
 
 import edu.cynanthus.auri.api.*;
 import edu.cynanthus.auri.consumer.AuriServiceConsumer;
@@ -18,41 +18,46 @@ public class AuriServiceFactory {
         @Value("${cynanthus.auri.server.hostName}") String hostName,
         @Value("${cynanthus.auri.server.hostPort}") Integer port
     ) {
-        this.hostAddress = HostAddress.create(hostName,port);
+        this.hostAddress = HostAddress.create(hostName, port);
     }
 
     @Bean
-    public AuriServiceConsumer<ServerInfoService> serverInfoServiceConsumer(){
+    public AuriServiceConsumer<AuthService> authServiceConsumer() {
+        return AuriServiceConsumer.createAuthServiceConsumer(hostAddress);
+    }
+
+    @Bean
+    public AuriServiceConsumer<ServerInfoService> serverInfoServiceConsumer() {
         return AuriServiceConsumer.createServerInfoServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<NodeInfoService> nodeInfoServiceConsumer(){
+    public AuriServiceConsumer<NodeInfoService> nodeInfoServiceConsumer() {
         return AuriServiceConsumer.createNodeInfoServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<InstructionSetService> instructionsetServiceConsumer(){
+    public AuriServiceConsumer<InstructionSetService> instructionsetServiceConsumer() {
         return AuriServiceConsumer.createInstructionSetServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<UserService> userServiceConsumer(){
+    public AuriServiceConsumer<UserService> userServiceConsumer() {
         return AuriServiceConsumer.createUserServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<SordidusServerService> sordidusServerServiceConsumer(){
+    public AuriServiceConsumer<SordidusServerService> sordidusServerServiceConsumer() {
         return AuriServiceConsumer.createSordidusServerServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<LatiroServerService> latiroServerServiceConsumer(){
+    public AuriServiceConsumer<LatiroServerService> latiroServerServiceConsumer() {
         return AuriServiceConsumer.createLatiroServerServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<StrisServerService> strisServerServiceConsumer(){
+    public AuriServiceConsumer<StrisServerService> strisServerServiceConsumer() {
         return AuriServiceConsumer.createStrisServerServiceConsumer(hostAddress);
     }
 
