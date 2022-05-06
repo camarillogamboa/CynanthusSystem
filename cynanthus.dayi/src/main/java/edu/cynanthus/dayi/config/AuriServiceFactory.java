@@ -22,37 +22,37 @@ public class AuriServiceFactory {
     }
 
     @Bean
-    public AuriServiceConsumer<ServerInfoService> createServerInfoServiceConsumer(){
+    public AuriServiceConsumer<ServerInfoService> serverInfoServiceConsumer(){
         return AuriServiceConsumer.createServerInfoServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<NodeInfoService> createNodeInfoServiceConsumer(){
+    public AuriServiceConsumer<NodeInfoService> nodeInfoServiceConsumer(){
         return AuriServiceConsumer.createNodeInfoServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<InstructionSetService> createInstructionsetServiceConsumer(){
+    public AuriServiceConsumer<InstructionSetService> instructionsetServiceConsumer(){
         return AuriServiceConsumer.createInstructionSetServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<UserService> createUserServiceConsumer(){
+    public AuriServiceConsumer<UserService> userServiceConsumer(){
         return AuriServiceConsumer.createUserServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<SordidusServerService> createSordidusServerServiceConsumer(){
+    public AuriServiceConsumer<SordidusServerService> sordidusServerServiceConsumer(){
         return AuriServiceConsumer.createSordidusServerServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<LatiroServerService> createLatiroServerServiceConsumer(){
+    public AuriServiceConsumer<LatiroServerService> latiroServerServiceConsumer(){
         return AuriServiceConsumer.createLatiroServerServiceConsumer(hostAddress);
     }
 
     @Bean
-    public AuriServiceConsumer<StrisServerService> createStrisServerServiceConsumer(){
+    public AuriServiceConsumer<StrisServerService> strisServerServiceConsumer(){
         return AuriServiceConsumer.createStrisServerServiceConsumer(hostAddress);
     }
 
