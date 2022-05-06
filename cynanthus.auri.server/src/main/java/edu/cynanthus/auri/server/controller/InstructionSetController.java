@@ -6,6 +6,7 @@ import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,21 +17,22 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
 
     @Autowired
     public InstructionSetController(
-        @Qualifier("transactionalInstructionSetService") InstructionSetService beanService
+        @Qualifier("transactionalInstructionSetService") InstructionSetService instructionSetService
     ) {
-        super(beanService);
-        this.instructionSetService = beanService;
+        super(instructionSetService);
+        this.instructionSetService = instructionSetService;
     }
 
     @GetMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    public InstructionSet readByName(@PathVariable("name") InstructionSet bean) {
+    public InstructionSet readByName(InstructionSet bean) {
         return read(bean);
     }
 
     @DeleteMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    public InstructionSet deleteByName(@PathVariable("name") InstructionSet bean) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public InstructionSet deleteByName(InstructionSet bean) {
         return delete(bean);
     }
 
@@ -58,6 +60,7 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
     @Override
     @DeleteMapping("/instruction/{id:\\d+}")
     @ResponseBody
+    @PreAuthorize("hasRole('ADMIN')")
     public Instruction deleteInstruction(@PathVariable Integer id) {
         return instructionSetService.deleteInstruction(id);
     }
@@ -65,6 +68,7 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
     @Override
     @DeleteMapping("/instruction/{idSet:\\d+}/{name:" + Patterns.NAME + "}")
     @ResponseBody
+    @PreAuthorize("hasRole('ADMIN')")
     public Instruction deleteInstruction(@PathVariable Integer idSet, @PathVariable String name) {
         return instructionSetService.deleteInstruction(idSet, name);
     }
@@ -72,6 +76,7 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
     @Override
     @DeleteMapping("/instruction/{setName:" + Patterns.NAME + "}/{name:" + Patterns.NAME + "}")
     @ResponseBody
+    @PreAuthorize("hasRole('ADMIN')")
     public Instruction deleteInstruction(@PathVariable String setName, @PathVariable String name) {
         return instructionSetService.deleteInstruction(setName, name);
     }

@@ -13,7 +13,6 @@ import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.ServerType;
 
 import java.net.http.HttpResponse;
-import java.util.Objects;
 
 class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer implements CynanthusServerService<T> {
 
@@ -29,7 +28,7 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
         Class<T> configClass,
         ServerType serverType
     ) {
-        this.serverInfoService = Objects.requireNonNull(serverInfoService);
+        this.serverInfoService = serverInfoService;
         this.basePath = basePath;
         this.configClass = configClass;
         this.serverType = serverType;
@@ -73,8 +72,8 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
         ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
         checkServerType(fullServerInfo);
         return consume(
-            lazyRequest -> lazyRequest.GET(buildUri(fullServerInfo, "/log/" + logFileName)),
-            String[].class
+            lazyRequest -> lazyRequest.GET(buildUri(fullServerInfo, "/log?value=" + logFileName)),
+            String.class
         );
     }
 

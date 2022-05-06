@@ -5,6 +5,7 @@ import edu.cynanthus.auri.server.repository.NodeInfoRepository;
 import edu.cynanthus.domain.NodeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class TransactionalNodeInfoService extends TransactionalBeanService<NodeI
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<? extends NodeInfo> readAllByIdServerInfo(Integer idServerInfo) {
         return nodeInfoService.readAllByIdServerInfo(idServerInfo);
     }

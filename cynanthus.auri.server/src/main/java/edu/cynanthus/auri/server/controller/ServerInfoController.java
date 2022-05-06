@@ -5,6 +5,7 @@ import edu.cynanthus.bean.Patterns;
 import edu.cynanthus.domain.ServerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,13 +21,14 @@ public class ServerInfoController extends BeanController<ServerInfo> implements 
 
     @GetMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    public ServerInfo readByName(@PathVariable("name") ServerInfo bean) {
+    public ServerInfo readByName(ServerInfo bean) {
         return read(bean);
     }
 
     @DeleteMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    public ServerInfo deleteByName(@PathVariable("name") ServerInfo bean) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ServerInfo deleteByName(ServerInfo bean) {
         return delete(bean);
     }
 

@@ -66,21 +66,21 @@ class HttpHostAddressImpl implements HttpHostAddress {
     /**
      * Permite establecer server name.
      *
-     * @param servername el servername
+     * @param hostName el servername
      */
     @Override
-    public final void setHostName(String servername) {
-        this.serverName = Objects.requireNonNull(servername);
+    public final void setHostName(String hostName) {
+        this.serverName = Objects.requireNonNull(hostName);
     }
 
     /**
      * Permite establecer server port.
      *
-     * @param serverPort el server port
+     * @param hostPort el server port
      */
     @Override
-    public final void setHostPort(int serverPort) {
-        if (serverPort >= 0) this.serverPort = serverPort;
+    public final void setHostPort(int hostPort) {
+        if (hostPort >= 0) this.serverPort = hostPort;
         else throw new IllegalArgumentException("Negative port number");
     }
 

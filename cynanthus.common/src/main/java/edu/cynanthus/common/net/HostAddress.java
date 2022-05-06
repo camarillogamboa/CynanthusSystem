@@ -22,15 +22,19 @@ public interface HostAddress {
     /**
      * Permite establecer server name.
      *
-     * @param serverName el server name
+     * @param hostName el server name
      */
-    void setHostName(String serverName);
+    void setHostName(String hostName);
 
     /**
      * Permite establecer server port.
      *
-     * @param serverPort el server port
+     * @param hostPort el server port
      */
-    void setHostPort(int serverPort);
+    void setHostPort(int hostPort);
+
+    static HostAddress create(String hostName, int port) {
+        return new HostAddressImpl(hostName, port);
+    }
 
 }

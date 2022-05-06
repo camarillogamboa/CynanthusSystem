@@ -5,7 +5,6 @@ import edu.cynanthus.bean.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 abstract class BasicBeanService<ID, B extends Bean, E extends B> implements BeanService<B> {
@@ -13,7 +12,7 @@ abstract class BasicBeanService<ID, B extends Bean, E extends B> implements Bean
     private final JpaRepository<E, ID> jpa;
 
     BasicBeanService(JpaRepository<E, ID> jpa) {
-        this.jpa = Objects.requireNonNull(jpa);
+        this.jpa = jpa;
     }
 
     @Override

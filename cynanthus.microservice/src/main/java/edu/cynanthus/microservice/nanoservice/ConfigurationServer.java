@@ -84,9 +84,11 @@ public class ConfigurationServer<T extends Config> extends WebServer {
     @RequestHandler(context = "/config", method = RequestMethod.PUT, roles = SystemRole.ROLE_AGENT)
     public final Boolean updateConfig(T configObject) throws HttpException {
         if (configObject != null && BeanValidation.isValid(configObject)) {
-            context.updatePropertiesFrom(configObject, fieldAliasFinder);
-            httpSecurityManager.logUserAction(Level.INFO, "Cambió la configuración del programa");
-            return true;
+            if (context.updatePropertiesFrom(configObject, fieldAliasFinder)) {
+                httpSecurityManager.logUserAction(Level.INFO, "Cambió la configuración del programa");
+                return true;
+            }
+            return false;
         }
         throw new HttpException(HttpStatus.BAD_REQUEST);
     }

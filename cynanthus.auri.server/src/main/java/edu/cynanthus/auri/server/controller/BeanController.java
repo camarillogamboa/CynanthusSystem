@@ -4,6 +4,7 @@ import edu.cynanthus.auri.api.BeanService;
 import edu.cynanthus.auri.api.WrappedBeanService;
 import edu.cynanthus.bean.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
+    @PreAuthorize("hasRole('ADMIN')")
     public T create(@RequestBody T bean) {
         return super.create(bean);
     }
@@ -32,19 +34,21 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @Override
     @GetMapping("/{id:\\d+}")
     @ResponseBody
-    public T read(@PathVariable("id") T bean) {
+    public T read(T bean) {
         return super.read(bean);
     }
 
     @Override
     @PutMapping
     @ResponseBody
+    @PreAuthorize("hasRole('ADMIN')")
     public T update(@RequestBody T bean) {
         return super.update(bean);
     }
 
     @Override
     @ResponseBody
+    @PreAuthorize("hasRole('ADMIN')")
     public List<? extends T> delete() {
         return super.delete();
     }
@@ -52,7 +56,8 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @Override
     @DeleteMapping("/{id:\\d+}")
     @ResponseBody
-    public T delete(@PathVariable("id") T data) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public T delete(T data) {
         return super.delete(data);
     }
 

@@ -5,6 +5,7 @@ import edu.cynanthus.bean.Patterns;
 import edu.cynanthus.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,13 +21,14 @@ public class UserController extends BeanController<User> implements UserService 
 
     @GetMapping("/{username:" + Patterns.IDENTIFIER + "}")
     @ResponseBody
-    public User readByUsername(@PathVariable("username") User bean) {
+    public User readByUsername(User bean) {
         return read(bean);
     }
 
     @DeleteMapping("/{username:" + Patterns.IDENTIFIER + "}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseBody
-    public User deleteByUsername(@PathVariable("username") User bean) {
+    public User deleteByUsername(User bean) {
         return delete(bean);
     }
 

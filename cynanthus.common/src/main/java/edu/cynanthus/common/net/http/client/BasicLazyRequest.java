@@ -68,7 +68,7 @@ class BasicLazyRequest implements LazyRequest {
 
     @Override
     public LazyRequest PUT(String path, HttpRequest.BodyPublisher bodyPublisher) {
-        return building(builder -> builder.uri(URI.create(path)).POST(bodyPublisher));
+        return building(builder -> builder.uri(URI.create(path)).PUT(bodyPublisher));
     }
 
     @Override

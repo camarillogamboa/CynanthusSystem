@@ -66,7 +66,7 @@ public interface Context {
      * @param configObject el config object
      * @param aliasFinder  el alias finder
      */
-    void updatePropertiesFrom(Config configObject, Function<Field, String> aliasFinder);
+    boolean updatePropertiesFrom(Config configObject, Function<Field, String> aliasFinder);
 
     /**
      * Update properties from.

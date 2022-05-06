@@ -17,7 +17,6 @@ import edu.cynanthus.domain.User;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,7 +28,7 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
     BasicUserService(UserRepository userJpa, RoleRepository roleJpa) {
         super(userJpa);
         this.userJpa = userJpa;
-        this.roleJpa = Objects.requireNonNull(roleJpa);
+        this.roleJpa = roleJpa;
     }
 
     @Override

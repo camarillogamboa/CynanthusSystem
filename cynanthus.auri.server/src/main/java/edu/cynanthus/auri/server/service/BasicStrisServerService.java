@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class BasicStrisServerService
@@ -42,15 +41,15 @@ public class BasicStrisServerService
             ServerType.CONTROL,
             CONTROL_NODE_LIST_TYPE
         );
-        this.nodeInfoService = Objects.requireNonNull(nodeInfoService);
-        this.instructionSetService = Objects.requireNonNull(instructionSetService);
+        this.nodeInfoService = nodeInfoService;
+        this.instructionSetService = instructionSetService;
     }
 
     @Override
     public Boolean performIndication(ServerInfo serverInfo, Indication indication) {
         ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
         checkServerType(fullServerInfo);
-        return sendIndication(serverInfo, indication);
+        return sendIndication(fullServerInfo, indication);
     }
 
     @Override

@@ -114,7 +114,7 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
             logger.addHandler(new FileHandler(logFile));
             logger.info("Archivo de registro iniciado en " + (new File(logFile).getAbsolutePath()));
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, "No fue posible iniciar el archivo de registro.", ex);
+            logger.log(Level.SEVERE, "No fue posible iniciar el archivo de registro", ex);
         }
 
         logger.info("Iniciando contexto " + name.replace('.', ' ').toUpperCase());
@@ -241,7 +241,7 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
                 return true;
             }
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, "No fue posible actualizar el archivo de propiedades.", ex);
+            logger.log(Level.SEVERE, "No fue posible actualizar el archivo de propiedades", ex);
         }
         return false;
     }
@@ -275,7 +275,7 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
      * @param aliasFinder  el alias finder
      */
     @Override
-    public void updatePropertiesFrom(Config configObject, Function<Field, String> aliasFinder) {
+    public boolean updatePropertiesFrom(Config configObject, Function<Field, String> aliasFinder) {
         if (configObject.getClass().equals(configClass)) {
             AtomicBoolean updateFlag = new AtomicBoolean(false);
             Entries.forEachEntry(configObject, aliasFinder, (k, v) -> {
@@ -283,25 +283,29 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
                     MetaProperty property = properties.get(k);
                     if (property != null) {
                         String newValue = v.toString();
-                        logger.info(
-                            "Estableciendo \""
-                                + k
-                                + "\" de \""
-                                + property.getValue()
-                                + "\" a \""
-                                + newValue
-                                + "\""
-                        );
-                        property.setValue(newValue);
-                        updateFlag.set(true);
+                        if (property.getValue() == null || !property.getValue().equals(newValue)) {
+                            logger.info(
+                                "Estableciendo \""
+                                    + k
+                                    + "\" de \""
+                                    + property.getValue()
+                                    + "\" a \""
+                                    + newValue
+                                    + "\""
+                            );
+                            property.setValue(newValue);
+                            updateFlag.set(true);
+                        }
                     }
                 }
             });
             if (updateFlag.get()) {
-                logger.info("Actualizando archivo de propiedades.");
+                logger.info("Actualizando archivo de propiedades");
                 saveProperties();
-            } else logger.info("Ninguna propiedad fue actualizada.");
-        } else logger.warning("Objeto de configuración de tipo no válido para este contexto.");
+                return true;
+            } else logger.info("Ninguna propiedad fue actualizada");
+        } else logger.warning("Objeto de configuración no válido para este contexto");
+        return false;
     }
 
     /**
@@ -323,10 +327,10 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
                             Object value = basicType.parse(property.getValue());
                             ReflectUtil.safeSet(field, configObject, value);
                         }
-                    } else logger.warning("El contenedor de valores de propiedad debe declarar tipos básicos.");
+                    } else logger.warning("El contenedor de valores de propiedad debe declarar tipos básicos");
                 }
             }
-        else logger.warning("Objeto de configuración de tipo no válido para este contexto.");
+        else logger.warning("Objeto de configuración de tipo no válido para este contexto");
     }
 
     /**

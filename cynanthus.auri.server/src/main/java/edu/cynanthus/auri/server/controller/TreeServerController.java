@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-class TreeServerController<T extends Config, N extends RuntimeNode>
+public class TreeServerController<T extends Config, N extends RuntimeNode>
     extends CynanthusServerController<T> implements TreeServerService<T, N> {
 
     private final TreeServerService<T, N> treeServerService;
@@ -23,21 +23,15 @@ class TreeServerController<T extends Config, N extends RuntimeNode>
     }
 
     @Override
-    @GetMapping("/{id:\\d+}/node/{selector}")
+    @GetMapping("/{id:\\d+}/node/{selector:\\*|" + Patterns.MAC + "}")
     @ResponseBody
-    public List<GeneralNode<N>> getGeneralNodesOf(
-        @PathVariable("id") ServerInfo serverInfo,
-        @PathVariable String selector
-    ) {
+    public List<GeneralNode<N>> getGeneralNodesOf(ServerInfo serverInfo, @PathVariable String selector) {
         return treeServerService.getGeneralNodesOf(serverInfo, selector);
     }
 
-    @GetMapping("/{name:" + Patterns.NAME + "}/node/{selector}")
+    @GetMapping("/{name:" + Patterns.NAME + "}/node/{selector:\\*|" + Patterns.MAC + "}")
     @ResponseBody
-    public List<GeneralNode<N>> getGeneralNodesOfByName(
-        @PathVariable("name") ServerInfo serverInfo,
-        @PathVariable String selector
-    ) {
+    public List<GeneralNode<N>> getGeneralNodesOfByName(ServerInfo serverInfo, @PathVariable String selector) {
         return getGeneralNodesOf(serverInfo, selector);
     }
 

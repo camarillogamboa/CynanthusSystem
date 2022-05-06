@@ -54,8 +54,10 @@ class MicroServiceConsumer {
             HttpResponse<InputStream> response = lazyRequestCopy.doRequestAndGetInputStream();
 
             try (Reader reader = new InputStreamReader(response.body())) {
-                if (HttpStatus.isCorrect(response.statusCode())) return JsonProvider.fromJson(reader, returnType);
-                else throw new RemoteServiceException(StreamUtil.toString(reader));
+                if (HttpStatus.isCorrect(response.statusCode())) {
+                    if (returnType.equals(String.class)) return (T) StreamUtil.toString(reader);
+                    return JsonProvider.fromJson(reader, returnType);
+                } else throw new RemoteServiceException(StreamUtil.toString(reader));
             }
 
         } catch (IOException ex) {

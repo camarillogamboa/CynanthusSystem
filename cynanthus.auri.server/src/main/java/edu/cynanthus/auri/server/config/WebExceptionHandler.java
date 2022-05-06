@@ -1,7 +1,6 @@
 package edu.cynanthus.auri.server.config;
 
-import edu.cynanthus.auri.api.error.MessageNode;
-import edu.cynanthus.auri.api.error.ServiceException;
+import edu.cynanthus.auri.api.error.*;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -28,13 +27,43 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class WebExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ServiceException.class)
-    public ResponseEntity<MessageNode> handlerServiceException(ServiceException serviceException) {
-        HttpStatus status = null;
+    @ExceptionHandler({
+        ExistingElementException.class,
+        IncompatibleServiceException.class,
+        InterruptedServiceException.class,
+        InvalidDataException.class,
+        IOServiceException.class,
+        NoExistingElementException.class,
+        NullPointerServiceException.class,
+        RemoteServiceException.class,
+        ServiceException.class
+    })
+    public ResponseEntity<MessageNode> handlerServiceException(ServiceException ex) {
+        HttpStatus status;
 
-        serviceException.printStackTrace();
+        ex.printStackTrace();
 
-        return new ResponseEntity<>(serviceException.toExceptionNode(), status);
+        if (ex instanceof ExistingElementException) {
+            status = HttpStatus.NOT_MODIFIED;
+        } else if (ex instanceof IncompatibleServiceException) {
+            status = HttpStatus.UNPROCESSABLE_ENTITY;
+        } else if (ex instanceof InterruptedServiceException) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        } else if (ex instanceof InvalidDataException) {
+            status = HttpStatus.BAD_REQUEST;
+        } else if (ex instanceof InvalidDataException) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        } else if (ex instanceof NoExistingElementException) {
+            status = HttpStatus.NOT_FOUND;
+        } else if (ex instanceof NullPointerServiceException) {
+            status = HttpStatus.BAD_REQUEST;
+        } else if (ex instanceof RemoteServiceException) {
+            status = HttpStatus.BAD_GATEWAY;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(ex.toExceptionNode(), status);
     }
 
     @Override

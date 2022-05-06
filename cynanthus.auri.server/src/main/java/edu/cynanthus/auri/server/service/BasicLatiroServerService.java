@@ -15,7 +15,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 @Service
-public class BasicLatiroServerService extends BasicTreeServerService<LatiroConfig, SensingNode> implements LatiroServerService {
+public class BasicLatiroServerService
+    extends BasicTreeServerService<LatiroConfig, SensingNode> implements LatiroServerService {
 
     private static final Type SENSING_NODE_LIST_TYPE = new TypeToken<List<SensingNode>>() {}.getType();
 

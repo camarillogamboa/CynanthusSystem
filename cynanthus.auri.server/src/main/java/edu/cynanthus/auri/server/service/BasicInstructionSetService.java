@@ -17,7 +17,6 @@ import edu.cynanthus.domain.InstructionSet;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,7 @@ class BasicInstructionSetService
     ) {
         super(instructionSetRepository);
         this.setJpa = instructionSetRepository;
-        this.instJpa = Objects.requireNonNull(instructionRepository);
+        this.instJpa = instructionRepository;
     }
 
     @Override
