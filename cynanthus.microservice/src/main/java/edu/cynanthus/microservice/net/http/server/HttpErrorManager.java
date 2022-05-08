@@ -51,8 +51,8 @@ public class HttpErrorManager {
         return exchange -> {
             try {
                 httpHandler.handle(exchange);
-            } catch (Throwable th) {
-                th.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
 
                 String language = HttpExchangeUtil.getHeader(
                     exchange,
@@ -66,20 +66,20 @@ public class HttpErrorManager {
                 int code;
                 List<String> causes = new LinkedList<>();
 
-                if (th instanceof HttpException)
-                    code = ((HttpException) th).getCode();
-                else if (th instanceof ConstraintViolationException) {
+                if (ex instanceof HttpException)
+                    code = ((HttpException) ex).getCode();
+                else if (ex instanceof ConstraintViolationException) {
                     code = HttpStatusCode.UNPROCESSABLE_ENTITY;
 
                     BeanValidation.basicInterpolation(
-                        ((ConstraintViolationException) th).getConstraintViolations(),
+                        ((ConstraintViolationException) ex).getConstraintViolations(),
                         langMessages,
                         causes
                     );
 
                 } else {
                     code = HttpStatusCode.INTERNAL_SERVER_ERROR;
-                    contextLogger.log(Level.SEVERE, DEFAULT_MESSAGE + ":" + th.getMessage(), th);
+                    contextLogger.log(Level.SEVERE, DEFAULT_MESSAGE + ":" + ex.getMessage(), ex);
                 }
 
                 String message = DEFAULT_MESSAGE;

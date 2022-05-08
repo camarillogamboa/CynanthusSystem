@@ -229,7 +229,7 @@ public abstract class FileAccesObject<R> implements ResourceAccesObject<File, R>
             throw new ResourceException(
                 "El archivo " + file + " no puede ser leido ya que se trata de un directorio.", ResourceAction.READ
             );
-        else throw new ResourceException("El archivo " + file + "no existe.", ResourceAction.READ);
+        else throw new ResourceException("El archivo " + file + " no existe.", ResourceAction.READ);
     }
 
     /**

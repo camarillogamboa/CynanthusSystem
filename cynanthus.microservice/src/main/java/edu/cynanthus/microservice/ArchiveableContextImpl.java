@@ -148,7 +148,7 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
             for (File file : contextFiles) {
                 String fileName = file.getName().split("\\.")[0];
                 if (fileName.startsWith("messages")) {
-                    Properties properties = loadProperties(fileName);
+                    Properties properties = loadProperties(file.getName());
                     if (properties != null) {
                         String subName = fileName.substring(8);
                         if (subName.isEmpty()) messages.put("default", properties);

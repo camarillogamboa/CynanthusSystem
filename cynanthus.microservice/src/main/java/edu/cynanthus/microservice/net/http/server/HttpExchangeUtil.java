@@ -15,7 +15,7 @@ public final class HttpExchangeUtil {
 
     public static String getHeader(HttpExchange exchange, String headerName, String defaultValue) {
         List<String> header = exchange.getRequestHeaders().get(headerName);
-        return header.isEmpty() ? defaultValue : header.get(0);
+        return header == null || header.isEmpty() ? defaultValue : header.get(0);
     }
 
     public static String getHeader(HttpExchange exchange, String headerName) {
