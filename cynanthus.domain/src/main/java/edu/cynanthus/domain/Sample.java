@@ -16,7 +16,7 @@ public class Sample implements Bean {
     /**
      * El Node.
      */
-    @NotNull(groups = Required.class)
+    @NotNull(groups = Required.class, message = "{NotNull.sample.node}")
     @Valid
     @JProperty
     private Node node;
@@ -24,7 +24,7 @@ public class Sample implements Bean {
     /**
      * El Environment.
      */
-    @NotNull(groups = Required.class)
+    @NotNull(groups = Required.class, message = "{NotNull.sample.environment}")
     @Valid
     @JProperty
     private SensedEnvironment environment;

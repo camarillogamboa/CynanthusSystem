@@ -24,7 +24,6 @@ public class TransactionalNodeInfoService extends TransactionalBeanService<NodeI
         this(new BasicNodeInfoService(nodeInfoRepository));
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public List<? extends NodeInfo> readAllByIdServerInfo(Integer idServerInfo) {

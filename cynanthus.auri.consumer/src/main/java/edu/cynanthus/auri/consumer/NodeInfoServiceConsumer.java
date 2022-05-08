@@ -2,8 +2,7 @@ package edu.cynanthus.auri.consumer;
 
 import com.google.gson.reflect.TypeToken;
 import edu.cynanthus.auri.api.NodeInfoService;
-import edu.cynanthus.auri.api.error.InvalidDataException;
-import edu.cynanthus.auri.api.error.NullPointerServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
 import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.NodeInfo;
 
@@ -26,7 +25,7 @@ class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements N
     @Override
     public List<? extends NodeInfo> readAllByIdServerInfo(Integer idServerInfo) {
         if (idServerInfo == null)
-            throw new NullPointerServiceException(
+            throw new InvalidArgumentException(
                 "Se requiere un identificador para realizar esta acción"
             );
 
@@ -40,7 +39,7 @@ class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements N
     Object getId(NodeInfo bean) {
         if (bean.getId() != null) return bean.getId();
         else if (bean.getName() != null) return bean.getMac();
-        else throw new InvalidDataException(
+        else throw new InvalidArgumentException(
                 "Se requiere un identificador válido para realizar esta acción"
             );
     }

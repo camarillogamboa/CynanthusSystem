@@ -1,8 +1,9 @@
 package edu.cynanthus.sordidus;
 
 import edu.cynanthus.bean.BeanValidation;
+import edu.cynanthus.bean.FullyValidate;
 import edu.cynanthus.common.net.http.HttpException;
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.net.http.RequestMethod;
 import edu.cynanthus.common.security.SystemRole;
 import edu.cynanthus.domain.SampleSet;
@@ -47,12 +48,13 @@ public final class SordidusServer extends CynanthusServer<SordidusConfig> {
      */
     @RequestHandler(context = "/sampleset", method = RequestMethod.POST, roles = SystemRole.ROLE_AGENT)
     public String putSampleSet(SampleSet sampleSet) throws HttpException {
-        if (sampleSet != null && BeanValidation.fullyValidate(sampleSet)) {
+        if (sampleSet != null) {
             System.out.println(sampleSet);
+            BeanValidation.validateAndThrow(sampleSet, FullyValidate.class);
             synchronized (sampleSetBuffer) {
                 sampleSetBuffer.add(sampleSet);
             }
-        } else throw new HttpException(HttpStatus.BAD_REQUEST);
+        } else throw new HttpException(HttpStatusCode.BAD_REQUEST);
         return "ok";
     }
 

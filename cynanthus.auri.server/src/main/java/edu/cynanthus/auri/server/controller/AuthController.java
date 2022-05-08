@@ -1,9 +1,11 @@
 package edu.cynanthus.auri.server.controller;
 
 import edu.cynanthus.auri.api.AuthService;
+import edu.cynanthus.bean.Required;
 import edu.cynanthus.domain.AuthenticatedUser;
 import edu.cynanthus.domain.User;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +23,7 @@ public class AuthController implements AuthService {
 
     @Override
     @PostMapping("/login")
-    public AuthenticatedUser auth(@RequestBody User user) {
+    public AuthenticatedUser auth(@RequestBody @Validated({Required.class}) User user) {
         return authService.auth(user);
     }
 

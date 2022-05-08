@@ -54,7 +54,7 @@ public final class JsonProvider {
      * @param object el object
      * @return el input stream
      */
-    public static InputStream toJsonInputStream(Object object){
+    public static InputStream toJsonInputStream(Object object) {
         return StreamUtil.asInputStream(toJson(object));
     }
 

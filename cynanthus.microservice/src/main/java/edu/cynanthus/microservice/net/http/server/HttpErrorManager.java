@@ -1,15 +1,18 @@
 package edu.cynanthus.microservice.net.http.server;
 
 import com.sun.net.httpserver.HttpHandler;
+import edu.cynanthus.bean.BeanValidation;
+import edu.cynanthus.bean.ErrorMessage;
+import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.HttpException;
-import edu.cynanthus.common.net.http.HttpStatus;
-import edu.cynanthus.common.resource.StreamUtil;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 
-import java.io.*;
+import javax.validation.ConstraintViolationException;
+import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TreeMap;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,32 +21,23 @@ import java.util.logging.Logger;
  */
 public class HttpErrorManager {
 
+    private static final String DEFAULT_MESSAGE = "Error interno del servidor";
+
     /**
      * El Context logger.
      */
     private final Logger contextLogger;
-    /**
-     * El Error message provider.
-     */
-    private final Map<Integer, Supplier<InputStream>> errorMessageProvider;
+
+    private final Map<String, ? extends Map<?, ?>> messages;
 
     /**
      * Instancia un nuevo Http error manager.
      *
      * @param contextLogger el context logger
      */
-    public HttpErrorManager(Logger contextLogger) {
+    public HttpErrorManager(Logger contextLogger, Map<String, ? extends Map<?, ?>> messages) {
         this.contextLogger = contextLogger;
-        this.errorMessageProvider = new TreeMap<>(Integer::compareTo);
-    }
-
-    /**
-     * Permite obtener error message provider.
-     *
-     * @return el error message provider
-     */
-    public Map<Integer, Supplier<InputStream>> getErrorMessageProvider() {
-        return errorMessageProvider;
+        this.messages = messages;
     }
 
     /**
@@ -57,31 +51,48 @@ public class HttpErrorManager {
         return exchange -> {
             try {
                 httpHandler.handle(exchange);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Throwable th) {
+                th.printStackTrace();
+
+                String language = HttpExchangeUtil.getHeader(
+                    exchange,
+                    "Accept-Language",
+                    "default"
+                );
+
+                Map<?, ?> langMessages = messages.get(language.toLowerCase());
+                if (langMessages == null) messages.get("default");
+
                 int code;
-                if (ex instanceof HttpException) code = ((HttpException) ex).getCode();
-                else {
-                    code = HttpStatus.INTERNAL_SERVER_ERROR;
-                    contextLogger.log(Level.SEVERE, "Error interno del servidor.", ex);
+                List<String> causes = new LinkedList<>();
+
+                if (th instanceof HttpException)
+                    code = ((HttpException) th).getCode();
+                else if (th instanceof ConstraintViolationException) {
+                    code = HttpStatusCode.UNPROCESSABLE_ENTITY;
+
+                    BeanValidation.basicInterpolation(
+                        ((ConstraintViolationException) th).getConstraintViolations(),
+                        langMessages,
+                        causes
+                    );
+
+                } else {
+                    code = HttpStatusCode.INTERNAL_SERVER_ERROR;
+                    contextLogger.log(Level.SEVERE, DEFAULT_MESSAGE + ":" + th.getMessage(), th);
                 }
 
-                InputStream responseStream;
+                String message = DEFAULT_MESSAGE;
 
-                Supplier<InputStream> messageSupplier = errorMessageProvider.get(code);
-                if (messageSupplier != null)
-                    responseStream = messageSupplier.get();
-                else try (
-                    Writer writer = new StringWriter();
-                    PrintWriter printWriter = new PrintWriter(writer)
-                ) {
-                    ex.printStackTrace(printWriter);
-                    responseStream = StreamUtil.asInputStream(writer.toString());
+                if (langMessages != null) {
+                    Object obj = langMessages.get("http.status." + code);
+                    if (obj != null) message = obj.toString();
                 }
 
-                exchange.sendResponseHeaders(code, 0);
-                try (OutputStream out = exchange.getResponseBody()) {
-                    responseStream.transferTo(out);
+                try (InputStream bodyStream = JsonProvider.toJsonInputStream(
+                    new ErrorMessage<>(code, message, causes)
+                )) {
+                    HttpExchangeUtil.sendResponse(exchange, code, bodyStream);
                 }
             }
         };

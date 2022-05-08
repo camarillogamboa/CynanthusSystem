@@ -2,8 +2,7 @@ package edu.cynanthus.auri.consumer;
 
 import com.google.gson.reflect.TypeToken;
 import edu.cynanthus.auri.api.StrisServerService;
-import edu.cynanthus.auri.api.error.InvalidDataException;
-import edu.cynanthus.auri.api.error.NullPointerServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.*;
@@ -24,7 +23,7 @@ class StrisServerServiceConsumer
     @Override
     public Boolean performIndication(ServerInfo serverInfo, Indication indication) {
         checkServerInfo(serverInfo);
-        if (indication == null) throw new NullPointerServiceException(
+        if (indication == null) throw new InvalidArgumentException(
             "Se requiere un objeto Indication"
         );
 
@@ -40,12 +39,12 @@ class StrisServerServiceConsumer
     @Override
     public Boolean performIndication(NodeInfo nodeInfo, String instructionName) {
         if (nodeInfo == null)
-            throw new NullPointerServiceException(
+            throw new InvalidArgumentException(
                 "Se requiere una instancia de NodeInfo para realizar esta acción"
             );
 
         if (instructionName == null)
-            throw new NullPointerServiceException("Se requiere un nombre de instrucción a ejecutar");
+            throw new InvalidArgumentException("Se requiere un nombre de instrucción a ejecutar");
 
         return consume(lazyRequest ->
                 lazyRequest.GET(
@@ -58,7 +57,7 @@ class StrisServerServiceConsumer
     Object getNodeId(NodeInfo bean) {
         if (bean.getId() != null) return bean.getId();
         else if (bean.getName() != null) return bean.getMac();
-        else throw new InvalidDataException(
+        else throw new InvalidArgumentException(
                 "Se requiere un identificador válido del NodeInfo para realizar esta acción"
             );
     }

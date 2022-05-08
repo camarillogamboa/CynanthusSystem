@@ -1,7 +1,7 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.AuthService;
-import edu.cynanthus.auri.api.error.NullPointerServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.AuthenticatedUser;
@@ -26,7 +26,8 @@ class AuthServiceConsumer extends GeneralConsumer implements AuthService {
     }
 
     private void checkUser(User user) {
-        if (user == null) throw new NullPointerServiceException("Se requiere un User para realizar esta acción");
+        if (user == null)
+            throw new InvalidArgumentException("Se requiere un objeto User para realizar esta acción");
     }
 
 }

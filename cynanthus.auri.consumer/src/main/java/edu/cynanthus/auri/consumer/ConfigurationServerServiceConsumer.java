@@ -1,8 +1,7 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.ConfigurationServerService;
-import edu.cynanthus.auri.api.error.InvalidDataException;
-import edu.cynanthus.auri.api.error.NullPointerServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
 import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.client.LazyRequest;
@@ -58,7 +57,7 @@ class ConfigurationServerServiceConsumer<T extends Config>
     public String getLogContentOf(ServerInfo serverInfo, String logFileName) {
         checkServerInfo(serverInfo);
         if (logFileName == null)
-            throw new NullPointerServiceException("Se requiere un nombre de archivo de registro");
+            throw new InvalidArgumentException("Se requiere un nombre de archivo de registro");
 
         return consume(
             lazyRequest -> lazyRequest.GET(resourcePath + "/" + getServerId(serverInfo) + "/log/" + logFileName),
@@ -68,14 +67,14 @@ class ConfigurationServerServiceConsumer<T extends Config>
 
     void checkConfig(T config) {
         if (config == null)
-            throw new NullPointerServiceException(
+            throw new InvalidArgumentException(
                 "Se requiere una instancia de " + configType + " para realizar esta acción"
             );
     }
 
     void checkServerInfo(ServerInfo serverInfo) {
         if (serverInfo == null)
-            throw new NullPointerServiceException(
+            throw new InvalidArgumentException(
                 "Se requiere una instancia de ServerInfo para realizar esta acción"
             );
     }
@@ -83,7 +82,7 @@ class ConfigurationServerServiceConsumer<T extends Config>
     Object getServerId(ServerInfo bean) {
         if (bean.getId() != null) return bean.getId();
         else if (bean.getName() != null) return bean.getName();
-        else throw new InvalidDataException(
+        else throw new InvalidArgumentException(
                 "Se requiere un identificador válido del ServerInfo para realizar esta acción"
             );
     }

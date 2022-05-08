@@ -18,8 +18,8 @@ public class JwtTokenProvider {
 
     @Autowired
     public JwtTokenProvider(
-        @Value("${app.jwt-secret}") String jwtSecret,
-        @Value("${app.jwt-expiration-milliseconds}") long jwtExpirationMilliseconds
+        @Value("${app.jwt-secret:ClaveSecrete}") String jwtSecret,
+        @Value("${app.jwt-expiration-milliseconds:604800000}") long jwtExpirationMilliseconds
     ) {
         this.jwtSecret = jwtSecret;
         this.jwtExpirationMilliseconds = jwtExpirationMilliseconds;

@@ -18,10 +18,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.logging.ConsoleHandler;
@@ -64,16 +61,21 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
     /**
      * El Properties.
      */
-    private final Map<String, MetaProperty> properties;
+    private final Map<String, MetaProperty> metaProperties;
     /**
      * El Properties file.
      */
-    private final File propertiesFile;
+    private final File metaPropertiesFile;
 
     /**
      * El System user management.
      */
     private final SystemUserManagement systemUserManagement;
+
+    /**
+     * El Messages.
+     */
+    private final Map<String, Properties> messages;
 
     /**
      * Instancia un nuevo Archiveable context.
@@ -122,20 +124,38 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
         /*---------------------------------------Preparando entorno de propiedades------------------------------------*/
         logger.info("Cargando propiedades del contexto...");
 
-        this.properties = new TreeMap<>(String::compareTo);
-        this.propertiesFile = new File(contextDirectory + "/properties.conf");
+        this.metaProperties = new TreeMap<>(String::compareTo);
+        this.metaPropertiesFile = new File(contextDirectory + "/properties.conf");
 
         for (Field field : configClass.getDeclaredFields()) {
             String[] propertyInfo = fieldInformationSeeker.apply(field);
             if (propertyInfo != null)
-                properties.put(propertyInfo[0], MetaProperty.asMetaProperty(propertyInfo[2], propertyInfo[1]));
+                metaProperties.put(propertyInfo[0], MetaProperty.asMetaProperty(propertyInfo[2], propertyInfo[1]));
         }
 
         /*--------------------------------Cargando propiedades establecidas por el usuario----------------------------*/
-        if (!loadProperties()) saveProperties();
+        if (!loadMetaProperties()) saveMetaProperties();
 
         this.systemUserManagement = new SystemUserManagementImpl(mainUser);
         systemUserManagement.loadSystemUsers();
+
+        /*--------------------------------------------Cargando mapa de mensajes---------------------------------------*/
+        this.messages = new TreeMap<>(String::compareTo);
+
+        File[] contextFiles = contextDirectory.listFiles(file -> file.getName().endsWith(".properties"));
+
+        if (contextFiles != null)
+            for (File file : contextFiles) {
+                String fileName = file.getName().split("\\.")[0];
+                if (fileName.startsWith("messages")) {
+                    Properties properties = loadProperties(fileName);
+                    if (properties != null) {
+                        String subName = fileName.substring(8);
+                        if (subName.isEmpty()) messages.put("default", properties);
+                        else messages.put(subName.substring(1), properties);
+                    }
+                }
+            }
     }
 
     /**
@@ -203,8 +223,8 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
      * @return el properties file
      */
     @Override
-    public File getPropertiesFile() {
-        return propertiesFile;
+    public File getMetaPropertiesFile() {
+        return metaPropertiesFile;
     }
 
     /**
@@ -213,12 +233,12 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
      * @return el boolean
      */
     @Override
-    public boolean loadProperties() {
-        if (propertiesFile.exists()) {
-            try (Reader reader = new FileReader(propertiesFile)) {
-                MetaProperties.loadMetaProperties(reader, properties);
+    public boolean loadMetaProperties() {
+        if (metaPropertiesFile.exists()) {
+            try (Reader reader = new FileReader(metaPropertiesFile)) {
+                MetaProperties.loadMetaProperties(reader, metaProperties);
             } catch (Exception ex) {
-                logger.log(Level.SEVERE, "No fue posible cargar las propiedades desde " + propertiesFile, ex);
+                logger.log(Level.SEVERE, "No fue posible cargar las propiedades desde " + metaPropertiesFile, ex);
                 return false;
             }
             return true;
@@ -232,11 +252,11 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
      * @return el boolean
      */
     @Override
-    public boolean saveProperties() {
+    public boolean saveMetaProperties() {
         try {
-            if (propertiesFile.exists() || propertiesFile.createNewFile()) {
-                try (Writer writer = new FileWriter(propertiesFile)) {
-                    MetaProperties.saveMetaProperties(properties, writer);
+            if (metaPropertiesFile.exists() || metaPropertiesFile.createNewFile()) {
+                try (Writer writer = new FileWriter(metaPropertiesFile)) {
+                    MetaProperties.saveMetaProperties(metaProperties, writer);
                 }
                 return true;
             }
@@ -247,14 +267,48 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
     }
 
     /**
+     * Load properties properties.
+     *
+     * @param name el name
+     * @return el properties
+     */
+    @Override
+    public Properties loadProperties(String name) {
+        try (InputStream in = loadResource(name)) {
+            Properties properties = new Properties();
+            properties.load(in);
+            return properties;
+        } catch (ResourceException | IOException ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Save properties boolean.
+     *
+     * @param properties el properties
+     * @param name       el name
+     * @return el boolean
+     */
+    @Override
+    public boolean saveProperties(Properties properties, String name) {
+        try (OutputStream out = new FileOutputStream(contextDirectory + name)) {
+            properties.store(out, "");
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Permite obtener property.
      *
      * @param key el key
      * @return el property
      */
     @Override
-    public MetaProperty getProperty(String key) {
-        return properties.get(name + "." + key);
+    public MetaProperty getMetaProperty(String key) {
+        return metaProperties.get(name + "." + key);
     }
 
     /**
@@ -264,8 +318,8 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
      * @param metaProperty el meta property
      */
     @Override
-    public void putProperty(String key, MetaProperty metaProperty) {
-        properties.put(name + "." + key, Objects.requireNonNull(metaProperty));
+    public void putMetaProperty(String key, MetaProperty metaProperty) {
+        metaProperties.put(name + "." + key, Objects.requireNonNull(metaProperty));
     }
 
     /**
@@ -273,14 +327,15 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
      *
      * @param configObject el config object
      * @param aliasFinder  el alias finder
+     * @return el boolean
      */
     @Override
-    public boolean updatePropertiesFrom(Config configObject, Function<Field, String> aliasFinder) {
+    public boolean updateMetaPropertiesFrom(Config configObject, Function<Field, String> aliasFinder) {
         if (configObject.getClass().equals(configClass)) {
             AtomicBoolean updateFlag = new AtomicBoolean(false);
             Entries.forEachEntry(configObject, aliasFinder, (k, v) -> {
                 if (v != null) {
-                    MetaProperty property = properties.get(k);
+                    MetaProperty property = metaProperties.get(k);
                     if (property != null) {
                         String newValue = v.toString();
                         if (property.getValue() == null || !property.getValue().equals(newValue)) {
@@ -301,7 +356,7 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
             });
             if (updateFlag.get()) {
                 logger.info("Actualizando archivo de propiedades");
-                saveProperties();
+                saveMetaProperties();
                 return true;
             } else logger.info("Ninguna propiedad fue actualizada");
         } else logger.warning("Objeto de configuración no válido para este contexto");
@@ -315,14 +370,14 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
      * @param aliasFinder  el alias finder
      */
     @Override
-    public void copyPropertiesTo(Config configObject, Function<Field, String> aliasFinder) {
+    public void copyMetaPropertiesTo(Config configObject, Function<Field, String> aliasFinder) {
         if (configObject.getClass().equals(configClass))
             for (Field field : configObject.getClass().getDeclaredFields()) {
                 String name = aliasFinder.apply(field);
                 if (name != null) {
                     BasicType basicType = BasicType.basicTypeOf(field.getType());
                     if (basicType != null) {
-                        MetaProperty property = properties.get(name);
+                        MetaProperty property = metaProperties.get(name);
                         if (property != null) {
                             Object value = basicType.parse(property.getValue());
                             ReflectUtil.safeSet(field, configObject, value);
@@ -341,9 +396,9 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
      * @throws Exception el exception
      */
     @Override
-    public <T extends Config> T getPropertiesAsConfigObject() throws Exception {
+    public <T extends Config> T getMetaPropertiesAsConfigObject() throws Exception {
         T configObject = (T) configClass.getConstructor().newInstance();
-        copyPropertiesTo(configObject);
+        copyMetaPropertiesTo(configObject);
         return configObject;
     }
 
@@ -417,6 +472,16 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
     @Override
     public SystemUserManagement getUserManagement() {
         return systemUserManagement;
+    }
+
+    /**
+     * Permite obtener messages.
+     *
+     * @return el messages
+     */
+    @Override
+    public Map<String, ? extends Map<?, ?>> getMessages() {
+        return messages;
     }
 
     /**

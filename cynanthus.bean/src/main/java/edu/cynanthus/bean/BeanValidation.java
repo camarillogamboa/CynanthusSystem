@@ -2,10 +2,10 @@ package edu.cynanthus.bean;
 
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -46,6 +46,14 @@ public final class BeanValidation {
      */
     public static <T extends Bean> Set<ConstraintViolation<T>> validate(T bean, Class<?>... groups) {
         return DEFAULT_VALIDATOR.validate(bean, groups);
+    }
+
+    public static <T extends Bean> void validateAndThrow(
+        T bean,
+        Class<?>... groups
+    ) throws ConstraintViolationException {
+        Set<ConstraintViolation<T>> constraintViolations = validate(bean,groups);
+        if(!constraintViolations.isEmpty()) throw new ConstraintViolationException(constraintViolations);
     }
 
     /**
@@ -107,6 +115,27 @@ public final class BeanValidation {
      */
     public static boolean validateNaturalIdCandidate(Bean bean) {
         return isValid(bean, NaturalIdCandidate.class);
+    }
+
+    public static void basicInterpolation(
+        Set<ConstraintViolation<?>> constraintViolations,
+        Map<?, ?> messages,
+        List<String> list
+    ) {
+        constraintViolations.forEach(constraintViolation -> {
+            String message = constraintViolation.getMessageTemplate();
+            if (messages != null) {
+                Object obj = messages.get(message.substring(1, message.length() - 1));
+                if (obj != null) message = obj.toString();
+            }
+            list.add(message);
+        });
+    }
+
+    public static List<String> basicInterpolation(Set<ConstraintViolation<?>> constraintViolations, Map<?, ?> messages) {
+        List<String> list = new LinkedList<>();
+        basicInterpolation(constraintViolations, messages, list);
+        return list;
     }
 
 }

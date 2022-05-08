@@ -39,7 +39,7 @@ public abstract class ContextNanoService extends BasicNanoService {
      * @return el property
      */
     protected final MetaProperty getProperty(String name) {
-        return context.getProperty(getId() + "." + name);
+        return context.getMetaProperty(getId() + "." + name);
     }
 
     /**
@@ -49,7 +49,7 @@ public abstract class ContextNanoService extends BasicNanoService {
      * @param metaProperty el meta property
      */
     protected final void putProperty(String name, MetaProperty metaProperty) {
-        context.putProperty(getId() + "." + name, metaProperty);
+        context.putMetaProperty(getId() + "." + name, metaProperty);
     }
 
 }

@@ -3,8 +3,9 @@ package edu.cynanthus.microservice.nanoservice;
 import edu.cynanthus.bean.BeanValidation;
 import edu.cynanthus.bean.Config;
 import edu.cynanthus.bean.FieldAliasFinder;
+import edu.cynanthus.bean.ValidInfo;
 import edu.cynanthus.common.net.http.HttpException;
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.net.http.RequestMethod;
 import edu.cynanthus.common.resource.FileAccesObject;
 import edu.cynanthus.common.resource.ResourceException;
@@ -66,11 +67,11 @@ public class ConfigurationServer<T extends Config> extends WebServer {
     @RequestHandler(context = "/config", method = RequestMethod.GET, roles = SystemRole.ROLE_AGENT)
     public final T getConfig(String string) throws HttpException {
         try {
-            T configObject = context.getPropertiesAsConfigObject();
+            T configObject = context.getMetaPropertiesAsConfigObject();
             httpSecurityManager.logUserAction(Level.INFO, "Consultó la configuración del programa");
             return configObject;
         } catch (Exception e) {
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -83,14 +84,15 @@ public class ConfigurationServer<T extends Config> extends WebServer {
      */
     @RequestHandler(context = "/config", method = RequestMethod.PUT, roles = SystemRole.ROLE_AGENT)
     public final Boolean updateConfig(T configObject) throws HttpException {
-        if (configObject != null && BeanValidation.isValid(configObject)) {
-            if (context.updatePropertiesFrom(configObject, fieldAliasFinder)) {
+        if (configObject != null) {
+            BeanValidation.validateAndThrow(configObject, ValidInfo.class);
+            if (context.updateMetaPropertiesFrom(configObject, fieldAliasFinder)) {
                 httpSecurityManager.logUserAction(Level.INFO, "Cambió la configuración del programa");
                 return true;
             }
             return false;
         }
-        throw new HttpException(HttpStatus.BAD_REQUEST);
+        throw new HttpException(HttpStatusCode.BAD_REQUEST);
     }
 
     /**
@@ -106,7 +108,7 @@ public class ConfigurationServer<T extends Config> extends WebServer {
         File logDirectory = archiveableContext.getLogDirectory();
         if (logDirectory.exists())
             return logDirectory.list((dir, name) -> name.endsWith(".log"));
-        throw new HttpException(HttpStatus.NOT_FOUND);
+        throw new HttpException(HttpStatusCode.NOT_FOUND);
     }
 
     /**
@@ -126,10 +128,10 @@ public class ConfigurationServer<T extends Config> extends WebServer {
                 try {
                     return FileAccesObject.INPUT_STREAM_FAO.read(logFile);
                 } catch (ResourceException e) {
-                    throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, e);
+                    throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, e);
                 }
         }
-        throw new HttpException(HttpStatus.NOT_FOUND);
+        throw new HttpException(HttpStatusCode.NOT_FOUND);
     }
 
     /**

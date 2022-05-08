@@ -3,7 +3,7 @@ package edu.cynanthus.microservice.net.http.server;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import edu.cynanthus.common.net.http.HttpException;
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.net.http.RequestMethod;
 
 import java.io.IOException;
@@ -48,11 +48,11 @@ public final class HttpContextHandler implements HttpHandler {
         try {
             requestMethod = RequestMethod.valueOf(exchange.getRequestMethod());
         } catch (IllegalArgumentException ex) {
-            throw new HttpException(HttpStatus.NOT_IMPLEMENTED, ex);
+            throw new HttpException(HttpStatusCode.NOT_IMPLEMENTED, ex);
         }
         HttpHandler methodHandler = methodHandlers.get(requestMethod);
         if (methodHandler != null) methodHandler.handle(exchange);
-        else throw new HttpException(HttpStatus.METHOD_NOT_ALLOWED);
+        else throw new HttpException(HttpStatusCode.METHOD_NOT_ALLOWED);
     }
 
 }

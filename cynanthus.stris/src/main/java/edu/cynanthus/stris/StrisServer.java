@@ -1,8 +1,9 @@
 package edu.cynanthus.stris;
 
 import edu.cynanthus.bean.BeanValidation;
+import edu.cynanthus.bean.Required;
 import edu.cynanthus.common.net.http.HttpException;
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.net.http.RequestMethod;
 import edu.cynanthus.common.net.tcp.TcpExchange;
 import edu.cynanthus.common.security.SystemRole;
@@ -51,7 +52,8 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
      */
     @RequestHandler(context = "/indication", method = RequestMethod.POST, roles = SystemRole.ROLE_AGENT)
     public Boolean performIndication(Indication indication) throws HttpException {
-        if (indication != null && BeanValidation.validateRequired(indication)) {
+        if (indication != null) {
+            BeanValidation.validateAndThrow(indication, Required.class);
             ConnectableControlNode controlNode = controlNodes.get(indication.getMac());
             if (controlNode != null) {
 
@@ -66,13 +68,13 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
                     for (int code : instruction) tcpExchange.writeByte(code);
                 } catch (IOException ex) {
                     throw new HttpException(
-                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        HttpStatusCode.INTERNAL_SERVER_ERROR,
                         "Comunicación con control \"" + controlNode.getMac() + "\" interrumpida",
                         ex
                     );
                 }
-            } else throw new HttpException(HttpStatus.NOT_FOUND);
-        } else throw new HttpException(HttpStatus.BAD_REQUEST);
+            } else throw new HttpException(HttpStatusCode.NOT_FOUND);
+        } else throw new HttpException(HttpStatusCode.BAD_REQUEST);
         return true;
     }
 
@@ -90,7 +92,7 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
         else {
             ControlNode controlNode = controlNodes.get(selector);
             if (controlNode != null) return new ControlNode[]{controlNode.clone()};
-            else throw new HttpException(HttpStatus.NOT_FOUND);
+            else throw new HttpException(HttpStatusCode.NOT_FOUND);
         }
     }
 

@@ -49,15 +49,17 @@ public class FunctionalBindingFactory<T, R> extends SingularParameterBindingFact
     private static <T> T invoke(Method method, Object instance, Object... parameters) throws IOException {
         try {
             return (T) method.invoke(instance, parameters);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException ex) {
+            throw new IOException(ex);
         } catch (InvocationTargetException e) {
             Throwable throwable = e.getTargetException();
+            if (throwable instanceof RuntimeException) {
+                throw (RuntimeException) throwable;
+            }
             if (throwable instanceof IOException) {
                 throw (IOException) throwable;
             } else throw new IOException(throwable);
         }
-        return null;
     }
 
 }

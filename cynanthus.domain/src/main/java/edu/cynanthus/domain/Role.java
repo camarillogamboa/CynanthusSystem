@@ -17,19 +17,14 @@ public class Role implements Bean {
     /**
      * El Id.
      */
-    @NotNull(groups = IdCandidate.class)
-    @Positive(
-        groups = {
-            IdCandidate.class,
-            ValidInfo.class
-        }
-    )
+    @NotNull(groups = IdCandidate.class, message = "{NotNull.role.id}")
+    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "{Positive.role.id}")
     private Integer id;
 
     /**
      * El Role type.
      */
-    @NotNull(groups = Required.class)
+    @NotNull(groups = Required.class, message = "{NotNull.role.roleType}")
     private RoleType roleType;
 
     /**

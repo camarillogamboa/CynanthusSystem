@@ -6,6 +6,7 @@ import edu.cynanthus.auri.api.TreeServerService;
 import edu.cynanthus.auri.server.entity.NodeInfoEntity;
 import edu.cynanthus.bean.Config;
 import edu.cynanthus.domain.*;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -57,7 +58,7 @@ class BasicTreeServerService<T extends Config, N extends RuntimeNode>
     }
 
     private List<? extends NodeInfo> selectNodeInfos(ServerInfo serverInfo, String selector) {
-        if (selector == null || selector.isBlank() || selector.isEmpty() || selector.equals("*")) {
+        if (!StringUtils.hasText(selector) || selector.equals("*")) {
             return nodeInfoService.readAllByIdServerInfo(serverInfo.getId());
         } else {
             List<NodeInfo> tempNodeInfos = new LinkedList<>();

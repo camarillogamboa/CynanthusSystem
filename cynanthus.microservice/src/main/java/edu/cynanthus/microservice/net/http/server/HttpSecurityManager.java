@@ -2,7 +2,7 @@ package edu.cynanthus.microservice.net.http.server;
 
 import com.sun.net.httpserver.HttpHandler;
 import edu.cynanthus.common.net.http.HttpException;
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.security.Encryption;
 import edu.cynanthus.common.security.SystemRole;
 import edu.cynanthus.common.security.SystemUser;
@@ -110,7 +110,7 @@ public final class HttpSecurityManager {
                     if (credentials != null && !credentials.isEmpty()) {
                         String credential = credentials.get(0);
                         authorize(currentUser = authenticate(credential.split(" ")), authorizedSystemRoles);
-                    } else throw new HttpException(HttpStatus.UNAUTHORIZED);
+                    } else throw new HttpException(HttpStatusCode.UNAUTHORIZED);
                 }
                 httpHandler.handle(exchange);
             } catch (Throwable th) {
@@ -142,7 +142,7 @@ public final class HttpSecurityManager {
             }
         }
         contextLogger.warning("[user:" + credentials[0] + "] Intento fallido de auntenticación.");
-        throw new HttpException(HttpStatus.UNAUTHORIZED);
+        throw new HttpException(HttpStatusCode.UNAUTHORIZED);
     }
 
     /**
@@ -155,7 +155,7 @@ public final class HttpSecurityManager {
     private void authorize(SystemUser systemUser, SystemRole[] authorizedSystemRoles) throws HttpException {
         if (authorizedSystemRoles.length > 0 && !systemUser.hasAnyRoles(authorizedSystemRoles)) {
             contextLogger.warning(systemUser + " Intento de petición de usuario no autorizado.");
-            throw new HttpException(HttpStatus.FORBIDDEN);
+            throw new HttpException(HttpStatusCode.FORBIDDEN);
         }
     }
 

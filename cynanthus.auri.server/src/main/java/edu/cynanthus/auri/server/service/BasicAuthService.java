@@ -1,6 +1,7 @@
 package edu.cynanthus.auri.server.service;
 
 import edu.cynanthus.auri.api.AuthService;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
 import edu.cynanthus.auri.server.security.JwtTokenProvider;
 import edu.cynanthus.domain.AuthenticatedUser;
 import edu.cynanthus.domain.User;
@@ -25,6 +26,9 @@ public class BasicAuthService implements AuthService {
 
     @Override
     public AuthenticatedUser auth(User user) {
+        if (user == null)
+            throw new InvalidArgumentException("El objeto usuario no debe ser nulo");
+
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
         );

@@ -8,6 +8,8 @@ import edu.cynanthus.microservice.property.MetaProperty;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Map;
+import java.util.Properties;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -35,14 +37,31 @@ public interface Context {
      *
      * @return el boolean
      */
-    boolean loadProperties();
+    boolean loadMetaProperties();
 
     /**
      * Save properties boolean.
      *
      * @return el boolean
      */
-    boolean saveProperties();
+    boolean saveMetaProperties();
+
+    /**
+     * Load properties properties.
+     *
+     * @param name el name
+     * @return el properties
+     */
+    Properties loadProperties(String name);
+
+    /**
+     * Save properties boolean.
+     *
+     * @param properties el properties
+     * @param name       el name
+     * @return el boolean
+     */
+    boolean saveProperties(Properties properties, String name);
 
     /**
      * Permite obtener property.
@@ -50,7 +69,7 @@ public interface Context {
      * @param key el key
      * @return el property
      */
-    MetaProperty getProperty(String key);
+    MetaProperty getMetaProperty(String key);
 
     /**
      * Put property.
@@ -58,23 +77,24 @@ public interface Context {
      * @param key          el key
      * @param metaProperty el meta property
      */
-    void putProperty(String key, MetaProperty metaProperty);
+    void putMetaProperty(String key, MetaProperty metaProperty);
 
     /**
      * Update properties from.
      *
      * @param configObject el config object
      * @param aliasFinder  el alias finder
+     * @return el boolean
      */
-    boolean updatePropertiesFrom(Config configObject, Function<Field, String> aliasFinder);
+    boolean updateMetaPropertiesFrom(Config configObject, Function<Field, String> aliasFinder);
 
     /**
      * Update properties from.
      *
      * @param configObject el config object
      */
-    default void updatePropertiesFrom(Config configObject) {
-        updatePropertiesFrom(configObject, FieldAliasFinder.INSTANCE);
+    default void updateMetaPropertiesFrom(Config configObject) {
+        updateMetaPropertiesFrom(configObject, FieldAliasFinder.INSTANCE);
     }
 
     /**
@@ -83,15 +103,15 @@ public interface Context {
      * @param configObject el config object
      * @param aliasFinder  el alias finder
      */
-    void copyPropertiesTo(Config configObject, Function<Field, String> aliasFinder);
+    void copyMetaPropertiesTo(Config configObject, Function<Field, String> aliasFinder);
 
     /**
      * Copy properties to.
      *
      * @param configObject el config object
      */
-    default void copyPropertiesTo(Config configObject) {
-        copyPropertiesTo(configObject, FieldAliasFinder.INSTANCE);
+    default void copyMetaPropertiesTo(Config configObject) {
+        copyMetaPropertiesTo(configObject, FieldAliasFinder.INSTANCE);
     }
 
     /**
@@ -101,7 +121,7 @@ public interface Context {
      * @return el properties as config object
      * @throws Exception el exception
      */
-    <T extends Config> T getPropertiesAsConfigObject() throws Exception;
+    <T extends Config> T getMetaPropertiesAsConfigObject() throws Exception;
 
     /**
      * Load resource input stream.
@@ -146,6 +166,13 @@ public interface Context {
      * @return el user management
      */
     SystemUserManagement getUserManagement();
+
+    /**
+     * Permite obtener messages.
+     *
+     * @return el messages
+     */
+    Map<String, ? extends Map<?, ?>> getMessages();
 
     /**
      * Permite obtener logger.

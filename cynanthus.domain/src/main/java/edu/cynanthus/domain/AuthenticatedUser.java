@@ -3,13 +3,11 @@ package edu.cynanthus.domain;
 import edu.cynanthus.bean.JProperty;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-public class AuthenticatedUser extends User{
+public class AuthenticatedUser extends User {
 
-    @NotNull
-    @NotEmpty
+    @NotEmpty(message = "{NotEmpty.authenticatedUser.token}")
     @JProperty
     private String token;
 

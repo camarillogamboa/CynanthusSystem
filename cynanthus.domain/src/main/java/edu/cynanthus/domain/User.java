@@ -2,10 +2,7 @@ package edu.cynanthus.domain;
 
 import edu.cynanthus.bean.*;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,36 +14,24 @@ public class User implements Bean {
     /**
      * El Id.
      */
-    @NotNull(groups = IdCandidate.class)
-    @Positive(groups = {
-        IdCandidate.class,
-        ValidInfo.class
-    })
+    @NotNull(groups = IdCandidate.class, message = "{NotNull.user.id}")
+    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "{Positive.user.id}")
     @JProperty
     private Integer id;
 
     /**
      * El Username.
      */
-    @NotNull(groups = {
-        Required.class,
-        NaturalIdCandidate.class
-    })
+    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "{NotEmpty.user.username}")
     @Size(
         max = 45,
-        groups = {
-            Required.class,
-            NaturalIdCandidate.class,
-            ValidInfo.class
-        }
+        groups = {Required.class, NaturalIdCandidate.class, ValidInfo.class},
+        message = "{Size.user.username}"
     )
     @Pattern(
         regexp = Patterns.IDENTIFIER,
-        groups = {
-            Required.class,
-            NaturalIdCandidate.class,
-            ValidInfo.class
-        }
+        groups = {Required.class, NaturalIdCandidate.class, ValidInfo.class},
+        message = "{Pattern.user.username}"
     )
     @JProperty
     private String username;
@@ -54,22 +39,16 @@ public class User implements Bean {
     /**
      * El Password.
      */
-    @NotNull(groups = Required.class)
-    @Size(
-        max = 128,
-        groups = {
-            Required.class,
-            ValidInfo.class
-        }
-    )
+    @NotNull(groups = Required.class, message = "{NotNull.user.password}")
+    @Size(max = 128, groups = {Required.class, ValidInfo.class}, message = "{Size.user.password}")
     @JProperty
     private String password;
 
     /**
      * El Roles.
      */
-    @NotNull
-    @Size(max = 3, groups = ValidInfo.class)
+    @NotNull(message = "{NotNull.user.roles}")
+    @Size(max = 3, groups = ValidInfo.class, message = "{Size.user.roles}")
     @JProperty
     private List<@NotNull Role> roles;
 

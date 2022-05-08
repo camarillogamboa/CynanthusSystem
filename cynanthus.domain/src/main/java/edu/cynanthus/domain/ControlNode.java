@@ -16,15 +16,15 @@ public class ControlNode extends Node implements RuntimeNode {
     /**
      * El Available.
      */
-    @NotNull(groups = Required.class)
+    @NotNull(groups = Required.class, message = "{NotNull.controlNode.available}")
     @JProperty
     private Boolean available;
 
     /**
      * El Last connection.
      */
-    @NotNull
-    @Positive(groups = ValidInfo.class)
+    @NotNull(message = "{NotNull.controlNode.lastConnection}")
+    @Positive(groups = ValidInfo.class, message = "{Positive.controlNode.lastConnection}")
     @JProperty
     private Long lastConnection;
 

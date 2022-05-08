@@ -2,15 +2,15 @@ package edu.cynanthus.auri.server.service;
 
 import edu.cynanthus.auri.api.CynanthusServerService;
 import edu.cynanthus.auri.api.ServerInfoService;
-import edu.cynanthus.auri.api.error.InvalidOperationException;
-import edu.cynanthus.auri.api.error.NullPointerServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
+import edu.cynanthus.auri.api.exception.InvalidTypeException;
 import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.json.JsonProvider;
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.net.http.client.LazyRequest;
-import edu.cynanthus.common.resource.StreamUtil;
 import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.ServerType;
+import org.springframework.util.StringUtils;
 
 import java.net.http.HttpResponse;
 
@@ -43,15 +43,15 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
 
     @Override
     public Boolean updateConfigOf(ServerInfo serverInfo, T config) {
-        if (config == null)
-            throw new NullPointerServiceException("Se requiere un objeto de configuración");
+        if (serverInfo == null)
+            throw new InvalidArgumentException("El objeto de configuración no debe ser nulo");
 
         ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
         checkServerType(fullServerInfo);
         return consume(lazyRequest ->
                 lazyRequest.PUT(
                     buildUri(fullServerInfo, "/config"),
-                    () -> StreamUtil.asInputStream(JsonProvider.toJson(config))
+                    () -> JsonProvider.toJsonInputStream(config)
                 ),
             Boolean.class
         );
@@ -66,8 +66,10 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
 
     @Override
     public String getLogContentOf(ServerInfo serverInfo, String logFileName) {
-        if (logFileName == null)
-            throw new NullPointerServiceException("Se requiere el nombre del archivo de registro");
+        if (StringUtils.hasText(logFileName))
+            throw new InvalidArgumentException(
+                "El nombre del archivo de registro no puede ser nulo, estar vacío o contener espacios en blanco"
+            );
 
         ServerInfo fullServerInfo = serverInfoService.read(serverInfo);
         checkServerType(fullServerInfo);
@@ -88,7 +90,7 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
 
         try {
             HttpResponse<String> response = lazyRequest.doRequestAndGetString();
-            return HttpStatus.isCorrect(response.statusCode());
+            return HttpStatusCode.isCorrect(response.statusCode());
         } catch (Exception ex) {
             return false;
         }
@@ -96,7 +98,7 @@ class BasicCynanthusServerService<T extends Config> extends MicroServiceConsumer
 
     void checkServerType(ServerInfo serverInfo) {
         if (!serverInfo.getServerType().equals(serverType))
-            throw new InvalidOperationException(
+            throw new InvalidTypeException(
                 "Este servicio es únicamente para objetos ServerInfo de tipo "
                     + serverType + " y el ServerInfo \"" + serverInfo.getName() + "\" no es de ese tipo"
             );

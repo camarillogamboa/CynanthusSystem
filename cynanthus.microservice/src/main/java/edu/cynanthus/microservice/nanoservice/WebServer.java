@@ -45,7 +45,7 @@ public class WebServer extends ContextNanoService implements HttpContextControll
         super(id, context);
         this.port = getProperty("port").asReadOnlyIntegerProperty();
 
-        this.httpErrorManager = new HttpErrorManager(logger);
+        this.httpErrorManager = new HttpErrorManager(logger, context.getMessages());
         this.httpSecurityManager = new HttpSecurityManager(context.getUserManagement(), logger);
     }
 

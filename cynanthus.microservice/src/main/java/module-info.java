@@ -4,6 +4,7 @@ module cynanthus.microservice {
     requires java.net.http;
     requires jdk.httpserver;
     requires com.google.gson;
+    requires java.validation;
     requires cynanthus.common;
     requires cynanthus.bean;
 

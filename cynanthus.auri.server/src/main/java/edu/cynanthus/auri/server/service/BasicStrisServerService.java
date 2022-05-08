@@ -5,7 +5,7 @@ import edu.cynanthus.auri.api.InstructionSetService;
 import edu.cynanthus.auri.api.NodeInfoService;
 import edu.cynanthus.auri.api.ServerInfoService;
 import edu.cynanthus.auri.api.StrisServerService;
-import edu.cynanthus.auri.api.error.InvalidOperationException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
 import edu.cynanthus.auri.server.entity.ServerInfoEntity;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.resource.StreamUtil;
@@ -81,8 +81,8 @@ public class BasicStrisServerService
 
     private Integer getIdSet(NodeInfo nodeInfo) {
         if (nodeInfo.getIdSet() != null) return nodeInfo.getIdSet();
-        throw new InvalidOperationException(
-            "El NodeInfo especificado no tiene un conjunto de instrucciones asociado"
+        throw new InvalidArgumentException(
+            "El NodeInfo \"" + nodeInfo.getMac() + "\" no tiene un conjunto de instrucciones asociado"
         );
     }
 

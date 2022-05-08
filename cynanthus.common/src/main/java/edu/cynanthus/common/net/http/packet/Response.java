@@ -1,6 +1,6 @@
 package edu.cynanthus.common.net.http.packet;
 
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 
 /**
  * La interface Response.
@@ -36,7 +36,7 @@ public interface Response<T> extends HttpPacket<T> {
      * @return el response
      */
     static <T> Response<T> createOkResponse(T data) {
-        return new ResponseImpl<>(HttpStatus.OK, data);
+        return new ResponseImpl<>(HttpStatusCode.OK, data);
     }
 
 }

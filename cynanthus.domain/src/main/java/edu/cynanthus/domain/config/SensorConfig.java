@@ -14,8 +14,8 @@ public class SensorConfig implements Config {
     /**
      * El Server name.
      */
-    @NotEmpty
-    @Size(max = 6, groups = ValidInfo.class)
+    @NotEmpty(message = "{NotEmpty.sensorConfig.serverName}")
+    @Size(max = 6, groups = ValidInfo.class, message = "{Size.sensorConfig.serverName}")
     @JProperty(
         alias = "cynanthus.sensor.sender.serverName",
         defaultValue = "127.0.0.1",
@@ -27,9 +27,9 @@ public class SensorConfig implements Config {
     /**
      * El Server port.
      */
-    @NotNull
-    @Positive(groups = ValidInfo.class)
-    @Max(value = 65536, groups = ValidInfo.class)
+    @NotNull(message = "{NotNull.sensorConfig.serverPort}")
+    @Positive(groups = ValidInfo.class, message = "{Positive.sensorConfig.serverPort}")
+    @Max(value = 65536, groups = ValidInfo.class, message = "{Max.sensorConfig.serverPort}")
     @JProperty(
         alias = "cynanthus.sensor.sender.serverPort",
         defaultValue = "8001",
@@ -40,8 +40,8 @@ public class SensorConfig implements Config {
     /**
      * El Time out.
      */
-    @NotNull
-    @Positive(groups = ValidInfo.class)
+    @NotNull(message = "{NotNull.sensorConfig.timeOut}")
+    @Positive(groups = ValidInfo.class, message = "{Positive.sensorConfig.timeOut}")
     @JProperty(
         alias = "cynanthus.sensor.sender.timeOut",
         defaultValue = "500",
@@ -52,8 +52,8 @@ public class SensorConfig implements Config {
     /**
      * El Sampling time.
      */
-    @NotNull
-    @Positive(groups = ValidInfo.class)
+    @NotNull(message = "{NotNull.sensorConfig.samplingTime}")
+    @Positive(groups = ValidInfo.class, message = "{Positive.sensorConfig.samplingTime}")
     @JProperty(
         alias = "cynanthus.sensor.sender.samplingTime",
         defaultValue = "2000",
@@ -64,8 +64,8 @@ public class SensorConfig implements Config {
     /**
      * El Wait time between attempts.
      */
-    @NotNull
-    @Positive(groups = ValidInfo.class)
+    @NotNull(message = "{NotNull.sensorConfig.waitTimeBetweenAttempts}")
+    @Positive(groups = ValidInfo.class, message = "{Positive.sensorConfig.waitTimeBetweenAttempts}")
     @JProperty(
         alias = "cynanthus.sensor.requester.waitTimeBetweenAttempts",
         defaultValue = "0",
@@ -76,9 +76,9 @@ public class SensorConfig implements Config {
     /**
      * El Send attemps.
      */
-    @NotNull
-    @Positive(groups = ValidInfo.class)
-    @Max(value = 20, groups = ValidInfo.class)
+    @NotNull(message = "{NotNull.sensorConfig.sendAttemps}")
+    @Positive(groups = ValidInfo.class, message = "{Positive.sensorConfig.sendAttemps}")
+    @Max(value = 20, groups = ValidInfo.class, message = "{Max.sensorConfig.sendAttemps}")
     @JProperty(
         alias = "cynanthus.sensor.requester.sendAttemps",
         defaultValue = "5",

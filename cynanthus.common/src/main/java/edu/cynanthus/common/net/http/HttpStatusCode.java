@@ -18,7 +18,7 @@ package edu.cynanthus.common.net.http;
  *     <li>y errores de los servidores (500–599).</li>
  * </ul>
  */
-public interface HttpStatus {
+public interface HttpStatusCode {
 
     /**
      * The constant CONTINUE.

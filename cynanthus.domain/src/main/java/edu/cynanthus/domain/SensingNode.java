@@ -16,14 +16,15 @@ public class SensingNode extends Sample implements RuntimeNode {
     /**
      * El Available.
      */
-    @NotNull(groups = Required.class)
+    @NotNull(groups = Required.class, message = "{NotNull.sensingNode.available}")
     @JProperty
     private Boolean available;
 
     /**
      * El Last connection.
      */
-    @Positive(groups = ValidInfo.class)
+    @NotNull(message = "{NotNull.sensingNode.lastConnection}")
+    @Positive(groups = ValidInfo.class, message = "{Positive.sensingNode.lastConnection}")
     @JProperty
     private Long lastConnection;
 

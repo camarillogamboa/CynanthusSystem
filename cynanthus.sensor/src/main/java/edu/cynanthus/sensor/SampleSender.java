@@ -1,7 +1,7 @@
 package edu.cynanthus.sensor;
 
 import edu.cynanthus.bean.FieldAliasFinder;
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.net.http.RequestMethod;
 import edu.cynanthus.common.net.http.client.ContextSuscriber;
 import edu.cynanthus.common.net.http.client.RequestQeue;
@@ -73,7 +73,7 @@ final class SampleSender extends HttpSuscriber<String> {
 
         this.responseConsumer = response -> {
             System.out.println(response);
-            if (response.getResponseCode() == HttpStatus.OK && !response.getData().equals("ok")) {
+            if (response.getResponseCode() == HttpStatusCode.OK && !response.getData().equals("ok")) {
 
                 String[] updates = response.getData().split(",");
                 SensorConfig sensorConfig = new SensorConfig();
@@ -92,7 +92,7 @@ final class SampleSender extends HttpSuscriber<String> {
                         logger.log(Level.WARNING, "Valores para propiedades inválidos", ex);
                     }
                 }
-                context.updatePropertiesFrom(sensorConfig);
+                context.updateMetaPropertiesFrom(sensorConfig);
             }
         };
     }

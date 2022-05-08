@@ -1,9 +1,8 @@
 package edu.cynanthus.auri.server.service;
 
 import edu.cynanthus.auri.api.NodeInfoService;
-import edu.cynanthus.auri.api.error.InvalidDataException;
-import edu.cynanthus.auri.api.error.NoExistingElementException;
-import edu.cynanthus.auri.api.error.ServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
+import edu.cynanthus.auri.api.exception.ResourceNotFoundException;
 import edu.cynanthus.auri.server.entity.NodeInfoEntity;
 import edu.cynanthus.auri.server.repository.NodeInfoRepository;
 import edu.cynanthus.bean.BeanValidation;
@@ -68,7 +67,7 @@ class BasicNodeInfoService
     @Override
     void checkNotNull(NodeInfo bean) {
         if (bean == null)
-            throw new ServiceException("El elemento NodeInfo no debe ser nulo");
+            throw new InvalidArgumentException("El objeto NodeInfo no debe ser nulo");
     }
 
     @Override
@@ -78,16 +77,18 @@ class BasicNodeInfoService
         else if (BeanValidation.validate(nodeInfo, NaturalIdCandidate.class).isEmpty())
             return jpa.findByMac(nodeInfo.getMac());
 
-        throw new InvalidDataException("Se requiere un identificador válido del NodeInfo");
+        throw new InvalidArgumentException("Se requiere un identificador válido para el objeto NodeInfo (id o mac)");
     }
 
     @Override
     NodeInfoEntity safeFind(NodeInfo bean) {
-        return find(bean).orElseThrow(() -> new NoExistingElementException(
-            "Registro NodeInfo{" +
-                (bean.getId() != null ? bean.getId() : bean.getMac()) +
-                "} no existe"
-        ));
+        return find(bean).orElseThrow(
+            () -> new ResourceNotFoundException(
+                "NodeInfo \"" +
+                    (bean.getId() != null ? bean.getId() : bean.getMac()) +
+                    "\" no encontrado"
+            )
+        );
     }
 
 }

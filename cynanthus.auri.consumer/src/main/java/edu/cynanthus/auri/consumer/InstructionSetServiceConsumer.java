@@ -2,8 +2,7 @@ package edu.cynanthus.auri.consumer;
 
 import com.google.gson.reflect.TypeToken;
 import edu.cynanthus.auri.api.InstructionSetService;
-import edu.cynanthus.auri.api.error.InvalidDataException;
-import edu.cynanthus.auri.api.error.NullPointerServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
 import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
@@ -77,32 +76,32 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
 
     private void checkId(Integer id) {
         if (id == null)
-            throw new NullPointerServiceException("Se requiere un identificador de instrucción");
+            throw new InvalidArgumentException("Se requiere un identificador de instrucción");
     }
 
     private void checkIdSet(Integer idSet) {
         if (idSet == null)
-            throw new NullPointerServiceException(
+            throw new InvalidArgumentException(
                 "Se requiere un identificador de conjunto de instrucciones"
             );
     }
 
     private void checkSetName(String setName) {
-        if (setName == null) throw new NullPointerServiceException(
+        if (setName == null) throw new InvalidArgumentException(
             "Se requiere un nombre de conjunto de instrucciones"
         );
     }
 
     private void checkName(String name) {
         if (name == null)
-            throw new NullPointerServiceException("Se requiere un nombre de instruccón");
+            throw new InvalidArgumentException("Se requiere un nombre de instruccón");
     }
 
     @Override
     Object getId(InstructionSet bean) {
         if (bean.getId() != null) return bean.getId();
         else if (bean.getName() != null) return bean.getName();
-        else throw new InvalidDataException(
+        else throw new InvalidArgumentException(
                 "Se requiere un identificador válido para realizar esta acción"
             );
     }

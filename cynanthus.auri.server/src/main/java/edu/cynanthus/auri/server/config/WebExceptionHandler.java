@@ -1,181 +1,127 @@
 package edu.cynanthus.auri.server.config;
 
-import edu.cynanthus.auri.api.error.*;
-import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.beans.TypeMismatchException;
+import edu.cynanthus.auri.api.exception.*;
+import edu.cynanthus.bean.ErrorMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.validation.BindException;
-import org.springframework.web.HttpMediaTypeNotAcceptableException;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingPathVariableException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.util.WebUtils;
 
 @RestControllerAdvice
 public class WebExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({
-        ExistingElementException.class,
-        IncompatibleServiceException.class,
-        InterruptedServiceException.class,
-        InvalidDataException.class,
-        IOServiceException.class,
-        NoExistingElementException.class,
-        NullPointerServiceException.class,
-        RemoteServiceException.class,
-        ServiceException.class
+        ServiceException.class,
+        InvalidArgumentException.class,
+        InvalidTypeException.class,
+        ResourceNotFoundException.class,
+        SyntaxException.class,
+        WebClientException.class,
+        WebServiceException.class
     })
-    public ResponseEntity<MessageNode> handlerServiceException(ServiceException ex) {
-        HttpStatus status;
+    public final ResponseEntity<Object> handleServiceException(
+        ServiceException serviceException,
+        WebRequest request
+    ) {
+        HttpHeaders headers = new HttpHeaders();
 
-        ex.printStackTrace();
-
-        if (ex instanceof ExistingElementException) {
-            status = HttpStatus.NOT_MODIFIED;
-        } else if (ex instanceof IncompatibleServiceException) {
-            status = HttpStatus.UNPROCESSABLE_ENTITY;
-        } else if (ex instanceof InterruptedServiceException) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        } else if (ex instanceof InvalidDataException) {
-            status = HttpStatus.BAD_REQUEST;
-        } else if (ex instanceof InvalidDataException) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        } else if (ex instanceof NoExistingElementException) {
-            status = HttpStatus.NOT_FOUND;
-        } else if (ex instanceof NullPointerServiceException) {
-            status = HttpStatus.BAD_REQUEST;
-        } else if (ex instanceof RemoteServiceException) {
-            status = HttpStatus.BAD_GATEWAY;
+        if (serviceException instanceof InvalidArgumentException) {
+            return commonHandler(
+                serviceException,
+                headers,
+                HttpStatus.BAD_REQUEST,
+                request
+            );
+        } else if (serviceException instanceof InvalidTypeException) {
+            return commonHandler(
+                serviceException,
+                headers,
+                HttpStatus.NOT_ACCEPTABLE,
+                request
+            );
+        } else if (serviceException instanceof ResourceNotFoundException) {
+            return commonHandler(
+                serviceException,
+                headers,
+                HttpStatus.NOT_FOUND,
+                request
+            );
+        } else if (serviceException instanceof SyntaxException) {
+            return commonHandler(
+                serviceException,
+                headers,
+                HttpStatus.BAD_GATEWAY,
+                request
+            );
+        } else if (serviceException instanceof WebClientException) {
+            return commonHandler(
+                serviceException,
+                headers,
+                HttpStatus.SERVICE_UNAVAILABLE,
+                request
+            );
+        } else if (serviceException instanceof WebServiceException) {
+            return handleWebServiceException(
+                (WebServiceException) serviceException,
+                headers,
+                HttpStatus.FAILED_DEPENDENCY,
+                request
+            );
         } else {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            return commonHandler(serviceException, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
         }
-
-        return new ResponseEntity<>(ex.toExceptionNode(), status);
     }
 
-    @Override
-    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
-        HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request
+    public ResponseEntity<Object> handleWebServiceException(
+        WebServiceException webServiceException,
+        HttpHeaders headers,
+        HttpStatus httpStatus,
+        WebRequest request
     ) {
-        return super.handleHttpRequestMethodNotSupported(ex, headers, status, request);
-    }
+        ErrorMessage<String> serviceMessage = webServiceException.getErrorMessage();
 
-    @Override
-    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
-        HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleHttpMediaTypeNotSupported(ex, headers, status, request);
-    }
+        String subMessage = "[Code:" + serviceMessage.getCode() + "] " + serviceMessage.getMessage();
 
-    @Override
-    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
-        HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleHttpMediaTypeNotAcceptable(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleMissingPathVariable(
-        MissingPathVariableException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleMissingPathVariable(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleMissingServletRequestParameter(
-        MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleMissingServletRequestParameter(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleServletRequestBindingException(
-        ServletRequestBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleServletRequestBindingException(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleConversionNotSupported(
-        ConversionNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleConversionNotSupported(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleTypeMismatch(
-        TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleTypeMismatch(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(
-        HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleHttpMessageNotReadable(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleHttpMessageNotWritable(
-        HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleHttpMessageNotWritable(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-        MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleMethodArgumentNotValid(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleMissingServletRequestPart(
-        MissingServletRequestPartException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleMissingServletRequestPart(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleBindException(
-        BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleBindException(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleNoHandlerFoundException(
-        NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request
-    ) {
-        return super.handleNoHandlerFoundException(ex, headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleAsyncRequestTimeoutException(
-        AsyncRequestTimeoutException ex, HttpHeaders headers, HttpStatus status, WebRequest webRequest
-    ) {
-        return super.handleAsyncRequestTimeoutException(ex, headers, status, webRequest);
+        ErrorMessage<String> errorMessage = new ErrorMessage<>(
+            httpStatus.value(),
+            webServiceException.getMessage() + "->" + subMessage,
+            webServiceException.getErrorMessage().getCauses()
+        );
+        return commonHandler(webServiceException, errorMessage, headers, httpStatus, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
         Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request
     ) {
-        return super.handleExceptionInternal(ex, body, headers, status, request);
+        return commonHandler(ex, headers, status, request);
+    }
+
+    private ResponseEntity<Object> commonHandler(
+        Throwable throwable,
+        HttpHeaders headers,
+        HttpStatus status,
+        WebRequest request
+    ) {
+        ErrorMessage<String> errorMessage = new ErrorMessage<>(status.value(), throwable.getMessage());
+        return commonHandler(throwable, errorMessage, headers, status, request);
+    }
+
+    private ResponseEntity<Object> commonHandler(
+        Throwable ex,
+        Object body,
+        HttpHeaders headers,
+        HttpStatus status,
+        WebRequest request
+    ) {
+        if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
+            request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
+        }
+        return new ResponseEntity<>(body, headers, status);
     }
 
 }

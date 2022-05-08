@@ -14,36 +14,24 @@ public class Instruction implements Bean {
     /**
      * El Id.
      */
-    @NotNull(groups = IdCandidate.class)
-    @Positive(groups = {
-        IdCandidate.class,
-        ValidInfo.class
-    })
+    @NotNull(groups = IdCandidate.class, message = "{NotNull.instrucction.id}")
+    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "{Positive.instruction.id}")
     @JProperty
     private Integer id;
 
     /**
      * El Name.
      */
-    @NotEmpty(groups = {
-        Required.class,
-        NaturalIdCandidate.class
-    })
+    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "{NotEmpty.instruction.name}")
     @Size(
         max = 45,
-        groups = {
-            Required.class,
-            NaturalIdCandidate.class,
-            ValidInfo.class
-        }
+        groups = {Required.class, NaturalIdCandidate.class, ValidInfo.class},
+        message = "{Size.instruction.name}"
     )
     @Pattern(
         regexp = Patterns.NAME,
-        groups = {
-            Required.class,
-            NaturalIdCandidate.class,
-            ValidInfo.class
-        }
+        groups = {Required.class, NaturalIdCandidate.class, ValidInfo.class},
+        message = "{Pattern.instruction.name}"
     )
     @JProperty
     private String name;
@@ -51,13 +39,11 @@ public class Instruction implements Bean {
     /**
      * El Value.
      */
-    @NotNull(groups = Required.class)
+    @NotNull(groups = Required.class, message = "{NotNull.instruction.value}")
     @Size(
         max = 255,
-        groups = {
-            Required.class,
-            ValidInfo.class
-        }
+        groups = {Required.class, ValidInfo.class},
+        message = "{Size.instruction.value}"
     )
     @JProperty
     private int[] value;

@@ -15,14 +15,8 @@ public class Indication extends Host {
     /**
      * El Instruction.
      */
-    @NotNull(groups = Required.class)
-    @Size(
-        max = 255,
-        groups = {
-            Required.class,
-            ValidInfo.class
-        }
-    )
+    @NotNull(groups = Required.class, message = "{NotNull.indication.instruction}")
+    @Size(max = 255, groups = {Required.class, ValidInfo.class}, message = "{Size.indication.instruction}")
     private int[] instruction;
 
     /**

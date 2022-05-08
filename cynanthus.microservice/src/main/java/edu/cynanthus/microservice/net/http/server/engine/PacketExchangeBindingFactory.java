@@ -2,7 +2,7 @@ package edu.cynanthus.microservice.net.http.server.engine;
 
 import com.google.gson.JsonSyntaxException;
 import edu.cynanthus.common.net.http.HttpException;
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.net.http.packet.Request;
 import edu.cynanthus.common.net.http.packet.Response;
 import edu.cynanthus.common.net.http.packet.converter.Converter;
@@ -184,7 +184,7 @@ public class PacketExchangeBindingFactory<T, R> extends ObjectExchangeBindingFac
                     try {
                         return converter.exchange(inputStream);
                     } catch (JsonSyntaxException ex) {
-                        throw new HttpException(HttpStatus.BAD_REQUEST, ex);
+                        throw new HttpException(HttpStatusCode.BAD_REQUEST, ex);
                     }
                 };
 

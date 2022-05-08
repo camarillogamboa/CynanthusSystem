@@ -15,8 +15,8 @@ public class Node extends Host {
     /**
      * El Rssi.
      */
-    @NotNull
-    @Negative(groups = ValidInfo.class)
+    @NotNull(message = "{NotNull.node.rssi}")
+    @Negative(groups = ValidInfo.class, message = "{Negative.node.rssi}")
     @JProperty
     private Float rssi;
 

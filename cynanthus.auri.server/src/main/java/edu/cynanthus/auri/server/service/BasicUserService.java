@@ -1,9 +1,8 @@
 package edu.cynanthus.auri.server.service;
 
 import edu.cynanthus.auri.api.UserService;
-import edu.cynanthus.auri.api.error.InvalidDataException;
-import edu.cynanthus.auri.api.error.NoExistingElementException;
-import edu.cynanthus.auri.api.error.NullPointerServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
+import edu.cynanthus.auri.api.exception.ResourceNotFoundException;
 import edu.cynanthus.auri.server.entity.RoleEntity;
 import edu.cynanthus.auri.server.entity.UserEntity;
 import edu.cynanthus.auri.server.repository.RoleRepository;
@@ -90,22 +89,22 @@ class BasicUserService extends BasicBeanService<Integer, User, UserEntity> imple
         else if (BeanValidation.validate(user, NaturalIdCandidate.class).isEmpty())
             return userJpa.findByUsername(user.getUsername());
 
-        throw new InvalidDataException("Se requiere un identificador válido del User");
+        throw new InvalidArgumentException("Se requiere un identificador válido del usuario (id o username)");
     }
 
     @Override
     UserEntity safeFind(User bean) {
-        return find(bean).orElseThrow(() -> new NoExistingElementException(
-            "Registro User{" +
+        return find(bean).orElseThrow(() -> new ResourceNotFoundException(
+            "Usuario \"" +
                 (bean.getId() != null ? bean.getId() : bean.getUsername()) +
-                "} no existe"
+                "\" no encontrado"
         ));
     }
 
     @Override
     void checkNotNull(User bean) {
         if (bean == null)
-            throw new NullPointerServiceException("El elemento User no debe ser nulo");
+            throw new InvalidArgumentException("El objeto usuario no debe ser nulo");
     }
 
     private User saveUserInfo(User user, UserEntity entity) {

@@ -1,9 +1,10 @@
 package edu.cynanthus.latiro;
 
 import edu.cynanthus.bean.BeanValidation;
+import edu.cynanthus.bean.FullyValidate;
 import edu.cynanthus.common.SSV;
 import edu.cynanthus.common.net.http.HttpException;
-import edu.cynanthus.common.net.http.HttpStatus;
+import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.net.http.RequestMethod;
 import edu.cynanthus.common.security.SystemRole;
 import edu.cynanthus.domain.Node;
@@ -62,8 +63,9 @@ public final class LatiroServer extends CynanthusServer<LatiroConfig> {
      */
     @RequestHandler(context = "/sample", method = RequestMethod.POST, roles = SystemRole.ROLE_AGENT)
     public String putSample(Sample sample) throws HttpException {
-        if (sample != null && BeanValidation.fullyValidate(sample)) {
+        if (sample != null) {
             System.out.println(sample);
+            BeanValidation.validateAndThrow(sample, FullyValidate.class);
             synchronized (sampleBuffer) {
                 sampleBuffer.add(sample);
             }
@@ -86,7 +88,7 @@ public final class LatiroServer extends CynanthusServer<LatiroConfig> {
                 return ssvBuilder.toString();
             }
 
-        } else throw new HttpException(HttpStatus.BAD_REQUEST);
+        } else throw new HttpException(HttpStatusCode.BAD_REQUEST);
         return "ok";
     }
 
@@ -104,7 +106,7 @@ public final class LatiroServer extends CynanthusServer<LatiroConfig> {
         else {
             SensingNode sensingNode = storableNodes.get(selector);
             if (sensingNode != null) return new SensingNode[]{sensingNode.clone()};
-            else throw new HttpException(HttpStatus.NOT_FOUND);
+            else throw new HttpException(HttpStatusCode.NOT_FOUND);
         }
     }
 

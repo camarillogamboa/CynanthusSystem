@@ -1,9 +1,8 @@
 package edu.cynanthus.auri.server.service;
 
 import edu.cynanthus.auri.api.ServerInfoService;
-import edu.cynanthus.auri.api.error.InvalidDataException;
-import edu.cynanthus.auri.api.error.NoExistingElementException;
-import edu.cynanthus.auri.api.error.NullPointerServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
+import edu.cynanthus.auri.api.exception.ResourceNotFoundException;
 import edu.cynanthus.auri.server.entity.ServerInfoEntity;
 import edu.cynanthus.auri.server.repository.ServerInfoRepository;
 import edu.cynanthus.bean.BeanValidation;
@@ -62,7 +61,7 @@ class BasicServerInfoService
     @Override
     void checkNotNull(ServerInfo bean) {
         if (bean == null)
-            throw new NullPointerServiceException("El elemento ServerInfo no debe ser nulo");
+            throw new InvalidArgumentException("El elemento ServerInfo no debe ser nulo");
     }
 
     @Override
@@ -72,15 +71,15 @@ class BasicServerInfoService
         else if (BeanValidation.validate(serverInfo, NaturalIdCandidate.class).isEmpty())
             return jpa.findByName(serverInfo.getName());
 
-        throw new InvalidDataException("Se requiere un identificador válido del ServerInfo");
+        throw new InvalidArgumentException("Se requiere un identificador válido del ServerInfo");
     }
 
     @Override
     ServerInfoEntity safeFind(ServerInfo bean) {
-        return find(bean).orElseThrow(() -> new NoExistingElementException(
-            "Registro ServerInfo{" +
+        return find(bean).orElseThrow(() -> new ResourceNotFoundException(
+            "Información del servidor \"" +
                 (bean.getId() != null ? bean.getId() : bean.getName()) +
-                "} no existe"
+                "\" no encontrada"
         ));
     }
 

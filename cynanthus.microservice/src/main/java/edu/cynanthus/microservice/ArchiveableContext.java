@@ -26,6 +26,6 @@ public interface ArchiveableContext extends Context {
      *
      * @return el properties file
      */
-    File getPropertiesFile();
+    File getMetaPropertiesFile();
 
 }

@@ -14,36 +14,24 @@ public class InstructionSet implements Bean {
     /**
      * El Id.
      */
-    @NotNull(groups = IdCandidate.class)
-    @Positive(groups = {
-        IdCandidate.class,
-        ValidInfo.class
-    })
+    @NotNull(groups = IdCandidate.class, message = "{NotNull.instructionSet.id}")
+    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "{Positive.instructionSet.id}")
     @JProperty
     private Integer id;
 
     /**
      * El Name.
      */
-    @NotEmpty(groups = {
-        Required.class,
-        NaturalIdCandidate.class
-    })
+    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "{NoEmpty.instructionSet.name}")
     @Size(
         max = 25,
-        groups = {
-            Required.class,
-            ValidInfo.class,
-            NaturalIdCandidate.class
-        }
+        groups = {Required.class, ValidInfo.class, NaturalIdCandidate.class},
+        message = "{Size.instructionSet.name}"
     )
     @Pattern(
         regexp = Patterns.NAME,
-        groups = {
-            Required.class,
-            ValidInfo.class,
-            NaturalIdCandidate.class
-        }
+        groups = {Required.class, ValidInfo.class, NaturalIdCandidate.class},
+        message = "{Pattern.instructionSet.name}"
     )
     @JProperty
     private String name;
@@ -51,7 +39,8 @@ public class InstructionSet implements Bean {
     /**
      * El Info.
      */
-    @Size(max = 300, groups = ValidInfo.class)
+    @NotEmpty(message = "{NotEmpty.instructionSet.info}")
+    @Size(max = 300, groups = ValidInfo.class, message = "{Size.instructionSet.info}")
     @JProperty
     private String info;
 

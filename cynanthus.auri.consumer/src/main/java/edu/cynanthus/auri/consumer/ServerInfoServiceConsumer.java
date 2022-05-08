@@ -2,7 +2,7 @@ package edu.cynanthus.auri.consumer;
 
 import com.google.gson.reflect.TypeToken;
 import edu.cynanthus.auri.api.ServerInfoService;
-import edu.cynanthus.auri.api.error.InvalidDataException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
 import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.ServerInfo;
 
@@ -26,7 +26,7 @@ class ServerInfoServiceConsumer extends BeanServiceConsumer<ServerInfo> implemen
     Object getId(ServerInfo bean) {
         if (bean.getId() != null) return bean.getId();
         else if (bean.getName() != null) return bean.getName();
-        else throw new InvalidDataException(
+        else throw new InvalidArgumentException(
                 "Se requiere un identificador válido para realizar esta acción"
             );
     }

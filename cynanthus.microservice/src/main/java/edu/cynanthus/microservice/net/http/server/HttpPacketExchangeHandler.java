@@ -11,10 +11,8 @@ import edu.cynanthus.common.resource.StreamUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TreeMap;
 
 /**
  * El tipo Http packet exchange handler.
@@ -43,9 +41,7 @@ public final class HttpPacketExchangeHandler implements HttpHandler {
      */
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        Map<String, String[]> headers = new TreeMap<>(String::compareTo);
-
-        exchange.getRequestHeaders().forEach((k, v) -> headers.put(k, v.toArray(String[]::new)));
+        Map<String, String[]> headers = HttpExchangeUtil.getHeaders(exchange);
 
         RequestMethod requestMethod = RequestMethod.valueOf(exchange.getRequestMethod());
 
@@ -57,9 +53,8 @@ public final class HttpPacketExchangeHandler implements HttpHandler {
             Request.create(requestMethod, headers, exchange.getRemoteAddress(), data)
         );
 
-        exchange.sendResponseHeaders(response.getResponseCode(), 0);
-        try (OutputStream out = exchange.getResponseBody()) {
-            response.getData().transferTo(out);
+        try (InputStream bodyStream = response.getData()) {
+            HttpExchangeUtil.sendResponse(exchange, response.getResponseCode(), bodyStream);
         }
     }
 

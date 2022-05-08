@@ -1,9 +1,8 @@
 package edu.cynanthus.auri.server.service;
 
 import edu.cynanthus.auri.api.InstructionSetService;
-import edu.cynanthus.auri.api.error.InvalidDataException;
-import edu.cynanthus.auri.api.error.NoExistingElementException;
-import edu.cynanthus.auri.api.error.NullPointerServiceException;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
+import edu.cynanthus.auri.api.exception.ResourceNotFoundException;
 import edu.cynanthus.auri.server.entity.InstructionEntity;
 import edu.cynanthus.auri.server.entity.InstructionSetEntity;
 import edu.cynanthus.auri.server.repository.InstructionRepository;
@@ -14,6 +13,7 @@ import edu.cynanthus.bean.NaturalIdCandidate;
 import edu.cynanthus.bean.ValueUpdater;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
+import org.springframework.util.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -94,7 +94,9 @@ class BasicInstructionSetService
         checkNaturalId(name);
 
         InstructionSetEntity entity = setJpa.findByName(setName).orElseThrow(
-            () -> new NoExistingElementException("Registro InstructionSet{" + setName + "} no existe")
+            () -> new ResourceNotFoundException(
+                "Conjunto de instrucciones \"" + setName + "\" no encontrado"
+            )
         );
 
         return safeFind(entity.getId(), name).clone();
@@ -115,14 +117,19 @@ class BasicInstructionSetService
 
         if (bean.getInstructions() != null)
             for (Instruction instruction : bean.getInstructions()) {
+
                 InstructionSetEntity finalEntity = entity;
+
                 find(entity.getId(), instruction).ifPresent(v -> {
+
                     if (v.getIdSet().equals(finalEntity.getId())) {
                         ValueUpdater.updateIfNotNull(instruction.getName(), v::setName);
                         ValueUpdater.updateIfNotNull(instruction.getValue(), v::setValue);
                         result.add(instJpa.save(v).clone());
                     }
+
                 });
+
             }
 
         entity.setInstructions(result);
@@ -175,7 +182,11 @@ class BasicInstructionSetService
     }
 
     private InstructionEntity safeFind(Integer id) {
-        return find(id).orElseThrow(() -> new NoExistingElementException("Registro Instruction{" + id + "} no existe"));
+        return find(id).orElseThrow(
+            () -> new ResourceNotFoundException(
+                "Intrucción \"" + id + "\" no encontrada"
+            )
+        );
     }
 
     private Optional<InstructionEntity> find(Integer idset, String name) {
@@ -183,9 +194,11 @@ class BasicInstructionSetService
     }
 
     private InstructionEntity safeFind(Integer idSet, String name) {
-        return find(idSet, name).orElseThrow(() -> new NoExistingElementException(
-            "Registro Instruction{" + idSet + ":" + name + "} no existe"
-        ));
+        return find(idSet, name).orElseThrow(
+            () -> new ResourceNotFoundException(
+                "Intrucción \"" + idSet + ":" + name + "\" no encontrada"
+            )
+        );
     }
 
     private Optional<InstructionEntity> find(Integer idSet, Instruction bean) {
@@ -206,32 +219,34 @@ class BasicInstructionSetService
             return setJpa.findByName(bean.getName());
         }
 
-        throw new InvalidDataException("Se requiere un identificador válido del InstructionSet");
+        throw new InvalidArgumentException(
+            "Se requiere un identificador válido del conjunto de instrucción (id o setName)"
+        );
     }
 
     @Override
     InstructionSetEntity safeFind(InstructionSet bean) {
-        return find(bean).orElseThrow(() -> new NoExistingElementException(
-            "Registro InstructionSet{" +
+        return find(bean).orElseThrow(() -> new ResourceNotFoundException(
+            "Conjunto de instrucciones \"" +
                 (bean.getId() != null ? bean.getId() : bean.getName()) +
-                "} no existe"
+                "\" no encontrado"
         ));
     }
 
     private void checkId(Integer id) {
         if (id == null || id < 0)
-            throw new InvalidDataException("Identificador \"" + id + "\" inválido");
+            throw new InvalidArgumentException("Identificador \"" + id + "\" inválido, no debe ser nulo o negativo");
     }
 
     private void checkNaturalId(String naturalId) {
-        if (naturalId == null || naturalId.isBlank() || naturalId.isEmpty())
-            throw new InvalidDataException("El identificador no puede ser nulo, vacío o en blanco");
+        if (StringUtils.hasText(naturalId))
+            throw new InvalidArgumentException("El identificador no puede ser nulo, estar vacío o lleno de espacios");
     }
 
     @Override
     void checkNotNull(InstructionSet bean) {
         if (bean == null)
-            throw new NullPointerServiceException("El elemento InstructionSet no debe ser nulo");
+            throw new InvalidArgumentException("El objeto InstructionSet no debe ser nulo");
     }
 
 }
