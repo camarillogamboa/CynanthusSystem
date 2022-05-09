@@ -5,14 +5,60 @@ import edu.cynanthus.bean.ErrorMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 @RestControllerAdvice
 public class WebExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(TransactionSystemException.class)
+    public ResponseEntity<Object> handleTransactionSystemException(
+        TransactionSystemException ex,
+        WebRequest request
+    ) {
+        Throwable cause = ex.getRootCause();
+        if (cause instanceof ConstraintViolationException) {
+            return handleConstraintViolationException((ConstraintViolationException) cause, request);
+        } else {
+            return commonHandler(ex, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        }
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(
+        ConstraintViolationException constraintViolationException,
+        WebRequest request
+    ) {
+        Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
+        List<String> causes = new LinkedList<>();
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+
+        constraintViolations.forEach(constraintViolation -> causes.add(constraintViolation.getMessage()));
+
+        ErrorMessage<String> errorMessage = new ErrorMessage<>(
+            status.value(),
+            "Se han violado algunas restricciones al validar el elemento",
+            causes
+        );
+
+        return commonHandler(
+            constraintViolationException,
+            errorMessage,
+            new HttpHeaders(),
+            status,
+            request
+        );
+    }
 
     @ExceptionHandler({
         ServiceException.class,
