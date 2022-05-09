@@ -6,69 +6,38 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 @RestControllerAdvice
 public class WebExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<Object> handleSQLException(
+        SQLException sqlException,
+        WebRequest request
+    ) {
+        HttpHeaders headers = new HttpHeaders();
+        return commonHandler(sqlException, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
 
     @ExceptionHandler(TransactionSystemException.class)
     public ResponseEntity<Object> handleTransactionSystemException(
         TransactionSystemException ex,
         WebRequest request
     ) {
-        Throwable cause = ex.getRootCause();
-        if (cause instanceof ConstraintViolationException) {
-            return handleConstraintViolationException((ConstraintViolationException) cause, request);
-        } else {
-            return commonHandler(ex, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
-        }
+        return commonHandler(ex, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(
-        ConstraintViolationException constraintViolationException,
-        WebRequest request
-    ) {
-        Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
-        List<String> causes = new LinkedList<>();
-        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-
-        constraintViolations.forEach(constraintViolation -> causes.add(constraintViolation.getMessage()));
-
-        ErrorMessage<String> errorMessage = new ErrorMessage<>(
-            status.value(),
-            "Se han violado algunas restricciones al validar el elemento",
-            causes
-        );
-
-        return commonHandler(
-            constraintViolationException,
-            errorMessage,
-            new HttpHeaders(),
-            status,
-            request
-        );
-    }
-
-    @ExceptionHandler({
-        ServiceException.class,
-        InvalidArgumentException.class,
-        InvalidTypeException.class,
-        ResourceNotFoundException.class,
-        SyntaxException.class,
-        WebClientException.class,
-        WebServiceException.class
-    })
+    @ExceptionHandler(ServiceException.class)
     public final ResponseEntity<Object> handleServiceException(
         ServiceException serviceException,
         WebRequest request
@@ -117,9 +86,9 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatus.FAILED_DEPENDENCY,
                 request
             );
-        } else {
-            return commonHandler(serviceException, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
         }
+
+        return commonHandler(serviceException, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     public ResponseEntity<Object> handleWebServiceException(
@@ -138,6 +107,29 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
             webServiceException.getErrorMessage().getCauses()
         );
         return commonHandler(webServiceException, errorMessage, headers, httpStatus, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+        MethodArgumentNotValidException ex,
+        HttpHeaders headers,
+        HttpStatus status,
+        WebRequest request
+    ) {
+        System.out.println("Ejecutanto handleMethodArgumentNotValid()");
+        List<String> causes = new LinkedList<>();
+
+        ex.getAllErrors().forEach(objectError -> causes.add(objectError.getDefaultMessage()));
+
+        status = HttpStatus.UNPROCESSABLE_ENTITY;
+
+        ErrorMessage<String> errorMessage = new ErrorMessage<>(
+            status.value(),
+            "Se han violado algunas restricciones de validacion del elemento",
+            causes
+        );
+
+        return commonHandler(ex, errorMessage, headers, status, request);
     }
 
     @Override

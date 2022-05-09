@@ -10,7 +10,7 @@ import edu.cynanthus.domain.ServerInfo;
 import java.lang.reflect.Type;
 
 class ConfigurationServerServiceConsumer<T extends Config>
-    extends GeneralConsumer implements ConfigurationServerService<T> {
+    extends ServiceConsumer implements ConfigurationServerService<T> {
 
     final String resourcePath;
 

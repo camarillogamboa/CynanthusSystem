@@ -2,6 +2,7 @@ package edu.cynanthus.domain;
 
 import edu.cynanthus.bean.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Objects;
@@ -48,6 +49,8 @@ public class InstructionSet implements Bean {
      * El Instructions.
      */
     @JProperty
+    @NotNull(message = "{NotNull.instructionSet.instructions}")
+    @Valid
     private List<Instruction> instructions;
 
     /**

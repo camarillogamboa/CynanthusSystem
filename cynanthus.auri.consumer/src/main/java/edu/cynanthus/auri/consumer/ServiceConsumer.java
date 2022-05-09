@@ -2,6 +2,7 @@ package edu.cynanthus.auri.consumer;
 
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import edu.cynanthus.auri.api.AuriService;
 import edu.cynanthus.auri.api.exception.ServiceException;
 import edu.cynanthus.auri.api.exception.SyntaxException;
 import edu.cynanthus.auri.api.exception.WebClientException;
@@ -24,13 +25,13 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpTimeoutException;
 import java.util.function.Consumer;
 
-class GeneralConsumer {
+class ServiceConsumer implements AuriService {
 
     private static final Type ERROR_MESSAGE_TYPE = new TypeToken<ErrorMessage<String>>() {}.getType();
 
     private final LazyRequest lazyRequest;
 
-    GeneralConsumer(LazyRequest lazyRequest) {
+    ServiceConsumer(LazyRequest lazyRequest) {
         this.lazyRequest = lazyRequest;
     }
 

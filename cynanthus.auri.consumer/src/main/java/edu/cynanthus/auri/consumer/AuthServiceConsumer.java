@@ -7,7 +7,7 @@ import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.AuthenticatedUser;
 import edu.cynanthus.domain.User;
 
-class AuthServiceConsumer extends GeneralConsumer implements AuthService {
+class AuthServiceConsumer extends ServiceConsumer implements AuthService {
 
     AuthServiceConsumer(LazyRequest lazyRequest) {
         super(lazyRequest);

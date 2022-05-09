@@ -23,7 +23,7 @@ public class AuthController implements AuthService {
 
     @Override
     @PostMapping("/login")
-    public AuthenticatedUser auth(@RequestBody @Validated({Required.class}) User user) {
+    public AuthenticatedUser auth(@RequestBody @Validated(Required.class) User user) {
         return authService.auth(user);
     }
 

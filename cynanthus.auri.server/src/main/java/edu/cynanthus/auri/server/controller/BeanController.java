@@ -3,8 +3,11 @@ package edu.cynanthus.auri.server.controller;
 import edu.cynanthus.auri.api.BeanService;
 import edu.cynanthus.auri.api.WrappedBeanService;
 import edu.cynanthus.bean.Bean;
+import edu.cynanthus.bean.Required;
+import edu.cynanthus.bean.ValidInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +23,7 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     @PreAuthorize("hasRole('ADMIN')")
-    public T create(@RequestBody T bean) {
+    public T create(@RequestBody @Validated(Required.class) T bean) {
         return super.create(bean);
     }
 
@@ -42,7 +45,7 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @PutMapping
     @ResponseBody
     @PreAuthorize("hasRole('ADMIN')")
-    public T update(@RequestBody T bean) {
+    public T update(@RequestBody @Validated(ValidInfo.class) T bean) {
         return super.update(bean);
     }
 

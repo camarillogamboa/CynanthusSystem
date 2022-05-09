@@ -7,7 +7,7 @@ import edu.cynanthus.common.net.http.client.LazyRequest;
 
 import java.lang.reflect.Type;
 
-abstract class CrudServiceConsumer<T> extends GeneralConsumer implements CrudService<T> {
+abstract class CrudServiceConsumer<T> extends ServiceConsumer implements CrudService<T> {
 
     protected final String resourcePath;
     private final Type dataType;
