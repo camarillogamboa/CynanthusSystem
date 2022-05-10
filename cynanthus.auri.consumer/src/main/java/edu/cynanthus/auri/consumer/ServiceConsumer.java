@@ -68,7 +68,7 @@ class ServiceConsumer implements AuriService {
         } catch (HttpTimeoutException ex) {
             throw new WebClientException("Tiempo muerto de conexión", ex);
         } catch (ConnectException ex) {
-            throw new WebClientException("No se pudo establecer la conexión con el servidor Auri");
+            throw new WebClientException("No se pudo establecer la conexión con el servidor Auri", ex);
         } catch (SSLHandshakeException ex) {
             throw new WebClientException("Error de intercambio de contexto SSL", ex);
         } catch (SSLException ex) {
