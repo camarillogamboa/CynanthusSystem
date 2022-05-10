@@ -1,0 +1,53 @@
+END POINTS DE CYNANTHUS SORDIDUS
+
+/cynanthus/sordidus/config                                                  GET (ONE), UPDATE (ONE)
+/cynanthus/sordidus/log/files                                               GET (ALL)
+/cynanthus/sordidus/log                                                     GET (ONE)
+/cynanthus/sordidus/user                                                    PUT (ALL)
+/cynanthus/sordidus/available                                               GET (ONE)
+/cynanthus/sordidus/sampleset                                               POST (ONE)
+
+
+END POINTS DE CYNANTHUS LATIRO
+
+/cynanthus/latiro/config                                                    GET (ONE), UPDATE (ONE)
+/cynanthus/latiro/log/files                                                 GET (ALL)
+/cynanthus/latiro/log                                                       GET (ONE)
+/cynanthus/latiro/user                                                      PUT (ALL)
+/cynanthus/latiro/available                                                 GET (ONE)
+/cynanthus/latiro/sample                                                    PUT (ONE)
+/cynanthus/latiro/node                                                      GET (ALL OR ONE)
+
+
+END POINTS DE CYNANTHUS STRIS
+
+/cynanthus/stris/config                                                     GET (ONE), UPDATE (ONE)
+/cynanthus/stris/log/files                                                  GET (ALL)
+/cynanthus/stris/log                                                        GET (ONE)
+/cynanthus/stris/user                                                       PUT (ALL)
+/cynanthus/stris/available                                                  GET (ONE)
+/cynanthus/stris/indication                                                 POST (ONE)
+/cynanthus/stris/node                                                       GET (ALL OR ONE)
+
+END POINTS DE CYNANTHUS AURI
+
+/cynanthus/auri/server					                                    POST (ONE), GET (ALL), PUT (ONE), DELETE (ALL)
+/cynanthus/auri/server/(sordidus|latiro|stris)/{id|name}				    GET (ONE), DELETE (ONE)
+/cynanthus/auri/server/(sordidus|latiro|stris)/{id|name}/config			    GET (ONE), UPDATE (ONE)
+/cynanthus/auri/server/(sordidus|latiro|stris)/{id|name}/log			    GET (ALL)
+/cynanthus/auri/server/(sordidus|latiro|stris)/{id|name}/log/{logFileName}	GET (ONE)
+/cynanthus/auri/server/(sordidus|latiro|stris)/{id|name}/available		    GET (ONE)
+/cynanthus/auri/server/(sordidus|latiro|stris)/{id|name}/node/{selector}	GET (ONE)
+/cynanthus/auri/server/(sordidus|latiro|stris)/{id|name}/indication		    PUT (ONE)
+
+/cynanthus/auri/node/info				                                    POST (ONE), GET (ALL), PUT (ONE), DELETE (ALL)
+/cynanthus/auri/node/info/{id|mac}			                                GET (ONE), DELETE (ONE)
+/cynanthus/auri/node/info/of/{idserverInfo}	                                GET (ALL)
+
+/cynanthus/auri/set					                                        POST (ONE), GET (ALL), PUT (ONE), DELETE (ALL)
+/cynanthus/auri/set/{id|name}				                                GET (ONE), DELETE (ONE)
+/cynanthus/auri/set/instruction/{id}		                                GET (ONE), DELETE (ONE)
+/cynanthus/auri/set/instruction/{idSet|name}/{id}	                        GET (ONE), DELETE (ONE)
+
+/cynanthus/auri/user					                                    POST (ONE), GET (ALL), PUT (ONE), DELETE (ALL)
+/cynanthus/auri/user/{id|username}				                            GET (ONE), DELETE (ONE)
