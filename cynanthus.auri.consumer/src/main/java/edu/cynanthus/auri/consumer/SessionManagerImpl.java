@@ -23,7 +23,9 @@ class SessionManagerImpl implements SessionManager {
 
     @Override
     public void login() {
+        System.out.println("INICIANDO SESION");
         authenticatedUser = authService.auth(user);
+        System.out.println(authenticatedUser);
     }
 
     @Override

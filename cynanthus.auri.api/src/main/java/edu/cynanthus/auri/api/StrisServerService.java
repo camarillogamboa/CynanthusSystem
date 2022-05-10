@@ -20,6 +20,13 @@ public interface StrisServerService extends TreeServerService<StrisConfig, Contr
      */
     Boolean performIndication(ServerInfo serverInfo, Indication indication);
 
+    /**
+     * Perform indication boolean.
+     *
+     * @param nodeInfo        el node info
+     * @param instructionName el instruction name
+     * @return el boolean
+     */
     Boolean performIndication(NodeInfo nodeInfo, String instructionName);
 
 }
