@@ -7,7 +7,7 @@ import edu.cynanthus.domain.User;
 import java.net.http.HttpClient;
 import java.util.Map;
 
-public interface AuriSession {
+public interface AuriSession extends SessionManager {
 
     ServerInfoService serverInfoService(Map<String, String> headers);
 

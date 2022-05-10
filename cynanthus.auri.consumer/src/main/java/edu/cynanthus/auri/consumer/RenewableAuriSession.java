@@ -61,6 +61,21 @@ class RenewableAuriSession implements AuriSession {
         this.defaultStrisServerService = new SessionBasedStrisServerService(strisServerServiceConsumer, sessionManager, headersSupplier);
     }
 
+    @Override
+    public AuthenticatedUser getAuthenticatedUser() {
+        return sessionManager.getAuthenticatedUser();
+    }
+
+    @Override
+    public void login() {
+        sessionManager.login();
+    }
+
+    @Override
+    public void logout() {
+        sessionManager.logout();
+    }
+
     private Map<String, String> prepareDeafultHeaders() {
         Map<String, String> headers = new TreeMap<>(String::compareTo);
         String token = "";
