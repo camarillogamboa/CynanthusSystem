@@ -27,7 +27,7 @@ class StrisServerServiceConsumer
             "Se requiere un objeto Indication"
         );
 
-        return consume(
+        return sendAndConsume(
             lazyRequest -> lazyRequest.POST(
                 resourcePath + "/" + getServerId(serverInfo) + "/indication",
                 () -> JsonProvider.toJsonInputStream(indication)

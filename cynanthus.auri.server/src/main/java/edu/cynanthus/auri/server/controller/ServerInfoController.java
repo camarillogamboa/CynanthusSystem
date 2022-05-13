@@ -27,7 +27,7 @@ public class ServerInfoController extends BeanController<ServerInfo> implements 
 
     @DeleteMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public ServerInfo deleteByName(ServerInfo bean) {
         return delete(bean);
     }

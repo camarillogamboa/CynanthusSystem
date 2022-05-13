@@ -22,7 +22,7 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public T create(@RequestBody @Validated(Required.class) T bean) {
         return super.create(bean);
     }
@@ -44,14 +44,14 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @Override
     @PutMapping
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public T update(@RequestBody @Validated(ValidInfo.class) T bean) {
         return super.update(bean);
     }
 
     @Override
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public List<? extends T> delete() {
         return super.delete();
     }
@@ -59,7 +59,7 @@ public class BeanController<T extends Bean> extends WrappedBeanService<T> {
     @Override
     @DeleteMapping("/{id:\\d+}")
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public T delete(T data) {
         return super.delete(data);
     }

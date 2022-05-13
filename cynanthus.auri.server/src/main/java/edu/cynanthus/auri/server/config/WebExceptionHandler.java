@@ -156,6 +156,7 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status,
         WebRequest request
     ) {
+        ex.printStackTrace();
         if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
             request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
         }

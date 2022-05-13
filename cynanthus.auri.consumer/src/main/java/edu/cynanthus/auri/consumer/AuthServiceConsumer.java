@@ -16,7 +16,7 @@ class AuthServiceConsumer extends ServiceConsumer implements AuthService {
     @Override
     public AuthenticatedUser auth(User user) {
         checkUser(user);
-        return consume(
+        return sendAndConsume(
             lazyRequest -> lazyRequest.POST(
                 "/cynanthus/auth/login",
                 () -> JsonProvider.toJsonInputStream(user)

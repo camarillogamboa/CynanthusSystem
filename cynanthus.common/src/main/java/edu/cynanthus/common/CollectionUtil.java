@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * El tipo Collection util.
@@ -86,6 +89,10 @@ public class CollectionUtil {
      */
     public static <T> void safeForEach(Iterable<T> iterable, Consumer<? super T> action) {
         if (iterable != null) iterable.forEach(action);
+    }
+
+    public static <T> List<T> filterAndCollect(List<T> list, Predicate<? super T> filter){
+        return list.stream().filter(filter).collect(Collectors.toList());
     }
 
 }

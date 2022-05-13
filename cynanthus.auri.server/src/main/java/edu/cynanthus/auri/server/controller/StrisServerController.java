@@ -30,14 +30,14 @@ public class StrisServerController
     @Override
     @PostMapping("/{id:\\d+}/indication")
     @ResponseBody
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN','USER')")
     public Boolean performIndication(ServerInfo serverInfo, @RequestBody Indication indication) {
         return strisServerService.performIndication(serverInfo, indication);
     }
 
     @PostMapping("/{name:" + Patterns.NAME + "}/indication")
     @ResponseBody
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','USER')")
     public Boolean performIndicationByName(ServerInfo serverInfo, @RequestBody Indication indication) {
         return performIndication(serverInfo, indication);
     }

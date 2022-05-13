@@ -2,30 +2,103 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
-    <meta charset="UTF-8">
     <title>Cynanthus Dayi</title>
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
-    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-</head>
 <body>
-<header th:fragment="header">
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
-        <div class="container">
 
-            <a th:href="@{/}" class="navbar-brand">Cynanthus Dayi</a>
+<!-- Cabezara de la UI -->
+<header th:fragment="headerView">
+    <nav class="navbar navbar-expand-sm navbar-dark p-0 dayi-primary">
+        <div class="container-fluid dayi-nav">
+
+            <a th:href="@{/cynanthus/dayi}" class="navbar-brand">Cynanthus Dayi</a>
 
             <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+
+                <ul class="navbar-nav">
+                    <li class="nav-item mr-3">
+                        <a href="#" class="nav-link">
+                            <span>Conjuntos de instrucciones</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-nav">
+                    <li class="nav-item mr-3">
+                        <a href="#" class="nav-link">
+                            <span>Usuarios</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown ml-md-auto">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            <i class="fas fa-user"></i>
+                            <span>Bienvenido </span>
+                            <span sec:authentication="name">Usuario</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">Actualizar información</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                            <div class="dropdown-divider">
+                            </div>
+
+                            <form method="POST" th:action="@{/logout}">
+                                <a href="#" onclick="this.parentNode.submit();" class="dropdown-item">
+                                    <i class="fas fa-user-times"></i> Cerrar sesión
+                                </a>
+                            </form>
+
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+
         </div>
     </nav>
 </header>
+
+<!-- Contenido principal de la UI -->
+<section th:fragment="contentView" class="container-fluid p-0">
+
+    <div class="row m-0">
+
+        <!-- Barra de navegación de servidores -->
+        <section class="col-md-2 bg-light p-0">
+
+            <div class="container-fluid p-0">
+                <div th:replace="components::categoryView">Vista categorizada de los servidores</div>
+
+                <div sec:authorize="hasRole('ROLE_ADMIN')" class="row m-0 mt-auto">
+                    <a href="#" class="btn btn-primary btn-block rounded-0" data-toggle="modal"
+                       data-target="#addServerPane">
+                        <i class="fas fa-plus"></i>Añadir servidor
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Area de contenido -->
+        <section class="col-md-10 bg-white">
+            <div th:replace="${currentServer}? ~{components::serverView} : ~{components::welcomeView}">
+                Vista principal
+            </div>
+        </section>
+
+    </div>
+
+</section>
+
 </body>
 </html>

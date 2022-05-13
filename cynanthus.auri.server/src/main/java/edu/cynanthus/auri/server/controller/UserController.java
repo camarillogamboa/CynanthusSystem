@@ -26,8 +26,8 @@ public class UserController extends BeanController<User> implements UserService 
     }
 
     @DeleteMapping("/{username:" + Patterns.IDENTIFIER + "}")
-    @PreAuthorize("hasRole('ADMIN')")
     @ResponseBody
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public User deleteByUsername(User bean) {
         return delete(bean);
     }

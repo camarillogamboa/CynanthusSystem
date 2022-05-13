@@ -1,0 +1,17 @@
+:root{
+    --dayi-primary-color: rgb(115, 112, 155);
+    --dayi-secondary-color: rgb(221, 233, 243);
+}
+
+.category-bar {
+    background: var(--dayi-secondary-color);
+    padding: 4px 8px 0 8px;
+}
+
+.dayi-nav{
+    padding: 0 0 5px 0;
+}
+
+.dayi-primary{
+    background: var(--dayi-primary-color);
+}

@@ -7,8 +7,8 @@ import edu.cynanthus.domain.config.SordidusConfig;
 class SordidusServerServiceConsumer
     extends CynanthusServerServiceConsumer<SordidusConfig> implements SordidusServerService {
 
-    SordidusServerServiceConsumer(LazyRequest clientInfo) {
-        super(clientInfo, "/cynanthus/auri/server/sordidus", SordidusConfig.class);
+    SordidusServerServiceConsumer(LazyRequest lazyRequest) {
+        super(lazyRequest, "/cynanthus/auri/server/sordidus", SordidusConfig.class);
     }
 
 }

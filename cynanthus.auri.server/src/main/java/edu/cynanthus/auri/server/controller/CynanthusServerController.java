@@ -30,14 +30,14 @@ public class CynanthusServerController<T extends Config> extends WrappedCynanthu
     @Override
     @PutMapping("/{id:\\d+}/config")
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public Boolean updateConfigOf(ServerInfo serverInfo, @RequestBody T config) {
         return super.updateConfigOf(serverInfo, config);
     }
 
     @PutMapping("/{name:" + Patterns.NAME + "}/config")
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public Boolean updateConfigOfByName(ServerInfo serverInfo, @RequestBody T config) {
         return updateConfigOf(serverInfo, config);
     }

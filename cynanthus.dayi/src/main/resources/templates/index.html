@@ -3,11 +3,25 @@
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
 >
-<head th:replace="layout::head">
-    <meta charset="UTF-8">
+<head>
     <title>Cynanthus Dayi</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
 </head>
+
 <body>
-<header th:replace="layout::header"></header>
+
+<!-- Contenedor principal de UI -->
+<div class="container-fluid vh-100 vw-100 m-0 p-1 bg-dark">
+    <header th:replace="layout::headerView">Cabezera del sitio</header>
+    <section th:replace="layout::contentView">Contenido del sitio</section>
+    <section th:replace="components::addServerView">Modal para añadir servidor</section>
+</div>
+
 </body>
 </html>

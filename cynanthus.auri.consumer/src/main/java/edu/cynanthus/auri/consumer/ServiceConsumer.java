@@ -29,10 +29,17 @@ class ServiceConsumer implements AuriService {
 
     private static final Type ERROR_MESSAGE_TYPE = new TypeToken<ErrorMessage<String>>() {}.getType();
 
+    static final Consumer<LazyRequest> JSON_CONTENT_TYPE_CONSUMER
+        = lazyRequest -> lazyRequest.addHeader("Content-Type", "application/json");
+
     private final LazyRequest lazyRequest;
 
     ServiceConsumer(LazyRequest lazyRequest) {
         this.lazyRequest = lazyRequest;
+    }
+
+    <T> T sendAndConsume(Consumer<LazyRequest> lazyRequestConsumer, Type returnType) {
+        return consume(JSON_CONTENT_TYPE_CONSUMER.andThen(lazyRequestConsumer), returnType);
     }
 
     <T> T consume(Consumer<LazyRequest> lazyRequestConsumer, Type returnType) {
@@ -41,14 +48,12 @@ class ServiceConsumer implements AuriService {
             LazyRequest lazyRequestCopy = lazyRequest.clone();
 
             lazyRequestConsumer.accept(lazyRequestCopy);
-
             HttpResponse<InputStream> response = lazyRequestCopy.doRequestAndGetInputStream();
 
             try (Reader reader = new InputStreamReader(response.body())) {
                 if (HttpStatusCode.isCorrect(response.statusCode()))
                     return JsonProvider.fromJson(reader, returnType);
                 else {
-
                     ErrorMessage<String> errorMessage = JsonProvider.fromJson(reader, ERROR_MESSAGE_TYPE);
 
                     throw new WebServiceException(

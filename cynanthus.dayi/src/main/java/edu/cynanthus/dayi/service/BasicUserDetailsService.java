@@ -31,21 +31,21 @@ public class BasicUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = new User(username);
-        try{
+        try {
             user = userService.read(user);
-        }catch (WebServiceException webServiceException){
+        } catch (WebServiceException webServiceException) {
             ErrorMessage<String> errorMessage = webServiceException.getErrorMessage();
-            if(errorMessage.getCode() == HttpStatusCode.NOT_FOUND){
-                throw new UsernameNotFoundException(username,webServiceException);
+            if (errorMessage.getCode() == HttpStatusCode.NOT_FOUND) {
+                throw new UsernameNotFoundException(username, webServiceException);
             }
         }
 
         List<GrantedAuthority> roles = new LinkedList<>();
 
-        for(Role role:user.getRoles())
+        for (Role role : user.getRoles())
             roles.add(new SimpleGrantedAuthority(role.getRoleType().name()));
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),roles);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), roles);
     }
 
 }

@@ -21,7 +21,7 @@ abstract class CrudServiceConsumer<T> extends ServiceConsumer implements CrudSer
     @Override
     public T create(T data) {
         checkNotNull(data);
-        return consume(
+        return sendAndConsume(
             lazyRequest -> lazyRequest.POST(
                 resourcePath,
                 () -> JsonProvider.toJsonInputStream(data)
@@ -39,7 +39,7 @@ abstract class CrudServiceConsumer<T> extends ServiceConsumer implements CrudSer
     @Override
     public T update(T data) {
         checkNotNull(data);
-        return consume(
+        return sendAndConsume(
             lazyRequest -> lazyRequest.PUT(
                 resourcePath,
                 () -> JsonProvider.toJsonInputStream(data)

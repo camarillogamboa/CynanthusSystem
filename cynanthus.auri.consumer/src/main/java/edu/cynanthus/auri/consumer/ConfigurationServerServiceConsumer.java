@@ -35,7 +35,7 @@ class ConfigurationServerServiceConsumer<T extends Config>
     public Boolean updateConfigOf(ServerInfo serverInfo, T config) {
         checkServerInfo(serverInfo);
         checkConfig(config);
-        return consume(
+        return sendAndConsume(
             lazyRequest -> lazyRequest.PUT(
                 resourcePath + "/" + getServerId(serverInfo) + "/config",
                 () -> JsonProvider.toJsonInputStream(config)

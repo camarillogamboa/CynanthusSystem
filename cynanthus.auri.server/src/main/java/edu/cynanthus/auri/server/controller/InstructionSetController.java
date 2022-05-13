@@ -31,7 +31,7 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
 
     @DeleteMapping("/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public InstructionSet deleteByName(InstructionSet bean) {
         return delete(bean);
     }
@@ -60,7 +60,7 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
     @Override
     @DeleteMapping("/instruction/{id:\\d+}")
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public Instruction deleteInstruction(@PathVariable Integer id) {
         return instructionSetService.deleteInstruction(id);
     }
@@ -68,7 +68,7 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
     @Override
     @DeleteMapping("/instruction/{idSet:\\d+}/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public Instruction deleteInstruction(@PathVariable Integer idSet, @PathVariable String name) {
         return instructionSetService.deleteInstruction(idSet, name);
     }
@@ -76,7 +76,7 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
     @Override
     @DeleteMapping("/instruction/{setName:" + Patterns.NAME + "}/{name:" + Patterns.NAME + "}")
     @ResponseBody
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public Instruction deleteInstruction(@PathVariable String setName, @PathVariable String name) {
         return instructionSetService.deleteInstruction(setName, name);
     }
