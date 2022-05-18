@@ -1,10 +1,9 @@
 package edu.cynanthus.common.reflect;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * El tipo Reflect util.
@@ -82,28 +81,8 @@ public final class ReflectUtil {
         return value;
     }
 
-    /**
-     * For each field.
-     *
-     * @param fields   el fields
-     * @param consumer el consumer
-     */
-    public static void forEachField(Field[] fields, Consumer<Field> consumer) {
-        for (Field field : fields) consumer.accept(field);
-    }
-
-    /**
-     * For each field.
-     *
-     * @param object        el object
-     * @param fieldSelector el field selector
-     * @param consumer      el consumer
-     */
-    public static void forEachField(
-        Object object,
-        Function<Class<?>, Field[]> fieldSelector,
-        Consumer<Field> consumer
-    ) {
+    public static Class<?> arrayTypeOf(Class<?> arrayClass) {
+        return Array.newInstance(arrayClass, 0).getClass();
     }
 
 }

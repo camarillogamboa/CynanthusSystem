@@ -1,8 +1,11 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.*;
+import edu.cynanthus.auri.api.exception.InvalidArgumentException;
+import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.net.HostAddress;
 import edu.cynanthus.domain.AuthenticatedUser;
+import edu.cynanthus.domain.ServerType;
 import edu.cynanthus.domain.User;
 
 import java.net.http.HttpClient;
@@ -134,6 +137,37 @@ class RenewableAuriSession implements AuriSession {
     @Override
     public UserService userService() {
         return defaultUserService;
+    }
+
+    @Override
+    public <T extends Config> CynanthusServerService<T> cynanthusServerService(ServerType serverType) {
+        switch (serverType) {
+            case STORAGE:
+                return (CynanthusServerService<T>) sordidusServerService();
+            case STREAM_DATA:
+                return (CynanthusServerService<T>) latiroServerService();
+            case CONTROL:
+                return (CynanthusServerService<T>) strisServerService();
+            default:
+                throw new InvalidArgumentException("Tipo enumerado inválido");
+        }
+    }
+
+    @Override
+    public <T extends Config> CynanthusServerService<T> cynanthusServerService(
+        ServerType serverType,
+        Map<String, String> headers
+    ) {
+        switch (serverType) {
+            case STORAGE:
+                return (CynanthusServerService<T>) sordidusServerService(headers);
+            case STREAM_DATA:
+                return (CynanthusServerService<T>) latiroServerService(headers);
+            case CONTROL:
+                return (CynanthusServerService<T>) strisServerService(headers);
+            default:
+                throw new InvalidArgumentException("Tipo enumerado inválido");
+        }
     }
 
     @Override

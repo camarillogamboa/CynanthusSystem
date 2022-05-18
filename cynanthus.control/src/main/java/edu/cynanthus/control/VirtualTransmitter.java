@@ -13,6 +13,7 @@ class VirtualTransmitter implements Transmitter {
      */
     @Override
     public void emit(int[] instruction) throws InterruptedException {
+        System.out.println("Codigos:");
         for (int code : instruction) {
             System.out.println("Code: " + code);
             Thread.sleep(0, code);

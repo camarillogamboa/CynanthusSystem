@@ -74,10 +74,14 @@ class BasicTreeServerService<T extends Config, N extends RuntimeNode>
     }
 
     private List<N> selectRuntimeNodes(ServerInfo serverInfo, String selector) {
-        return consume(
-            lazyRequest -> lazyRequest.GET(buildUri(serverInfo, "/node?value=" + selector)),
-            runtimeNodeListType
-        );
+        try {
+            return consume(
+                lazyRequest -> lazyRequest.GET(buildUri(serverInfo, "/node?value=" + selector)),
+                runtimeNodeListType
+            );
+        } catch (Exception ex) {
+            return new LinkedList<>();
+        }
     }
 
 }

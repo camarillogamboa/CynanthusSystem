@@ -37,7 +37,7 @@ public class BasicUserDetailsService implements UserDetailsService {
             ErrorMessage<String> errorMessage = webServiceException.getErrorMessage();
             if (errorMessage.getCode() == HttpStatusCode.NOT_FOUND) {
                 throw new UsernameNotFoundException(username, webServiceException);
-            }
+            } else throw webServiceException;
         }
 
         List<GrantedAuthority> roles = new LinkedList<>();

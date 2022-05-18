@@ -1,6 +1,6 @@
 package edu.cynanthus.common;
 
-import edu.cynanthus.common.reflect.BasicType;
+import edu.cynanthus.common.reflect.ConstantType;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -139,7 +139,7 @@ public final class URIQuery {
         if (object.getClass().isArray()) {
             SSV.Builder builder = new SSV.Builder("&");
             for (Object o : (Object[]) object) builder.append(toQuery(o, identifierGenerator));
-        } else if (BasicType.isBasicType(object.getClass())) {
+        } else if (ConstantType.isConstantType(object.getClass())) {
             return "value=" + object;
         }
         Formatter<Object> formatter = new PairKeyValueFormatter<>(

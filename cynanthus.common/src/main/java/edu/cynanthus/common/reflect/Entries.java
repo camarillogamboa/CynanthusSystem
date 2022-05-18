@@ -78,7 +78,7 @@ public final class Entries {
                 if (value != null) {
 
                     Class<?> valueClass = value.getClass();
-                    if (!BasicType.isBasicType(valueClass)) {
+                    if (!ConstantType.isConstantType(valueClass)) {
 
                         if (valueClass.isArray())
                             for (Object o : (Object[]) value)

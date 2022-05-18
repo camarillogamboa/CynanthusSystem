@@ -23,18 +23,18 @@ public final class BeanUtil {
         return filterAndCollectServerInfos(serverInfos, ServerType.CONTROL);
     }
 
-    public static List<ServerCategory> toCategories(List<? extends ServerInfo> serverInfos) {
-        List<ServerCategory> serverCategories = new LinkedList<>();
-        serverCategories.add(
-            new ServerCategory("Servidores de almacenamiento", getStorageServers(serverInfos))
+    public static List<ServerSection> toServerSections(List<? extends ServerInfo> serverInfos) {
+        List<ServerSection> serverSections = new LinkedList<>();
+        serverSections.add(
+            new ServerSection("Almacenamiento","fas fa-hdd", getStorageServers(serverInfos))
         );
-        serverCategories.add(
-            new ServerCategory("Servidores de flujo de datos", getDataStreamServers(serverInfos))
+        serverSections.add(
+            new ServerSection("Flujo de datos","fas fa-stream", getDataStreamServers(serverInfos))
         );
-        serverCategories.add(
-            new ServerCategory("Servidores de control", getControlServers(serverInfos))
+        serverSections.add(
+            new ServerSection("Control","fas fa-grip-horizontal", getControlServers(serverInfos))
         );
-        return serverCategories;
+        return serverSections;
     }
 
     private static List<ServerInfo> filterAndCollectServerInfos(

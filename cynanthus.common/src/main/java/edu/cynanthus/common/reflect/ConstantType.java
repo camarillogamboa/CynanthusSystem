@@ -6,7 +6,7 @@ import java.util.function.Function;
 /**
  * La enumeración Basic type.
  */
-public enum BasicType {
+public enum ConstantType {
 
     /**
      * El Byte.
@@ -100,7 +100,7 @@ public enum BasicType {
      *
      * @param parsingFunction el parsing function
      */
-    BasicType(Function<String, Object> parsingFunction) {
+    ConstantType(Function<String, Object> parsingFunction) {
         this.parsingFunction = parsingFunction;
     }
 
@@ -128,10 +128,10 @@ public enum BasicType {
      * @param type el type
      * @return el basic type
      */
-    public static BasicType basicTypeOf(Type type) {
-        for (BasicType basicType : BasicType.values())
-            if (basicType.is(type))
-                return basicType;
+    public static ConstantType constantTypeOf(Type type) {
+        for (ConstantType constantType : ConstantType.values())
+            if (constantType.is(type))
+                return constantType;
 
         return null;
     }
@@ -142,8 +142,8 @@ public enum BasicType {
      * @param type el type
      * @return el boolean
      */
-    public static boolean isBasicType(Type type) {
-        return basicTypeOf(type) != null;
+    public static boolean isConstantType(Type type) {
+        return constantTypeOf(type) != null;
     }
 
 }

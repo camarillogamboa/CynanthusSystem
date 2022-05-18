@@ -1,7 +1,9 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.*;
+import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.net.HostAddress;
+import edu.cynanthus.domain.ServerType;
 import edu.cynanthus.domain.User;
 
 import java.net.http.HttpClient;
@@ -24,6 +26,13 @@ public interface AuriSession extends SessionManager {
     UserService userService(Map<String, String> headers);
 
     UserService userService();
+
+    <T extends Config> CynanthusServerService<T> cynanthusServerService(ServerType serverType);
+
+    <T extends Config> CynanthusServerService<T> cynanthusServerService(
+        ServerType serverType,
+        Map<String, String> headers
+    );
 
     SordidusServerService sordidusServerService(Map<String, String> headers);
 

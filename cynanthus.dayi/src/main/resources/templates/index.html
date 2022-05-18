@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
+<html
+        lang="en"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        class="dayi-viewport"
 >
 <head>
     <title>Cynanthus Dayi</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
@@ -14,13 +16,13 @@
     <script th:src="@{/js/app.js}"></script>
 </head>
 
-<body>
+<body class="d-flex flex-fill vh-100 p-1 dayi-body">
 
 <!-- Contenedor principal de UI -->
-<div class="container-fluid vh-100 vw-100 m-0 p-1 bg-dark">
+<div class="d-flex flex-fill flex-column">
     <header th:replace="layout::headerView">Cabezera del sitio</header>
     <section th:replace="layout::contentView">Contenido del sitio</section>
-    <section th:replace="components::addServerView">Modal para añadir servidor</section>
+    <section th:replace="components/server::addServerModal">Modal para añadir servidor</section>
 </div>
 
 </body>

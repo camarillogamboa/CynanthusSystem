@@ -5,18 +5,25 @@ import edu.cynanthus.domain.ServerInfo;
 import java.util.List;
 import java.util.Objects;
 
-public final class ServerCategory {
+public final class ServerSection {
 
     private final String name;
+
+    private final String iconName;
     private final List<ServerInfo> servers;
 
-    public ServerCategory(String name, List<ServerInfo> servers) {
+    public ServerSection(String name,String iconName, List<ServerInfo> servers) {
         this.name = name;
+        this.iconName = iconName;
         this.servers = servers;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getIconName() {
+        return iconName;
     }
 
     public List<ServerInfo> getServers() {
@@ -27,19 +34,22 @@ public final class ServerCategory {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ServerCategory that = (ServerCategory) o;
-        return Objects.equals(name, that.name) && Objects.equals(servers, that.servers);
+        ServerSection that = (ServerSection) o;
+        return Objects.equals(name, that.name)
+            && Objects.equals(iconName, that.iconName)
+            && Objects.equals(servers, that.servers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, servers);
+        return Objects.hash(name, iconName, servers);
     }
 
     @Override
     public String toString() {
         return "{" +
-            "categoryName:'" + name + '\'' +
+            "name:'" + name + '\'' +
+            ",iconName:'" + iconName + '\'' +
             ",servers:" + servers +
             '}';
     }

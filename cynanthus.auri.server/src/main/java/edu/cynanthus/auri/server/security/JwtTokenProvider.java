@@ -31,17 +31,28 @@ public class JwtTokenProvider {
         Date currentDate = new Date();
         Date endDate = new Date(currentDate.getTime() + jwtExpirationMilliseconds);
 
-        return Jwts.builder().setSubject(username).setIssuedAt(new Date()).setExpiration(endDate)
-            .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+        return Jwts.builder()
+            .setSubject(username)
+            .setIssuedAt(new Date())
+            .setExpiration(endDate)
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
     }
 
     public String getUsernameOf(String token) {
-        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+        Claims claims = Jwts
+            .parser()
+            .setSigningKey(jwtSecret)
+            .parseClaimsJws(token)
+            .getBody();
         return claims.getSubject();
     }
 
     public boolean validateToken(String token) {
-        Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+        Jwts
+            .parser()
+            .setSigningKey(jwtSecret)
+            .parseClaimsJws(token);
         return true;
     }
 

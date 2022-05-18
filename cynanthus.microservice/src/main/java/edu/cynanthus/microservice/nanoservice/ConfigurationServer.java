@@ -67,9 +67,7 @@ public class ConfigurationServer<T extends Config> extends WebServer {
     @RequestHandler(context = "/config", method = RequestMethod.GET, roles = SystemRole.ROLE_AGENT)
     public final T getConfig(String string) throws HttpException {
         try {
-            T configObject = context.getMetaPropertiesAsConfigObject();
-            httpSecurityManager.logUserAction(Level.INFO, "Consultó la configuración del programa");
-            return configObject;
+            return context.getMetaPropertiesAsConfigObject();
         } catch (Exception e) {
             throw new HttpException(HttpStatusCode.INTERNAL_SERVER_ERROR);
         }

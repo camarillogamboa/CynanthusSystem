@@ -39,9 +39,9 @@ class MicroServiceConsumer {
     MicroServiceConsumer() {
         this.lazyRequest = new HttpRequester().lazyRequest();
 
-        SystemUser requestUser = AgentUser.DEFAUL_AGENT_USER;
+        SystemUser systemUser = AgentUser.DEFAUL_AGENT_USER;
 
-        String[] credentials = requestUser.getCredentials();
+        String[] credentials = systemUser.getCredentials();
 
         try {
             credentials[1] = Encryption.decrypt(credentials[1]);
@@ -80,7 +80,7 @@ class MicroServiceConsumer {
         } catch (InterruptedException ex) {
             throw new WebClientException("Proceso de petición hacia microservicio interrumpido", ex);
         } catch (IllegalArgumentException ex) {
-            throw new WebClientException("Argumentos para el cliente web ilegales");
+            throw new WebClientException("Argumentos para el cliente web ilegales", ex);
         } catch (SecurityException ex) {
             throw new WebClientException("Vulneración de la seguridad al realizar la petición hacia el microservicio", ex);
         } catch (HttpConnectTimeoutException ex) {
@@ -88,7 +88,7 @@ class MicroServiceConsumer {
         } catch (HttpTimeoutException ex) {
             throw new WebClientException("Tiempo muerto de conexión", ex);
         } catch (ConnectException ex) {
-            throw new WebClientException("No se pudo establecer la conexión con el servidor del microservicio");
+            throw new WebClientException("No se pudo establecer la conexión con el servidor del microservicio", ex);
         } catch (SSLHandshakeException ex) {
             throw new WebClientException("Error de intercambio de contexto SSL", ex);
         } catch (SSLException ex) {

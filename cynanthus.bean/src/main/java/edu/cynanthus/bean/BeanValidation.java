@@ -52,8 +52,8 @@ public final class BeanValidation {
         T bean,
         Class<?>... groups
     ) throws ConstraintViolationException {
-        Set<ConstraintViolation<T>> constraintViolations = validate(bean,groups);
-        if(!constraintViolations.isEmpty()) throw new ConstraintViolationException(constraintViolations);
+        Set<ConstraintViolation<T>> constraintViolations = validate(bean, groups);
+        if (!constraintViolations.isEmpty()) throw new ConstraintViolationException(constraintViolations);
     }
 
     /**

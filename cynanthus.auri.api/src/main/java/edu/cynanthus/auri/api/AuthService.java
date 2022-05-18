@@ -4,12 +4,17 @@ import edu.cynanthus.domain.AuthenticatedUser;
 import edu.cynanthus.domain.User;
 
 /**
- * La interface Auth service.
+ * La interface AuthService abstrae la autenticación de un
+ * usuario.
  */
 public interface AuthService extends AuriService {
 
     /**
-     * Auth authenticated user.
+     * Realiza la autenticación de un usuario a partir
+     * de un objeto User el cual debe contener
+     * los campos username y password. El servicio implementador
+     * deberá retornar un objeto AuthenticatedUser con el token
+     * de autenticación apropiado.
      *
      * @param user el user
      * @return el authenticated user

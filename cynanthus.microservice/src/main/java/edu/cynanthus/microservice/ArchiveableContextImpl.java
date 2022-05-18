@@ -4,7 +4,7 @@ import com.google.gson.JsonSyntaxException;
 import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.TimePatterns;
 import edu.cynanthus.common.json.JsonProvider;
-import edu.cynanthus.common.reflect.BasicType;
+import edu.cynanthus.common.reflect.ConstantType;
 import edu.cynanthus.common.reflect.Entries;
 import edu.cynanthus.common.reflect.ReflectUtil;
 import edu.cynanthus.common.resource.FileAccesObject;
@@ -375,11 +375,11 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
             for (Field field : configObject.getClass().getDeclaredFields()) {
                 String name = aliasFinder.apply(field);
                 if (name != null) {
-                    BasicType basicType = BasicType.basicTypeOf(field.getType());
-                    if (basicType != null) {
+                    ConstantType constantType = ConstantType.constantTypeOf(field.getType());
+                    if (constantType != null) {
                         MetaProperty property = metaProperties.get(name);
                         if (property != null) {
-                            Object value = basicType.parse(property.getValue());
+                            Object value = constantType.parse(property.getValue());
                             ReflectUtil.safeSet(field, configObject, value);
                         }
                     } else logger.warning("El contenedor de valores de propiedad debe declarar tipos básicos");
