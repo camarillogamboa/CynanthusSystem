@@ -28,6 +28,7 @@ import java.net.http.HttpConnectTimeoutException;
 import java.net.http.HttpResponse;
 import java.net.http.HttpTimeoutException;
 import java.security.GeneralSecurityException;
+import java.time.Duration;
 import java.util.function.Consumer;
 
 class MicroServiceConsumer {
@@ -37,7 +38,9 @@ class MicroServiceConsumer {
     private final LazyRequest lazyRequest;
 
     MicroServiceConsumer() {
-        this.lazyRequest = new HttpRequester().lazyRequest();
+        this.lazyRequest = new HttpRequester().lazyRequest().building(builder ->
+            builder.timeout(Duration.ofSeconds(3))
+        );
 
         SystemUser systemUser = AgentUser.DEFAUL_AGENT_USER;
 

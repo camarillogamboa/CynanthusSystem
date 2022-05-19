@@ -7,9 +7,13 @@ import edu.cynanthus.domain.ServerType;
 import edu.cynanthus.domain.User;
 
 import java.net.http.HttpClient;
+import java.time.Duration;
 import java.util.Map;
 
 public interface AuriSession extends SessionManager {
+    Duration getTimeOut();
+
+    void setTimeOut(Duration timeOut);
 
     ServerInfoService serverInfoService(Map<String, String> headers);
 

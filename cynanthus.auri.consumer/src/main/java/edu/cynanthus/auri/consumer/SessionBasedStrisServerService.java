@@ -1,14 +1,14 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.StrisServerService;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.ControlNode;
 import edu.cynanthus.domain.Indication;
 import edu.cynanthus.domain.NodeInfo;
 import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.config.StrisConfig;
 
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 class SessionBasedStrisServerService
     extends SessionBasedTreeServerService<StrisConfig, ControlNode, StrisServerService>
@@ -17,9 +17,9 @@ class SessionBasedStrisServerService
     SessionBasedStrisServerService(
         AuriServiceConsumer<StrisServerService> auriServiceConsumer,
         SessionStarter sessionStarter,
-        Supplier<Map<String, String>> headersSupplier
+        Consumer<LazyRequest> lazyRequestConsumer
     ) {
-        super(auriServiceConsumer, sessionStarter, headersSupplier);
+        super(auriServiceConsumer, sessionStarter, lazyRequestConsumer);
     }
 
     @Override

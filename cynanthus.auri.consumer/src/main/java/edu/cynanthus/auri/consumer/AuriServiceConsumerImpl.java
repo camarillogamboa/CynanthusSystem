@@ -6,7 +6,7 @@ import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.common.net.http.client.RequestingClient;
 
 import java.net.http.HttpClient;
-import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 class AuriServiceConsumerImpl<T extends AuriService> implements AuriServiceConsumer<T> {
@@ -15,7 +15,7 @@ class AuriServiceConsumerImpl<T extends AuriService> implements AuriServiceConsu
     private final Function<LazyRequest, T> factory;
 
     AuriServiceConsumerImpl(HttpClient httpClient, HostAddress hostAddress, Function<LazyRequest, T> factory) {
-        requestingClient = new RequestingClient(httpClient, hostAddress);
+        this.requestingClient = new RequestingClient(httpClient, hostAddress);
         this.factory = factory;
     }
 
@@ -24,14 +24,10 @@ class AuriServiceConsumerImpl<T extends AuriService> implements AuriServiceConsu
         return factory.apply(requestingClient.lazyRequest());
     }
 
-    @Override
-    public T prepare(Map<String, String> headers) {
-        return factory.apply(requestingClient.lazyRequest().addHeaders(headers));
-    }
-
-    @Override
-    public T prepare(String headerName, String headerValue) {
-        return factory.apply(requestingClient.lazyRequest().addHeader(headerName, headerValue));
+    public T prepare(Consumer<LazyRequest> lazyRequestConsumer) {
+        LazyRequest lazyRequest = requestingClient.lazyRequest();
+        lazyRequestConsumer.accept(lazyRequest);
+        return factory.apply(lazyRequest);
     }
 
 }

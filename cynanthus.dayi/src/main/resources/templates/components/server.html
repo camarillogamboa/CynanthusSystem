@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html
-        lang="en"
+        lang="es"
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org"
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
@@ -83,6 +83,17 @@
                         Propiedades
                     </a>
                 </li>
+
+                <!-- Opción de vista de registro de eventos -->
+                <li class="nav-item">
+                    <a
+                            class="nav-link"
+                            th:classappend="${serverOption} == 'LOG' ? 'active':''"
+                            th:href="@{/cynanthus/dayi/server/}+${currentServer.id}+@{/log}"
+                    >
+                        Registro del servidor
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -95,17 +106,22 @@
                 <th:block th:case="'NODES'">
                     <th:block th:switch="${currentServer.serverType.name}">
                         <th:block th:case="'STREAM_DATA'">
-                            <div th:replace="this::sensingNodesView"></div>
+                            <div th:replace="~{/components/sensingNodes::sensingNodesView}"></div>
                         </th:block>
                         <th:block th:case="${'CONTROL'}">
-                            <div th:replace="this::controlNodesView"></div>
+                            <div th:replace="~{/components/controlNodes::controlNodesView}"></div>
                         </th:block>
                     </th:block>
                 </th:block>
 
                 <!-- si la opción de vista elegida es PROPERTIES -->
                 <th:block th:case="'PROPERTIES'">
-                    <div th:replace="${propertyList}? ~{this::propertiesView}: ~{this::noPropertiesView}"></div>
+                    <div th:replace="${propertyList}? ~{/components/serverProperties::propertiesView}: ~{/components/serverProperties::noPropertiesView}"></div>
+                </th:block>
+
+                <!-- si la opción de vista elegida es LOG -->
+                <th:block th:case="'LOG'">
+                    <div th:replace="${availableServer}? ~{/components/serverLog::logView} : ~{/components/serverLog::noLogView}"></div>
                 </th:block>
             </th:block>
 
@@ -118,6 +134,7 @@
 
 </div>
 
+<!-- Modal para añadir un servidor -->
 <section th:fragment="addServerModal">
     <div class="modal fade" th:id="'addServerModal'">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -179,7 +196,7 @@
     </div>
 </section>
 
-
+<!-- Modal para la actualizar el servidor actual -->
 <section th:fragment="updateServerModal">
     <div class="modal fade" th:id="'updateServerModal'">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -193,7 +210,7 @@
                 </div>
 
                 <form
-                        th:action="@{/cynanthus/dayi/server(previus=${currentPath})}"
+                        th:action="@{/cynanthus/dayi/server}"
                         th:object="${currentServer}"
                         method="POST"
                         class="was-validated"
@@ -241,7 +258,7 @@
     </div>
 </section>
 
-
+<!-- Modal para eliminar el servidor actual -->
 <section th:fragment="deleteServerModal">
     <div class="modal fade" id="deleteServerModal">
         <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -276,67 +293,6 @@
         </div>
     </div>
 </section>
-
-<div th:fragment="propertiesView" class="container-fluid p-0">
-    <table class="table table-striped table-borderless">
-        <thead class="dayi-bg text-white sticky-top">
-        <tr>
-            <th class="p-2 text-center align-middle" scope="col">
-                <h6>Clave</h6>
-            </th>
-            <th class="p-2 text-center align-middle" scope="col">
-                <h6>Valor</h6>
-            </th>
-            <th class="p-2" scope="col">
-                <div class="container-fluid p-0">
-                    <div class="row m-0">
-                        <div class="col m-auto text-center">
-                            <h6>Información</h6>
-                        </div>
-                        <div sec:authorize="hasRole('ADMIN')" class="col-xs ml-auto">
-                            <button
-                                    type="button"
-                                    class="btn btn-light m-0"
-                                    data-toggle="modal"
-                                    data-target="#editPropertiesModal"
-                            >
-                                <span>
-                                    <i class="fas fa-pen"></i>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="property:${propertyList}" class="border-top">
-            <td th:text="${property.key}" class="font-weight-bold border-right">Clave</td>
-            <td th:text="${property.value}" class="border-right">Valor</td>
-            <td th:text="${property.info}" class="">Informacion</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-<div th:fragment="noPropertiesView" class="container-fluid h-100 p-4 text-center">
-    <h6>No se encontraron propiedades, verifica la disponibilidad de [[${currentServer.name}]]</h6>
-</div>
-
-<div th:fragment="sensingNodesView" class="container-fluid p-3">
-    Vista de nodos de sensado
-</div>
-
-<div th:fragment="controlNodesView" class="container-fluid p-3">
-    Vista de nodos de control
-</div>
-
-<section th:fragment="updateSordidusPropertiesModal"></section>
-
-<section th:fragment="updateLatiroPropertiesModal"></section>
-
-<section th:fragment="updateStrisPropertiesView"></section>
 
 </body>
 </html>

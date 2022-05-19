@@ -12,7 +12,7 @@ public final class ServerSection {
     private final String iconName;
     private final List<ServerInfo> servers;
 
-    public ServerSection(String name,String iconName, List<ServerInfo> servers) {
+    public ServerSection(String name, String iconName, List<ServerInfo> servers) {
         this.name = name;
         this.iconName = iconName;
         this.servers = servers;

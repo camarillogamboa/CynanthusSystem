@@ -15,9 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.HandlerMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -32,37 +30,31 @@ public class DayiController {
     }
 
     @GetMapping
-    public String home(Model model, HttpServletRequest request) {
+    public String home(Model model) {
         setViewOption(model, "WELCOME_VIEW");
-        return internalHome(model, request);
+        return internalHome(model);
     }
 
-    private String internalHome(Model model, HttpServletRequest request) {
+    private String internalHome(Model model) {
         List<? extends ServerInfo> serverInfos = auriSession.serverInfoService().read();
         model.addAttribute("serverSections", BeanUtil.toServerSections(serverInfos));
 
-        Object currentPath = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-        model.addAttribute("currentPath", currentPath);
         model.addAttribute("emptyServer", new ServerInfo());
 
         return "index";
     }
 
     @GetMapping("/server/{id:\\d+}")
-    public String serverView(
-        ServerInfo serverInfo,
-        Model model,
-        HttpServletRequest request
-    ) {
-        serverInfo = auriSession.serverInfoService().read(serverInfo);
+    public String serverView(ServerInfo serverInfo, Model model) {
+        serverInfo = findServer(serverInfo);
 
         String defaultOption = serverInfo.getServerType() == ServerType.STORAGE ? "PROPERTIES" : "NODES";
-        return internalServerView(serverInfo, defaultOption, model, request);
+        return internalServerView(serverInfo, defaultOption, model);
     }
 
     @GetMapping("/server/{id:\\d+}/nodes")
-    public String serverNodesOption(ServerInfo serverInfo, Model model, HttpServletRequest request) {
-        serverInfo = auriSession.serverInfoService().read(serverInfo);
+    public String serverNodesOption(ServerInfo serverInfo, Model model) {
+        serverInfo = findServer(serverInfo);
 
         List<? extends GeneralNode<?>> nodes;
         switch (serverInfo.getServerType()) {
@@ -80,13 +72,19 @@ public class DayiController {
 
         model.addAttribute("nodes", nodes);
 
-        return internalServerView(serverInfo, "NODES", model, request);
+        return internalServerView(serverInfo, "NODES", model);
     }
 
     @GetMapping("/server/{id:\\d+}/properties")
-    public String serverPropertiesOption(ServerInfo serverInfo, Model model, HttpServletRequest request) {
-        serverInfo = auriSession.serverInfoService().read(serverInfo);
-        return internalServerView(serverInfo, "PROPERTIES", model, request);
+    public String serverPropertiesOption(ServerInfo serverInfo, Model model) {
+        serverInfo = findServer(serverInfo);
+        return internalServerView(serverInfo, "PROPERTIES", model);
+    }
+
+    @GetMapping("/server/{id:\\d+}/log")
+    public String serverLogOption(ServerInfo serverInfo, Model model) {
+        serverInfo = findServer(serverInfo);
+        return internalServerView(serverInfo, "LOG", model);
     }
 
     @GetMapping("/server/{id:\\d+}/delete")
@@ -97,12 +95,7 @@ public class DayiController {
         return "redirect:/cynanthus/dayi";
     }
 
-    private String internalServerView(
-        ServerInfo serverInfo,
-        String serverOption,
-        Model model,
-        HttpServletRequest request
-    ) {
+    private String internalServerView(ServerInfo serverInfo, String serverOption, Model model) {
         Boolean available = auriSession.cynanthusServerService(serverInfo.getServerType()).isAvailable(serverInfo);
 
         setViewOption(model, "SERVER_VIEW");
@@ -117,7 +110,7 @@ public class DayiController {
             model.addAttribute("propertyList", list);
         }
 
-        return internalHome(model, request);
+        return internalHome(model);
     }
 
     @PostMapping("/server")
@@ -132,15 +125,19 @@ public class DayiController {
     }
 
     @GetMapping("/instructions")
-    public String instructionsView(Model model, HttpServletRequest request) {
+    public String instructionsView(Model model) {
         setViewOption(model, "INSTRUCTIONS_VIEW");
-        return internalHome(model, request);
+        return internalHome(model);
     }
 
     @GetMapping("/users")
-    public String usersView(Model model, HttpServletRequest request) {
+    public String usersView(Model model) {
         setViewOption(model, "USERS_VIEW");
-        return internalHome(model, request);
+        return internalHome(model);
+    }
+
+    private ServerInfo findServer(ServerInfo serverInfo) {
+        return auriSession.serverInfoService().read(serverInfo);
     }
 
     private void setViewOption(Model model, String viewOption) {

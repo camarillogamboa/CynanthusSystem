@@ -1,11 +1,11 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.InstructionSetService;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 public class SessionBasedInstructionSetService
     extends SessionBasedBeanService<InstructionSet, InstructionSetService> implements InstructionSetService {
@@ -13,9 +13,9 @@ public class SessionBasedInstructionSetService
     SessionBasedInstructionSetService(
         AuriServiceConsumer<InstructionSetService> auriServiceConsumer,
         SessionStarter sessionStarter,
-        Supplier<Map<String, String>> headersSupplier
+        Consumer<LazyRequest> lazyRequestConsumer
     ) {
-        super(auriServiceConsumer, sessionStarter, headersSupplier);
+        super(auriServiceConsumer, sessionStarter, lazyRequestConsumer);
     }
 
     @Override

@@ -25,15 +25,26 @@ public final class BeanUtil {
 
     public static List<ServerSection> toServerSections(List<? extends ServerInfo> serverInfos) {
         List<ServerSection> serverSections = new LinkedList<>();
-        serverSections.add(
-            new ServerSection("Almacenamiento","fas fa-hdd", getStorageServers(serverInfos))
-        );
-        serverSections.add(
-            new ServerSection("Flujo de datos","fas fa-stream", getDataStreamServers(serverInfos))
-        );
-        serverSections.add(
-            new ServerSection("Control","fas fa-grip-horizontal", getControlServers(serverInfos))
-        );
+
+        List<ServerInfo> storageServers = getStorageServers(serverInfos);
+        List<ServerInfo> dataStreamServers = getDataStreamServers(serverInfos);
+        List<ServerInfo> controlServers = getControlServers(serverInfos);
+
+        if (!storageServers.isEmpty())
+            serverSections.add(
+                new ServerSection("Almacenamiento", "fas fa-hdd", storageServers)
+            );
+
+        if (!dataStreamServers.isEmpty())
+            serverSections.add(
+                new ServerSection("Flujo de datos", "fas fa-stream", dataStreamServers)
+            );
+
+        if (!controlServers.isEmpty())
+            serverSections.add(
+                new ServerSection("Control", "fas fa-grip-horizontal", controlServers)
+            );
+
         return serverSections;
     }
 

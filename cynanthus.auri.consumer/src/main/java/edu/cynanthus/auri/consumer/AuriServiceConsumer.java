@@ -2,17 +2,16 @@ package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.*;
 import edu.cynanthus.common.net.HostAddress;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 
 import java.net.http.HttpClient;
-import java.util.Map;
+import java.util.function.Consumer;
 
 public interface AuriServiceConsumer<T extends AuriService> {
 
     T prepare();
 
-    T prepare(Map<String, String> headers);
-
-    T prepare(String headerName, String headerValue);
+    T prepare(Consumer<LazyRequest> lazyRequestConsumer);
 
     static AuriServiceConsumer<AuthService> createAuthServiceConsumer(HttpClient httpClient, HostAddress hostAddress) {
         return new AuriServiceConsumerImpl<>(httpClient, hostAddress, AuthServiceConsumer::new);

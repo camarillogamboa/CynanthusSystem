@@ -11,6 +11,7 @@ import edu.cynanthus.common.resource.FileAccesObject;
 import edu.cynanthus.common.resource.ResourceException;
 import edu.cynanthus.common.security.AgentUser;
 import edu.cynanthus.common.security.SystemUser;
+import edu.cynanthus.microservice.logging.JsonFormatter;
 import edu.cynanthus.microservice.property.MetaProperties;
 import edu.cynanthus.microservice.property.MetaProperty;
 
@@ -21,10 +22,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * El tipo Archiveable context.
@@ -113,7 +111,9 @@ final class ArchiveableContextImpl implements ArchiveableContext, TimePatterns {
         try {
             FileAccesObject.createDirectoryIfNoExists(logDirectory);
             String logFile = logDirectory + "/" + LocalDateTime.now().format(LOG_FILE_NAME_PATTERN) + ".log";
-            logger.addHandler(new FileHandler(logFile));
+            Handler fileHandler = new FileHandler(logFile);
+            fileHandler.setFormatter(new JsonFormatter());
+            logger.addHandler(fileHandler);
             logger.info("Archivo de registro iniciado en " + (new File(logFile).getAbsolutePath()));
         } catch (IOException ex) {
             logger.log(Level.SEVERE, "No fue posible iniciar el archivo de registro", ex);

@@ -1,18 +1,18 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.CrudService;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 class SessionBasedCrudService<T, S extends CrudService<T>> extends SessionBasedService<S> implements CrudService<T> {
 
     SessionBasedCrudService(
         AuriServiceConsumer<S> auriServiceConsumer,
         SessionStarter sessionStarter,
-        Supplier<Map<String, String>> headersSupplier
+        Consumer<LazyRequest> lazyRequestConsumer
     ) {
-        super(auriServiceConsumer, sessionStarter, headersSupplier);
+        super(auriServiceConsumer, sessionStarter, lazyRequestConsumer);
     }
 
     @Override

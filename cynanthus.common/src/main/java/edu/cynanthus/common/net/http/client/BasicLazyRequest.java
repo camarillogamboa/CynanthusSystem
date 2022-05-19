@@ -18,7 +18,7 @@ class BasicLazyRequest implements LazyRequest {
 
     BasicLazyRequest(HttpClient httpClient) {
         this.httpClient = httpClient;
-        this.builderConsumer = nuilder -> {};
+        this.builderConsumer = builder -> {};
     }
 
     @Override

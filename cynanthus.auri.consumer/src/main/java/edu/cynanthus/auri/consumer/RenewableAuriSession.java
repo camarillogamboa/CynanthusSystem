@@ -4,20 +4,26 @@ import edu.cynanthus.auri.api.*;
 import edu.cynanthus.auri.api.exception.InvalidArgumentException;
 import edu.cynanthus.bean.Config;
 import edu.cynanthus.common.net.HostAddress;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.AuthenticatedUser;
 import edu.cynanthus.domain.ServerType;
 import edu.cynanthus.domain.User;
 
 import java.net.http.HttpClient;
+import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 class RenewableAuriSession implements AuriSession {
 
-    private final SessionManager sessionManager;
+    private Duration timeOut;
 
+    private final Function<Map<String, String>, Consumer<LazyRequest>> requestBuilder;
+
+    private final SessionManager sessionManager;
     private final AuriServiceConsumer<ServerInfoService> serverInfoServiceConsumer;
     private final AuriServiceConsumer<NodeInfoService> nodeInfoServiceConsumer;
     private final AuriServiceConsumer<InstructionSetService> instructionSetServiceConsumer;
@@ -38,6 +44,14 @@ class RenewableAuriSession implements AuriSession {
         Objects.requireNonNull(hostAddress);
         Objects.requireNonNull(user);
 
+        this.timeOut = Duration.ofSeconds(5);
+
+        Consumer<LazyRequest> timeOutSetter
+            = lazyRequest -> lazyRequest.building(builder -> builder.timeout(getTimeOut()));
+
+        this.requestBuilder
+            = headers -> timeOutSetter.andThen(lazyRequest -> lazyRequest.addHeaders(headers));
+
         AuriServiceConsumer<AuthService> authServiceConsumer = AuriServiceConsumer.createAuthServiceConsumer(
             httpClient,
             hostAddress
@@ -53,15 +67,26 @@ class RenewableAuriSession implements AuriSession {
         this.latiroServerServiceConsumer = AuriServiceConsumer.createLatiroServerServiceConsumer(httpClient, hostAddress);
         this.strisServerServiceConsumer = AuriServiceConsumer.createStrisServerServiceConsumer(httpClient, hostAddress);
 
-        Supplier<Map<String, String>> headersSupplier = this::prepareDeafultHeaders;
+        Consumer<LazyRequest> consumerLazyRequest
+            = timeOutSetter.andThen(lazyRequest -> lazyRequest.addHeaders(prepareDeafultHeaders()));
 
-        this.defaultServerInfoService = new SessionBasedServerInfoService(serverInfoServiceConsumer, sessionManager, headersSupplier);
-        this.defaultNodeInfoService = new SessionBasedNodeInfoService(nodeInfoServiceConsumer, sessionManager, headersSupplier);
-        this.defaultInstructionSetService = new SessionBasedInstructionSetService(instructionSetServiceConsumer, sessionManager, headersSupplier);
-        this.defaultUserService = new SessionBasedUserService(userServiceConsumer, sessionManager, headersSupplier);
-        this.defaultSordidusServerService = new SessionBasedSordidusServerService(sordidusServerServiceConsumer, sessionManager, headersSupplier);
-        this.defaultLatiroServerService = new SessionBasedLatiroServerService(latiroServerServiceConsumer, sessionManager, headersSupplier);
-        this.defaultStrisServerService = new SessionBasedStrisServerService(strisServerServiceConsumer, sessionManager, headersSupplier);
+        this.defaultServerInfoService = new SessionBasedServerInfoService(serverInfoServiceConsumer, sessionManager, consumerLazyRequest);
+        this.defaultNodeInfoService = new SessionBasedNodeInfoService(nodeInfoServiceConsumer, sessionManager, consumerLazyRequest);
+        this.defaultInstructionSetService = new SessionBasedInstructionSetService(instructionSetServiceConsumer, sessionManager, consumerLazyRequest);
+        this.defaultUserService = new SessionBasedUserService(userServiceConsumer, sessionManager, consumerLazyRequest);
+        this.defaultSordidusServerService = new SessionBasedSordidusServerService(sordidusServerServiceConsumer, sessionManager, consumerLazyRequest);
+        this.defaultLatiroServerService = new SessionBasedLatiroServerService(latiroServerServiceConsumer, sessionManager, consumerLazyRequest);
+        this.defaultStrisServerService = new SessionBasedStrisServerService(strisServerServiceConsumer, sessionManager, consumerLazyRequest);
+    }
+
+    @Override
+    public Duration getTimeOut() {
+        return timeOut;
+    }
+
+    @Override
+    public void setTimeOut(Duration timeOut) {
+        this.timeOut = timeOut;
     }
 
     @Override
@@ -101,7 +126,11 @@ class RenewableAuriSession implements AuriSession {
 
     @Override
     public ServerInfoService serverInfoService(Map<String, String> headers) {
-        return new SessionBasedServerInfoService(serverInfoServiceConsumer, sessionManager, () -> prepareHeaders(headers));
+        return new SessionBasedServerInfoService(
+            serverInfoServiceConsumer,
+            sessionManager,
+            requestBuilder.apply(headers)
+        );
     }
 
     @Override
@@ -111,7 +140,7 @@ class RenewableAuriSession implements AuriSession {
 
     @Override
     public NodeInfoService nodeInfoService(Map<String, String> headers) {
-        return new SessionBasedNodeInfoService(nodeInfoServiceConsumer, sessionManager, () -> prepareHeaders(headers));
+        return new SessionBasedNodeInfoService(nodeInfoServiceConsumer, sessionManager, requestBuilder.apply(headers));
     }
 
     @Override
@@ -121,7 +150,11 @@ class RenewableAuriSession implements AuriSession {
 
     @Override
     public InstructionSetService instructionSetService(Map<String, String> headers) {
-        return new SessionBasedInstructionSetService(instructionSetServiceConsumer, sessionManager, () -> prepareHeaders(headers));
+        return new SessionBasedInstructionSetService(
+            instructionSetServiceConsumer,
+            sessionManager,
+            requestBuilder.apply(headers)
+        );
     }
 
     @Override
@@ -131,7 +164,7 @@ class RenewableAuriSession implements AuriSession {
 
     @Override
     public UserService userService(Map<String, String> headers) {
-        return new SessionBasedUserService(userServiceConsumer, sessionManager, () -> prepareHeaders(headers));
+        return new SessionBasedUserService(userServiceConsumer, sessionManager, requestBuilder.apply(headers));
     }
 
     @Override
@@ -172,7 +205,11 @@ class RenewableAuriSession implements AuriSession {
 
     @Override
     public SordidusServerService sordidusServerService(Map<String, String> headers) {
-        return new SessionBasedSordidusServerService(sordidusServerServiceConsumer, sessionManager, () -> prepareHeaders(headers));
+        return new SessionBasedSordidusServerService(
+            sordidusServerServiceConsumer,
+            sessionManager,
+            requestBuilder.apply(headers)
+        );
     }
 
     @Override
@@ -182,7 +219,11 @@ class RenewableAuriSession implements AuriSession {
 
     @Override
     public LatiroServerService latiroServerService(Map<String, String> headers) {
-        return new SessionBasedLatiroServerService(latiroServerServiceConsumer, sessionManager, () -> prepareHeaders(headers));
+        return new SessionBasedLatiroServerService(
+            latiroServerServiceConsumer,
+            sessionManager,
+            requestBuilder.apply(headers)
+        );
     }
 
     @Override
@@ -192,7 +233,11 @@ class RenewableAuriSession implements AuriSession {
 
     @Override
     public StrisServerService strisServerService(Map<String, String> headers) {
-        return new SessionBasedStrisServerService(strisServerServiceConsumer, sessionManager, () -> prepareHeaders(headers));
+        return new SessionBasedStrisServerService(
+            strisServerServiceConsumer,
+            sessionManager,
+            requestBuilder.apply(headers)
+        );
     }
 
     @Override

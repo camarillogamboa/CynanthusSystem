@@ -71,41 +71,56 @@
         <h5 class="w-100 text-center">Servidores</h5>
     </div>
 
-    <div class="row m-0">
+    <div
+            th:with="hasSections = !${#lists.isEmpty(serverSections)}"
+            class="row m-0"
+            th:classappend="${hasSections}? '' : 'flex-fill' "
+    >
 
-        <!-- Barra de nevegacion de servidores -->
-        <nav class="navbar navbar-light m-0 p-1 w-100">
+        <th:block th:if="${hasSections}">
 
-            <!-- Iteracion por las categorias disponibles -->
-            <nav th:each="serverSection : ${serverSections}" class="nav nav-pills flex-column w-100">
+            <nav class="navbar navbar-light p-1 w-100">
+                <!-- Iteracion por las categorias disponibles -->
+                <nav
+                        th:each="serverSection : ${serverSections}"
+                        th:if="!${#lists.isEmpty(serverSection.servers)}"
+                        class="nav nav-pills flex-column w-100"
+                >
 
-                <!-- Barra de categoria de servidor (Titulo de categoria) -->
-                <div class="nav-link section-bar p-1 pl-2 pt-2">
-                    <h6>
-                        <i class="pr-2" th:classappend="${serverSection.iconName}"></i>[[${serverSection.name}]]
-                    </h6>
-                </div>
+                    <!-- Barra de categoria de servidor (Titulo de categoria) -->
+                    <div class="nav-link section-bar p-1 pl-2 pt-2">
+                        <h6>
+                            <i class="pr-2" th:classappend="${serverSection.iconName}"></i>[[${serverSection.name}]]
+                        </h6>
+                    </div>
 
-                <!-- Items de la categoria -->
-                <nav class="nav nav-pills flex-column w-100">
-                    <ul class="row m-0 p-0">
-                        <li th:each="server :${serverSection.servers}" class="section-item m-0 p-0">
+                    <!-- Items de la categoria -->
+                    <nav class="nav nav-pills flex-column w-100">
+                        <ul class="row m-0 p-0">
+                            <li th:each="server :${serverSection.servers}" class="section-item m-0 p-0">
 
-                            <a
-                                    th:href="@{/cynanthus/dayi/server/}+${server.id}"
-                                    class="nav-link ml-2 my-1"
-                                    th:with="isSelected = ${currentServer} and ${server.id} == ${currentServer.id}"
-                                    th:classappend="${isSelected}? (${availableServer}?'active bg-success':'active bg-danger'):'bg-light'"
-                            >
-                                [[${server.name}]]
-                            </a>
-                        </li>
-                    </ul>
+                                <a
+                                        th:href="@{/cynanthus/dayi/server/}+${server.id}"
+                                        class="nav-link ml-2 my-1"
+                                        th:with="isSelected = ${currentServer} and ${server.id} == ${currentServer.id}"
+                                        th:classappend="${isSelected}? (${availableServer}?'active bg-success':'active bg-danger'):'bg-light'"
+                                >
+                                    [[${server.name}]]
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
                 </nav>
-
             </nav>
 
-        </nav>
+        </th:block>
+
+        <th:block th:unless="${hasSections}">
+            <div class="d-flex flex-fill text-center align-middle">
+                <h6 class="m-auto">No hay servidores registrados</h6>
+            </div>
+        </th:block>
 
     </div>
 

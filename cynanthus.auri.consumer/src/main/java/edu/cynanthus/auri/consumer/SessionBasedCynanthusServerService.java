@@ -2,10 +2,10 @@ package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.CynanthusServerService;
 import edu.cynanthus.bean.Config;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.ServerInfo;
 
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 public class SessionBasedCynanthusServerService<T extends Config, S extends CynanthusServerService<T>>
     extends SessionBasedConfigurationServerService<T, S> implements CynanthusServerService<T> {
@@ -13,9 +13,9 @@ public class SessionBasedCynanthusServerService<T extends Config, S extends Cyna
     SessionBasedCynanthusServerService(
         AuriServiceConsumer<S> auriServiceConsumer,
         SessionStarter sessionStarter,
-        Supplier<Map<String, String>> headersSupplier
+        Consumer<LazyRequest> lazyRequestConsumer
     ) {
-        super(auriServiceConsumer, sessionStarter, headersSupplier);
+        super(auriServiceConsumer, sessionStarter, lazyRequestConsumer);
     }
 
     @Override

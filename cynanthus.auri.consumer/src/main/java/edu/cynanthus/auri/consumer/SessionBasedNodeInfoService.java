@@ -1,11 +1,11 @@
 package edu.cynanthus.auri.consumer;
 
 import edu.cynanthus.auri.api.NodeInfoService;
+import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.NodeInfo;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 class SessionBasedNodeInfoService
     extends SessionBasedBeanService<NodeInfo, NodeInfoService> implements NodeInfoService {
@@ -13,9 +13,9 @@ class SessionBasedNodeInfoService
     SessionBasedNodeInfoService(
         AuriServiceConsumer<NodeInfoService> auriServiceConsumer,
         SessionStarter sessionStarter,
-        Supplier<Map<String, String>> headersSupplier
+        Consumer<LazyRequest> lazyRequestConsumer
     ) {
-        super(auriServiceConsumer, sessionStarter, headersSupplier);
+        super(auriServiceConsumer, sessionStarter, lazyRequestConsumer);
     }
 
     @Override
