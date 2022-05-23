@@ -9,6 +9,9 @@ import java.util.List;
  */
 public interface NodeInfoService extends BeanService<NodeInfo> {
 
+    /**
+     * La constante NODE_INFO_SERVICE_PATH.
+     */
     String NODE_INFO_SERVICE_PATH = AURI_PATH + "/node";
 
 

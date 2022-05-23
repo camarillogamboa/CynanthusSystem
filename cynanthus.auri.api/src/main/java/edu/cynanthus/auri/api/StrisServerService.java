@@ -11,6 +11,9 @@ import edu.cynanthus.domain.config.StrisConfig;
  */
 public interface StrisServerService extends TreeServerService<StrisConfig, ControlNode> {
 
+    /**
+     * La constante STRIS_SERVER_SERVICE_PATH.
+     */
     String STRIS_SERVER_SERVICE_PATH = CYNANTHUS_SERVER_SERVICE_PATH + "/stris";
 
     /**

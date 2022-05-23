@@ -7,6 +7,9 @@ import edu.cynanthus.domain.ServerInfo;
  */
 public interface ServerInfoService extends BeanService<ServerInfo> {
 
+    /**
+     * La constante SERVER_INFO_SERVICE_PATH.
+     */
     String SERVER_INFO_SERVICE_PATH = AURI_PATH + "/server";
 
 }

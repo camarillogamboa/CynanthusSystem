@@ -10,6 +10,9 @@ import edu.cynanthus.domain.ServerInfo;
  */
 public interface CynanthusServerService<T extends Config> extends ConfigurationServerService<T> {
 
+    /**
+     * La constante CYNANTHUS_SERVER_SERVICE_PATH.
+     */
     String CYNANTHUS_SERVER_SERVICE_PATH = AURI_PATH + "/server";
 
     /**

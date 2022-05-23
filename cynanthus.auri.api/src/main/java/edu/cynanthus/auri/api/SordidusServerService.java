@@ -7,6 +7,9 @@ import edu.cynanthus.domain.config.SordidusConfig;
  */
 public interface SordidusServerService extends CynanthusServerService<SordidusConfig> {
 
+    /**
+     * La constante SORDIDUS_SERVER_SERVICE_PATH.
+     */
     String SORDIDUS_SERVER_SERVICE_PATH = CYNANTHUS_SERVER_SERVICE_PATH + "/sordidus";
 
 }

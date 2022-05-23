@@ -8,6 +8,9 @@ import edu.cynanthus.domain.InstructionSet;
  */
 public interface InstructionSetService extends BeanService<InstructionSet> {
 
+    /**
+     * La constante INSTRUCTION_SET_SERVICE_PATH.
+     */
     String INSTRUCTION_SET_SERVICE_PATH = AURI_PATH + "/set";
 
 

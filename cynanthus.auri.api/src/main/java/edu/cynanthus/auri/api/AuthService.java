@@ -9,6 +9,9 @@ import edu.cynanthus.domain.User;
  */
 public interface AuthService extends AuriService {
 
+    /**
+     * La constante AUTH_SERVICE_PATH.
+     */
     String AUTH_SERVICE_PATH = AURI_PATH + "/auth";
 
     /**

@@ -6,6 +6,9 @@ package edu.cynanthus.auri.api;
  */
 public interface AuriService {
 
+    /**
+     * La constante AURI_PATH.
+     */
     String AURI_PATH = "/cynanthus/auri";
 
 }
