@@ -33,7 +33,7 @@ public class DayiDinamicController extends CommonController {
     @MessageMapping("/server/{id:\\d+}/control")
     public void loadSensingNodesViewContent(@DestinationVariable Integer id) {
         ServerInfo serverInfo = findServerInfo(new ServerInfo(id));
-
+        System.out.println("EJECUTANDO");
     }
 
     @MessageMapping("/server/{id:\\d+}/properties")
@@ -54,8 +54,8 @@ public class DayiDinamicController extends CommonController {
         }
 
         ServerPropertiesViewContent serverPropertiesViewContent = new ServerPropertiesViewContent(
-            available,
             serverInfo,
+            available,
             propertyInfos
         );
 

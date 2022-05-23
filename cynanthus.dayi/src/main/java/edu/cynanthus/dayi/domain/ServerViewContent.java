@@ -6,31 +6,20 @@ import java.util.Objects;
 
 public class ServerViewContent {
 
-    private ServerInfo serverInfo;
-    private Boolean available;
+    private final ServerInfo serverInfo;
+    private final Boolean available;
 
     public ServerViewContent(ServerInfo serverInfo, Boolean available) {
         this.serverInfo = serverInfo;
         this.available = available;
     }
 
-    public ServerViewContent() {
-    }
-
     public ServerInfo getServerInfo() {
         return serverInfo;
     }
 
-    public void setServerInfo(ServerInfo serverInfo) {
-        this.serverInfo = serverInfo;
-    }
-
-    public Boolean getAvailable() {
+    public Boolean isAvailable() {
         return available;
-    }
-
-    public void setAvailable(Boolean available) {
-        this.available = available;
     }
 
     @Override

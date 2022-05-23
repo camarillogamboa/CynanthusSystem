@@ -56,10 +56,7 @@ class ServiceConsumer implements AuriService {
                     return JsonProvider.fromJson(reader, returnType);
                 else {
 
-                    String message = StreamUtil.toString(reader);
-                    System.out.println(message);
-
-                    ErrorMessage<String> errorMessage = JsonProvider.fromJson(message, ERROR_MESSAGE_TYPE);
+                    ErrorMessage<String> errorMessage = JsonProvider.fromJson(reader, ERROR_MESSAGE_TYPE);
 
                     throw new WebServiceException(
                         "El servidor Auri ha respondido con un código de error",

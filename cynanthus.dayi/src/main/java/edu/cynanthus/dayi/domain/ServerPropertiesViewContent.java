@@ -9,12 +9,9 @@ public class ServerPropertiesViewContent extends ServerViewContent {
 
     private List<PropertyInfo> propertyInfos;
 
-    public ServerPropertiesViewContent(boolean available, ServerInfo serverInfo, List<PropertyInfo> propertyInfos) {
+    public ServerPropertiesViewContent(ServerInfo serverInfo, Boolean available, List<PropertyInfo> propertyInfos) {
         super(serverInfo, available);
         this.propertyInfos = propertyInfos;
-    }
-
-    public ServerPropertiesViewContent() {
     }
 
     public List<PropertyInfo> getPropertyInfos() {

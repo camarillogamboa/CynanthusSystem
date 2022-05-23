@@ -20,7 +20,7 @@ import java.util.List;
 @Service("userDetailsService")
 public class BasicUserDetailsService implements UserDetailsService {
 
-    private final UserDetails auriUser;
+    private final User auriUser;
     private final UserService userService;
 
     @Autowired
@@ -28,20 +28,19 @@ public class BasicUserDetailsService implements UserDetailsService {
         User auriUser,
         @Qualifier("transactionalUserService") UserService userService
     ) {
-        this.auriUser = domainUserToUserDetails(auriUser);
+        this.auriUser = auriUser;
         this.userService = userService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (auriUser.getUsername().equals(username)) {
-            return auriUser;
+            return domainUserToUserDetails(auriUser);
         } else {
             User user = new UserEntity();
             user.setUsername(username);
             try {
                 user = userService.read(user);
-                System.out.println(user);
                 return domainUserToUserDetails(user);
             } catch (Exception ex) {
                 throw new UsernameNotFoundException(username, ex);

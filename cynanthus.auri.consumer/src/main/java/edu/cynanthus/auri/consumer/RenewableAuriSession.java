@@ -50,7 +50,7 @@ class RenewableAuriSession implements AuriSession {
             = lazyRequest -> lazyRequest.building(builder -> builder.timeout(getTimeOut()));
 
         this.requestBuilder
-            = headers -> timeOutSetter.andThen(lazyRequest -> lazyRequest.addHeaders(headers));
+            = headers -> timeOutSetter.andThen(lazyRequest -> lazyRequest.addHeaders(prepareHeaders(headers)));
 
         AuriServiceConsumer<AuthService> authServiceConsumer = AuriServiceConsumer.createAuthServiceConsumer(
             httpClient,
