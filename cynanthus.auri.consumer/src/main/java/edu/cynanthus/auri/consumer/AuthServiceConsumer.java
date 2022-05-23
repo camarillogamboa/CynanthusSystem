@@ -18,7 +18,7 @@ class AuthServiceConsumer extends ServiceConsumer implements AuthService {
         checkUser(user);
         return sendAndConsume(
             lazyRequest -> lazyRequest.POST(
-                "/cynanthus/auth/login",
+                AUTH_SERVICE_PATH + "/login",
                 () -> JsonProvider.toJsonInputStream(user)
             ),
             AuthenticatedUser.class

@@ -9,23 +9,23 @@
     <meta charset="UTF-8"/>
 <body>
 
-<!-- Cabezara de la UI -->
-<header th:fragment="headerView">
+<!-- Cabezera de la UI -->
+<header th:fragment="headerView" class="container-fluid p-0">
     <nav th:replace="components/navegation::bar"></nav>
 </header>
 
 <!-- Contenido principal de la UI -->
-<section th:fragment="contentView" class="d-flex flex-fill bg-white">
+<section th:fragment="contentView" class="container-fluid flex-fill p-0 bg-white rounded">
 
-    <div class="row m-0 flex-fill">
+    <div class="row h-100 m-0">
 
         <!-- Barra de navegación de servidores -->
-        <section class="col-md-2 p-1">
-            <nav th:replace="components/navegation::serversBar"></nav>
+        <section class="col-lg-2 p-1">
+            <div th:replace="components/navegation::serversBar"></div>
         </section>
 
         <!-- Area de contenido -->
-        <section class="col-md-10 p-1">
+        <section class="col-lg-10 p-1">
 
             <th:block th:switch="${viewOption}">
                 <th:block th:case="'WELCOME_VIEW'">
@@ -33,7 +33,7 @@
                 </th:block>
 
                 <th:block th:case="'SERVER_VIEW'">
-                    <div th:replace="components/server::serverView"></div>
+                    <div th:replace="components/server::bestServerView"></div>
                 </th:block>
 
                 <th:block th:case="'USERS_VIEW'">

@@ -17,11 +17,11 @@ public class AuriServiceFactory {
     @Autowired
     public AuriServiceFactory(
         @Value("${cynanthus.auri.server.hostName}") String hostName,
-        @Value("${cynanthus.auri.server.hostPort}") Integer port,
-        @Value("${cynanthus.dayi.username}") String username,
-        @Value("${cynanthus.dayi.password}") String password
+        @Value("${cynanthus.auri.server.hostPort}") Integer hostPort,
+        @Value("${cynanthus.auri.username}") String username,
+        @Value("${cynanthus.auri.password}") String password
     ) {
-        this.hostAddress = HostAddress.create(hostName, port);
+        this.hostAddress = HostAddress.create(hostName, hostPort);
         this.user = new User(username, password);
     }
 

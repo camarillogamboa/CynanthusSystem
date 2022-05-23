@@ -36,6 +36,7 @@ public class BasicAuthService implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtTokenProvider.generateToken(authentication);
+        System.out.println("TOKEN GENERADO: " + token);
 
         return new AuthenticatedUser(user.getUsername(), user.getPassword(), token);
     }

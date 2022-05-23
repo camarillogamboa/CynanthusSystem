@@ -17,7 +17,7 @@ class StrisServerServiceConsumer
     private static final Type GENERAL_NODE_LIST_TYPE = new TypeToken<List<GeneralNode<ControlNode>>>() {}.getType();
 
     StrisServerServiceConsumer(LazyRequest lazyRequest) {
-        super(lazyRequest, "/cynanthus/auri/server/stris", StrisConfig.class, GENERAL_NODE_LIST_TYPE);
+        super(lazyRequest, STRIS_SERVER_SERVICE_PATH, StrisConfig.class, GENERAL_NODE_LIST_TYPE);
     }
 
     @Override

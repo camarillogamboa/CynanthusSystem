@@ -5,4 +5,7 @@ package edu.cynanthus.auri.api;
  * provistos por Auri API
  */
 public interface AuriService {
+
+    String AURI_PATH = "/cynanthus/auri";
+
 }

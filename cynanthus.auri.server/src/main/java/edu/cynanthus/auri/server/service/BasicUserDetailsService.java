@@ -2,6 +2,7 @@ package edu.cynanthus.auri.server.service;
 
 import edu.cynanthus.auri.api.UserService;
 import edu.cynanthus.auri.server.entity.UserEntity;
+import edu.cynanthus.auri.server.security.SpringUser;
 import edu.cynanthus.domain.Role;
 import edu.cynanthus.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,32 +20,43 @@ import java.util.List;
 @Service("userDetailsService")
 public class BasicUserDetailsService implements UserDetailsService {
 
+    private final UserDetails auriUser;
     private final UserService userService;
 
     @Autowired
     public BasicUserDetailsService(
+        User auriUser,
         @Qualifier("transactionalUserService") UserService userService
     ) {
+        this.auriUser = domainUserToUserDetails(auriUser);
         this.userService = userService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = new UserEntity();
-        user.setUsername(username);
-
-        try {
-            user = userService.read(user);
-        } catch (Exception ex) {
-            throw new UsernameNotFoundException(username, ex);
+        if (auriUser.getUsername().equals(username)) {
+            return auriUser;
+        } else {
+            User user = new UserEntity();
+            user.setUsername(username);
+            try {
+                user = userService.read(user);
+                System.out.println(user);
+                return domainUserToUserDetails(user);
+            } catch (Exception ex) {
+                throw new UsernameNotFoundException(username, ex);
+            }
         }
+    }
 
+
+    private UserDetails domainUserToUserDetails(User user) {
         List<GrantedAuthority> roles = new LinkedList<>();
 
         for (Role role : user.getRoles())
             roles.add(new SimpleGrantedAuthority(role.getRoleType().name()));
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), roles);
+        return new SpringUser(user.getUsername(), user.getPassword(), roles);
     }
 
 }

@@ -8,7 +8,7 @@ class SordidusServerServiceConsumer
     extends CynanthusServerServiceConsumer<SordidusConfig> implements SordidusServerService {
 
     SordidusServerServiceConsumer(LazyRequest lazyRequest) {
-        super(lazyRequest, "/cynanthus/auri/server/sordidus", SordidusConfig.class);
+        super(lazyRequest, SORDIDUS_SERVER_SERVICE_PATH, SordidusConfig.class);
     }
 
 }

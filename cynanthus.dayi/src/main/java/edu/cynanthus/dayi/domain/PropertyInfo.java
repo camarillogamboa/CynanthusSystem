@@ -1,4 +1,4 @@
-package edu.cynanthus.dayi.util;
+package edu.cynanthus.dayi.domain;
 
 import java.util.Objects;
 

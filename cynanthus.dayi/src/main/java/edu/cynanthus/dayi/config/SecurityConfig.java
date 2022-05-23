@@ -35,8 +35,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
-        http.formLogin().defaultSuccessUrl("/cynanthus/dayi");
+        http.authorizeRequests()
+            .antMatchers(
+                "/server/**/delete",
+                "/server"
+            ).hasRole("ADMIN")
+            .antMatchers(
+                "/",
+                "/server/**",
+                "/instructions",
+                "/users"
+            ).hasAnyRole("ADMIN", "USER")
+            .and().formLogin().loginPage("/login").defaultSuccessUrl("/").permitAll();
     }
 
     @Override

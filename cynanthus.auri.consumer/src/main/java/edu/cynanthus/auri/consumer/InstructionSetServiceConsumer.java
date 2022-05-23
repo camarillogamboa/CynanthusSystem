@@ -17,7 +17,7 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     InstructionSetServiceConsumer(LazyRequest lazyRequest) {
         super(
             lazyRequest,
-            "/cynanthus/auri/set",
+            INSTRUCTION_SET_SERVICE_PATH,
             InstructionSet.class,
             INSTRUCTION_SET_LIST_TYPE
         );

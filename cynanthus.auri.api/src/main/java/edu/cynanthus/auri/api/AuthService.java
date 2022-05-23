@@ -9,6 +9,8 @@ import edu.cynanthus.domain.User;
  */
 public interface AuthService extends AuriService {
 
+    String AUTH_SERVICE_PATH = AURI_PATH + "/auth";
+
     /**
      * Realiza la autenticación de un usuario a partir
      * de un objeto User el cual debe contener

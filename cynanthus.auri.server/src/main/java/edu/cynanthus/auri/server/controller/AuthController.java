@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/cynanthus/auth")
+@RequestMapping(AuthService.AUTH_SERVICE_PATH)
 public class AuthController implements AuthService {
 
     private final AuthService authService;

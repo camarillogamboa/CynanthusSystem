@@ -16,7 +16,7 @@ class LatiroServerServiceConsumer
     private static final Type GENARAL_NODE_LIST_TYPE = new TypeToken<List<GeneralNode<SensingNode>>>() {}.getType();
 
     LatiroServerServiceConsumer(LazyRequest lazyRequest) {
-        super(lazyRequest, "/cynanthus/auri/server/latiro", LatiroConfig.class, GENARAL_NODE_LIST_TYPE);
+        super(lazyRequest, LATIRO_SERVER_SERVICE_PATH, LatiroConfig.class, GENARAL_NODE_LIST_TYPE);
     }
 
 }

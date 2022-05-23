@@ -16,7 +16,7 @@ class UserServiceConsumer extends BeanServiceConsumer<User> implements UserServi
     UserServiceConsumer(LazyRequest lazyRequest) {
         super(
             lazyRequest,
-            "/cynanthus/auri/user",
+            USER_SERVICE_PATH,
             User.class,
             USER_LIST_TYPE
         );

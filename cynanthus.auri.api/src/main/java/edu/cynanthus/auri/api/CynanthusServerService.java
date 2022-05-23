@@ -10,6 +10,8 @@ import edu.cynanthus.domain.ServerInfo;
  */
 public interface CynanthusServerService<T extends Config> extends ConfigurationServerService<T> {
 
+    String CYNANTHUS_SERVER_SERVICE_PATH = AURI_PATH + "/server";
+
     /**
      * Is available boolean.
      *

@@ -11,6 +11,7 @@ import edu.cynanthus.bean.ErrorMessage;
 import edu.cynanthus.common.json.JsonProvider;
 import edu.cynanthus.common.net.http.HttpStatusCode;
 import edu.cynanthus.common.net.http.client.LazyRequest;
+import edu.cynanthus.common.resource.StreamUtil;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
@@ -54,7 +55,11 @@ class ServiceConsumer implements AuriService {
                 if (HttpStatusCode.isCorrect(response.statusCode()))
                     return JsonProvider.fromJson(reader, returnType);
                 else {
-                    ErrorMessage<String> errorMessage = JsonProvider.fromJson(reader, ERROR_MESSAGE_TYPE);
+
+                    String message = StreamUtil.toString(reader);
+                    System.out.println(message);
+
+                    ErrorMessage<String> errorMessage = JsonProvider.fromJson(message, ERROR_MESSAGE_TYPE);
 
                     throw new WebServiceException(
                         "El servidor Auri ha respondido con un código de error",

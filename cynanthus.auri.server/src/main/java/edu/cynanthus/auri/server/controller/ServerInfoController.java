@@ -6,10 +6,13 @@ import edu.cynanthus.domain.ServerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/cynanthus/auri/server")
+@RequestMapping(ServerInfoService.SERVER_INFO_SERVICE_PATH)
 public class ServerInfoController extends BeanController<ServerInfo> implements ServerInfoService {
 
     @Autowired
@@ -20,13 +23,11 @@ public class ServerInfoController extends BeanController<ServerInfo> implements 
     }
 
     @GetMapping("/{name:" + Patterns.NAME + "}")
-    @ResponseBody
     public ServerInfo readByName(ServerInfo bean) {
         return read(bean);
     }
 
     @DeleteMapping("/{name:" + Patterns.NAME + "}")
-    @ResponseBody
     @PreAuthorize("hasAnyRole('AGENT','ADMIN')")
     public ServerInfo deleteByName(ServerInfo bean) {
         return delete(bean);

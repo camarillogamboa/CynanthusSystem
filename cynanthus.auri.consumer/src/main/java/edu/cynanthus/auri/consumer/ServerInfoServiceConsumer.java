@@ -16,7 +16,7 @@ class ServerInfoServiceConsumer extends BeanServiceConsumer<ServerInfo> implemen
     ServerInfoServiceConsumer(LazyRequest lazyRequest) {
         super(
             lazyRequest,
-            "/cynanthus/auri/server",
+            SERVER_INFO_SERVICE_PATH,
             ServerInfo.class,
             SERVER_INFO_LIST_TYPE
         );

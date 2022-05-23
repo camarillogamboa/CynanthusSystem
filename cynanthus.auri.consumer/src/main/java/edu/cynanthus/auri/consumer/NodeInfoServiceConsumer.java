@@ -16,7 +16,7 @@ class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements N
     NodeInfoServiceConsumer(LazyRequest lazyRequest) {
         super(
             lazyRequest,
-            "/cynanthus/auri/node/info",
+            NODE_INFO_SERVICE_PATH,
             NodeInfo.class,
             NODE_INFO_LIST_TYPE
         );

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/cynanthus/auri/server/sordidus")
+@RequestMapping(SordidusServerService.SORDIDUS_SERVER_SERVICE_PATH)
 public class SordidusServerController
     extends CynanthusServerController<SordidusConfig> implements SordidusServerService {
 
