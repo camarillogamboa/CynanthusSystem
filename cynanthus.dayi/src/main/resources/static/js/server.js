@@ -13,7 +13,7 @@ class WebSocketConnector {
         let socket = new SockJS(this._socketName);
         let stompClient = Stomp.over(socket);
         let subscriptionPath = this._subscriptionPath;
-        stompClient.connect({}, function (frame) {
+        stompClient.connect({}, frame => {
             console.log("Connected: " + frame);
             stompClient.subscribe(subscriptionPath, callback);
         });
@@ -56,6 +56,7 @@ function init(subPath, callback) {
 function consumePublication(message) {
     let body = message.body;
     let obj = JSON.parse(body);
+    console.log(obj);
     updateServerView(obj);
 }
 
@@ -76,29 +77,27 @@ function updateServerView(content) {
     let available = content.available;
     let serverInfo = content.serverInfo;
 
-    document.getElementById("serverNameE").innerHTML = serverInfo.name;
-    document.getElementById("addressE").innerHTML = serverInfo.address + ":" + serverInfo.port;
+    $("#serverNameE").html(`${serverInfo.name}`);
+    $("#addressE").html(`${serverInfo.address}:${serverInfo.port}`);
+    $("#serverInfoE").html(serverInfo.info !== null ? serverInfo.info : "No hay información")
 
     if (available) {
-        document.getElementById("availableIndicatorE")
-            .innerHTML = "<i class='fas fa-2x fa-check-circle available-indicator'></i>";
+        $("#availableIndicatorE").html(`<i class="fas fa-2x fa-check-circle available-indicator"></i>`);
 
-        document.getElementById("server" + serverInfo.id)
-            .classList.replace("bg-info", "bg-success");
+        $("#server" + serverInfo.id)[0].classList.replace("bg-info", "bg-success");
         updateAvailableContent(content);
     } else {
-        document.getElementById("availableIndicatorE")
-            .innerHTML = "<i class='fas fa-2x fa-times-circle unavailable-indicator'></i>";
-        document.getElementById("unavailableMessageE")
-            .innerHTML =
-            "<div class='alert alert-warning mb-2 pb-0 w-100'>" +
-            "<p class='w-100 text-center'>" +
-            "No se logró establecer comunicación con el servidor. " +
-            "Verifique la dirección y puerto de referencia o asegurese que el microservicio correspondiente se esté ejecutando" +
-            "</p>" +
-            "</div>";
-        document.getElementById("server" + serverInfo.id)
-            .classList.replace("bg-info", "bg-danger");
+        $("#availableIndicatorE").html(`<i class="fas fa-2x fa-times-circle unavailable-indicator"></i>`);
+        $("#unavailableMessageE").html(
+            `<div class="alert alert-warning rounded-0 border-left-0 border-right-0 p-2 w-100">
+            <p class="w-100 m-auto text-center">
+            No se logró establecer comunicación con el servidor.
+            Verifique la dirección y puerto de referencia o asegurese que el microservicio correspondiente se esté ejecutando
+            </p>
+            </div>`
+        );
+
+        $("#server" + serverInfo.id)[0].classList.replace("bg-info", "bg-danger");
         updateUnavailableContent(content);
     }
 
@@ -106,16 +105,16 @@ function updateServerView(content) {
 
 function setDefaultUnavailableContent(message) {
     setMainContentE(
-        "<div class='row h-100 m-0'>" +
-        "<div class='col text-center m-auto'>" +
-        "<h6>" + message + "</h6>" +
-        "</div>" +
-        "</div>"
+        `<div class="row h-100 m-0">
+        <div class="col text-center m-auto">
+        <h6>${message}</h6>
+        </div>
+        </div>`
     );
 }
 
 function setMainContentE(innerHTML) {
-    document.getElementById("serverMainContentE").innerHTML = innerHTML;
+    $("#serverMainContentE").html(innerHTML);
 }
 
 

@@ -20,7 +20,7 @@ public enum RoleType {
 
     private final RoleLevel roleLevel;
 
-    RoleType(RoleLevel roleLevel){
+    RoleType(RoleLevel roleLevel) {
         this.roleLevel = roleLevel;
     }
 
@@ -28,7 +28,7 @@ public enum RoleType {
         return roleLevel;
     }
 
-    public enum RoleLevel{
+    public enum RoleLevel {
         LOW_LEVEL, MID_LEVEL, TOP_LEVEL
     }
 

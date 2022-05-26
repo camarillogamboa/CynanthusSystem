@@ -62,10 +62,9 @@ class BasicInstructionSetService
 
     @Override
     public InstructionSet read(InstructionSet bean) {
-        checkNotNull(bean);
-        InstructionSetEntity entity = safeFind(bean);
-        findInstructions(entity);
-        return entity;
+        bean = readOnlySet(bean);
+        findInstructions(bean);
+        return bean;
     }
 
     @Override
@@ -73,6 +72,17 @@ class BasicInstructionSetService
         List<? extends InstructionSet> sets = super.read();
         for (InstructionSet set : sets) findInstructions(set);
         return sets;
+    }
+
+    @Override
+    public InstructionSet readOnlySet(InstructionSet bean) {
+        checkNotNull(bean);
+        return safeFind(bean);
+    }
+
+    @Override
+    public List<? extends InstructionSet> readOnlySets() {
+        return super.read();
     }
 
     @Override

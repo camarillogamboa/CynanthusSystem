@@ -52,6 +52,12 @@ public class InstructionEntity extends Instruction {
     }
 
     @Override
+    @Transient
+    public String getVector() {
+        return super.getVector();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

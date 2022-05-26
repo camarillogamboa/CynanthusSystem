@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Cynanthus Dayi</title>
+</head>
+<body>
+
+<div th:fragment="frame(modalId,modalSize,modalContent)" th:id="${modalId}" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered" th:classappend="'modal-'+${modalSize}">
+        <div th:replace="${modalContent}"></div>
+    </div>
+</div>
+
+<div th:fragment="contentHeader(headerTitle)" class="modal-header text-white dayi-primary">
+    <h5 class="modal-title" th:text="${headerTitle}">Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div th:fragment="contentBody(bodyContent)" class="modal-body" th:insert="${bodyContent}"></div>
+
+<div th:fragment="contentFooter(footerContent)" class="modal-footer bg-light" th:insert="${footerContent}"></div>
+
+<th:block th:fragment="yesNoAction(noOptionText,yesOptionText,yesAction,yesTheme)">
+    <button class="btn btn-secondary" data-dismiss="modal">
+        <span th:text="${noOptionText}">No text</span>
+    </button>
+    <form th:action="${yesAction}" method="GET">
+        <button type="submit" class="btn" th:classappend="'btn-'+${yesTheme}">
+            <span th:text="${yesOptionText}">Yes text</span>
+        </button>
+    </form>
+</th:block>
+
+<div
+        th:fragment="yesNoActionFooter(noOptionText,yesOptionText,yesAction,yesTheme)"
+        th:replace="~{this::contentFooter(~{this::yesNoAction(${noOptionText},${yesOptionText},${yesAction},${yesTheme})})}"
+>
+</div>
+
+<th:block th:fragment="saveAction">
+    <button
+            th:text="'Cancelar'"
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+    >
+    </button>
+    <button type="submit" class="btn btn-primary" th:text="'Guardar'"></button>
+</th:block>
+
+<div th:fragment="saveActionFooter" th:replace="~{this::contentFooter(~{this::saveAction})}"></div>
+
+<div th:fragment="message(messageText)">
+    <span>
+        <p th:text="${messageText}"></p>
+    </span>
+</div>
+
+<div
+        th:fragment="contentOptionDialog(headerTitle,messageText,noOptionText,yesOptionText,yesAction,yesTheme)"
+        class="modal-content"
+>
+    <div th:replace="~{this::contentHeader(${headerTitle})}"></div>
+    <div th:replace="~{this::contentBody(~{this::message(${messageText})})}"></div>
+    <div th:replace="~{this::yesNoActionFooter(${noOptionText},${yesOptionText},${yesAction},${yesTheme})}"></div>
+</div>
+
+<section th:fragment="deleteModalDialog(modalId,headerTitle,messageText,yesAction)">
+    <div th:replace="~{this::frame(${modalId},'sm',~{this::contentOptionDialog(${headerTitle},${messageText},'Cancelar','Eliminar',${yesAction},'danger')})}"></div>
+</section>
+
+</body>
+</html>

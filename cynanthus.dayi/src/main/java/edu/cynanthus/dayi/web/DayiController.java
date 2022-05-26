@@ -2,6 +2,7 @@ package edu.cynanthus.dayi.web;
 
 import edu.cynanthus.auri.consumer.AuriSession;
 import edu.cynanthus.dayi.util.BeanUtil;
+import edu.cynanthus.domain.InstructionSet;
 import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.ServerType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
-@Controller
+
 public class DayiController extends CommonController {
 
-    @Autowired
     public DayiController(AuriSession auriSession) {
         super(auriSession);
     }
 
+    /*-------------------------------------------------Vista principal------------------------------------------------*/
     @GetMapping
     public String home(Model model) {
         setViewOption(model, "WELCOME_VIEW");
@@ -35,6 +36,11 @@ public class DayiController extends CommonController {
         return "index";
     }
 
+    private void setViewOption(Model model, String viewOption) {
+        model.addAttribute("viewOption", viewOption);
+    }
+
+    /*-------------------------------------------------Vista Servidor-------------------------------------------------*/
     @GetMapping("/server/{id:\\d+}")
     public String serverView(ServerInfo serverInfo, Model model) {
         serverInfo = findServerInfo(serverInfo);
@@ -44,7 +50,7 @@ public class DayiController extends CommonController {
 
     @GetMapping("/server/{id:\\d+}/{serverOption:nodes|properties|log}")
     public String serverView(ServerInfo serverInfo, @PathVariable String serverOption, Model model) {
-        serverInfo = auriSession.serverInfoService().read(serverInfo);
+        serverInfo = findServerInfo(serverInfo);
 
         String cannonicalOption = "SERVER_" + serverOption.toUpperCase();
 
@@ -80,20 +86,45 @@ public class DayiController extends CommonController {
         return "redirect:/server/" + serverInfo.getId();
     }
 
-    @GetMapping("/instructions")
+    /*----------------------------------------------Vista de instrucciones--------------------------------------------*/
+
+    @GetMapping("/sets")
     public String instructionsView(Model model) {
         setViewOption(model, "INSTRUCTIONS_VIEW");
+
+        List<? extends InstructionSet> sets = auriSession.instructionSetService().readOnlySets();
+
+        model.addAttribute("sets", sets);
+        model.addAttribute("emptySet", new InstructionSet());
+
         return internalHome(model);
     }
+
+    @GetMapping("/sets/{id:\\d+}")
+    public String instructionSetView(InstructionSet instructionSet, Model model) {
+        instructionSet = auriSession.instructionSetService().read(instructionSet);
+
+        model.addAttribute("currentSet", instructionSet);
+
+        return "components/instructions::currentSetView";
+    }
+
+    @PostMapping("/sets")
+    public String saveInstructionSet(InstructionSet instructionSet) {
+        if (instructionSet.getId() == null) instructionSet = auriSession.instructionSetService().create(instructionSet);
+        else instructionSet = auriSession.instructionSetService().update(instructionSet);
+
+        System.out.println("Se guardó: " + instructionSet);
+
+        return "redirect:/sets/" + instructionSet.getId();
+    }
+
+    /*-----------------------------------------------Vista de usuarios------------------------------------------------*/
 
     @GetMapping("/users")
     public String usersView(Model model) {
         setViewOption(model, "USERS_VIEW");
         return internalHome(model);
-    }
-
-    private void setViewOption(Model model, String viewOption) {
-        model.addAttribute("viewOption", viewOption);
     }
 
 }

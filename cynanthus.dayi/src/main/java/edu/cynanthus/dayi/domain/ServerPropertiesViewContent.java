@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class ServerPropertiesViewContent extends ServerViewContent {
 
-    private List<PropertyInfo> propertyInfos;
+    private final List<PropertyInfo> propertyInfos;
 
     public ServerPropertiesViewContent(ServerInfo serverInfo, Boolean available, List<PropertyInfo> propertyInfos) {
         super(serverInfo, available);
@@ -16,10 +16,6 @@ public class ServerPropertiesViewContent extends ServerViewContent {
 
     public List<PropertyInfo> getPropertyInfos() {
         return propertyInfos;
-    }
-
-    public void setPropertyInfos(List<PropertyInfo> propertyInfos) {
-        this.propertyInfos = propertyInfos;
     }
 
     @Override

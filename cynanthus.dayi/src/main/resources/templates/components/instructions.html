@@ -3,21 +3,267 @@
         lang="en"
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Cynanthus Dayi</title>
 </head>
-<body
-        role="application"
->
+<body>
 
-<div th:fragment="instructionsView" class="d-flex flex-fill bg-light rounded border h-100">
-    <div class="row m-0">
+<th:block th:fragment="instructionsView">
+
+    <!-- Parte superior -->
+    <div class="row m-2">
         <div class="col">
             <h2>Conjuntos de instrucciones</h2>
         </div>
+        <div sec:authorize="hasRole('ADMIN')" class="col-xs">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSet">
+                <span><i class="fas fa-plus"></i></span> Agregar nuevo conjunto
+            </button>
+        </div>
     </div>
+
+    <!-- Contenido -->
+    <div
+            class="row flex-fill m-2 bg-white border rounded"
+            th:with="hasSets = !${#lists.isEmpty(sets)}"
+    >
+
+        <!-- Si hay conjuntos de instrucciones -->
+        <th:block th:if="${hasSets}">
+
+            <!-- Lista de conjuntos de instrucciones disponibles -->
+            <div class="col-md-2 p-0 border-right overflow-auto">
+                <nav class="navbar navbar-light p-1 w-100 align-items-start">
+                    <nav class="nav nav-pills flex-column w-100 m-0">
+                        <ul class="row m-0 p-0">
+                            <!-- Iteración por los conjuntos disponibles -->
+                            <li th:each="set :${sets}" class="nav-item w-100 pb-1">
+                                <a
+                                        th:id="'set-'+${set.id}"
+                                        class="nav-link section-bar text-center"
+                                        th:onclick="'loadInstructionSet(this,'+${set.id}+')'"
+                                        href="#"
+                                        th:text="${set.name}"
+                                ></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </nav>
+            </div>
+
+            <!-- Contenido de la vista de conjunto de instrucciones seleccionada -->
+            <div id="currentSetViewE" class="col-md-10 p-1">
+                <div class="d-flex h-100 p-0">
+                    <h6 class="m-auto" th:text="'Selecciona un conjunto de instrucciones'"></h6>
+                </div>
+            </div>
+
+            <script th:src="@{/js/instructions.js}"></script>
+
+        </th:block>
+
+        <!-- Si no hay conjuntos de instrucciones -->
+        <th:block th:unless="${hasSets}">
+            <div class="d-flex flex-fill text-center align-middle">
+                <h6 class="m-auto" th:text="'No hay conjuntos registrados'"></h6>
+            </div>
+        </th:block>
+
+    </div>
+
+    <section th:replace="this::saveInstructionSetModal('addSet','Agregar conjunto',${emptySet})"></section>
+
+</th:block>
+
+<div
+        th:fragment="currentSetView"
+        th:object="${currentSet}"
+        class="d-flex flex-fill flex-column h-100 m-0 p-0 rounded-right border bg-light"
+>
+
+    <!-- Cabecero de la vista de conjunto selccionado -->
+    <div class="row m-0 border-bottom p-1">
+        <div class="col align-middle m-auto">
+            <h5 th:text="*{name}"></h5>
+        </div>
+
+        <div sec:authorize="hasRole('ADMIN')" class="col-xs p-0">
+            <button
+                    type="button"
+                    class="btn btn-light"
+                    data-toggle="modal"
+                    data-target="#addInstructionModal"
+                    title="Agregar una instrucción"
+            >
+                <span><i class="fas fa-plus"></i></span>
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-light"
+                    data-toggle="modal"
+                    data-target="#updateSetModal"
+                    title="Editar información del conjunto"
+            >
+                <span><i class="fas fa-pen"></i></span>
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-light"
+                    data-toggle="modal"
+                    data-target="#deleteSetModal"
+                    title="Eliminar conjunto"
+            >
+                <span><i class="fas fa-trash"></i></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenido de la vista de conjunto seleccionado -->
+    <div
+            class="row flex-fill m-0 bg-white"
+            th:with="hasInstructions = !${#lists.isEmpty(currentSet.instructions)}"
+    >
+        <!-- Si tiene instrucciones -->
+        <th:block th:if="${hasInstructions}">
+            <div th:replace="this::instructionsTable"></div>
+        </th:block>
+
+        <!-- Si no tiene instrucciones -->
+        <th:block th:unless="${hasInstructions}">
+            <div class="d-flex flex-fill text-center align-middle">
+                <h6 class="m-auto">No hay instrucciones registradas</h6>
+            </div>
+        </th:block>
+
+    </div>
+
+    <!-- Tira informativa del conjunto -->
+    <div class="row m-0 p-1 border-top">
+        <p th:text="${#strings.isEmpty(info)}?*{info}:'No hay información'" class="w-100 m-0 p-0 text-center">
+        </p>
+    </div>
+</div>
+
+<div th:fragment="instructionsTable" class="container-fluid p-0">
+    <table class="table table-striped table-borderless">
+        <thead class="dayi-bg text-white sticky-top">
+        <tr>
+            <th class="col-2 p-2 text-center align-middle" scope="col">
+                Nombre
+            </th>
+            <th class="col p-2 text-center align-middle" scope="col">
+                Vector
+            </th>
+            <th class="col-xs" scope="col"></th>
+            <th:block sec:authorize="hasRole('ADMIN')">
+                <th class="col-xs" scope="col"></th>
+                <th class="col-xs" scope="col"></th>
+            </th:block>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+                th:each="instruction : ${currentSet.instructions}"
+                th:object="${instruction}"
+                class="border-top"
+        >
+            <td class='font-weight-bold border-right' th:text="*{name}">Nombre</td>
+            <td class="col text-truncate" style="max-width: 50px" th:text="*{vector}">Vector</td>
+            <td class="p-2 text-center align-middle w-auto">
+                <button
+                        type="button"
+                        class="btn btn-light pt-0 pl-1 pb-0 pr-1"
+                        data-toggle="modal"
+                        data-target="#showInstructionModal"
+                        title="Editar instrucción"
+                >
+                    <span><i class="fas fa-eye"></i></span>
+                </button>
+            </td>
+            <th:block sec:authorize="hasRole('ADMIN')">
+                <td class="p-2 text-center align-middle w-auto">
+                    <button
+                            type="button"
+                            class="btn btn-light pt-0 pl-1 pb-0 pr-1"
+                            data-toggle="modal"
+                            data-target="#updateInstructionModal"
+                            title="Editar instrucción"
+                    >
+                        <span><i class="fas fa-pen"></i></span>
+                    </button>
+                </td>
+                <td class="p-2 text-center align-middle w-auto">
+                    <button
+                            type="button"
+                            class="btn btn-light pt-0 pl-1 pb-0 pr-1"
+                            data-toggle="modal"
+                            data-target="#deleteInstructionModal"
+                            title="Eliminar instrucción"
+                    >
+                        <span><i class="fas fa-trash"></i></span>
+                    </button>
+                </td>
+            </th:block>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<section th:fragment="saveInstructionSetModal(modalId,headerTitle,instructionSet)">
+    <div th:replace="~{components/modals::frame(${modalId},'lg',~{this::saveInstructionSetContent(${modalId},${headerTitle},${instructionSet})})}">
+    </div>
+</section>
+
+<div th:fragment="saveInstructionSetContent(sectionId,headerTitle,instructionSet)" class="modal-content">
+    <div th:replace="~{components/modals::contentHeader(${headerTitle})}"></div>
+
+    <form
+        th:action="@{/sets}"
+        th:object="${instructionSet}"
+        method="POST"
+        class="was-validated"
+    >
+        <input
+                th:id="${sectionId}+'-id'"
+                th:value="*{id}"
+                name="id"
+                type="hidden"
+                required="false"
+        />
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label th:for="${sectionId}+'-name'" th:text="'Nombre del conjunto'"></label>
+                <input
+                        th:id="${sectionId}+'-name'"
+                        th:value="*{name}"
+                        name="name"
+                        type="text"
+                        class="form-control"
+                        required
+                >
+            </div>
+
+            <div class="form-group">
+                <label th:for="${sectionId}+'-info'" th:text="'Información adicional'"></label>
+                <textarea
+                        th:id="${sectionId}+'-info'"
+                        th:text="*{info}"
+                        name="info"
+                        class="form-control"
+                        rows="2"
+                >
+                </textarea>
+            </div>
+
+        </div>
+
+        <div th:replace="~{components/modals::saveActionFooter}"></div>
+
+    </form>
 </div>
 
 </body>

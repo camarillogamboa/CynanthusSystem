@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(InstructionSetService.INSTRUCTION_SET_SERVICE_PATH)
 public class InstructionSetController extends BeanController<InstructionSet> implements InstructionSetService {
@@ -30,6 +32,23 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
     @DeleteMapping("/{name:" + Patterns.NAME + "}")
     public InstructionSet deleteByName(InstructionSet bean) {
         return delete(bean);
+    }
+
+    @Override
+    @GetMapping("/only/{id:\\d+}")
+    public InstructionSet readOnlySet(InstructionSet bean) {
+        return instructionSetService.readOnlySet(bean);
+    }
+
+    @GetMapping("/only/{name:" + Patterns.NAME + "}")
+    public InstructionSet readOnlySetByName(InstructionSet bean) {
+        return instructionSetService.readOnlySet(bean);
+    }
+
+    @Override
+    @GetMapping("/only")
+    public List<? extends InstructionSet> readOnlySets() {
+        return instructionSetService.readOnlySets();
     }
 
     @Override

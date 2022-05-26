@@ -1,11 +1,19 @@
 package edu.cynanthus.dayi.domain;
 
+import edu.cynanthus.domain.ControlNode;
+import edu.cynanthus.domain.GeneralNode;
 import edu.cynanthus.domain.ServerInfo;
 
-public class ControlNodesViewContent extends ServerViewContent {
+import java.util.List;
 
-    public ControlNodesViewContent(ServerInfo serverInfo, Boolean available) {
-        super(serverInfo, available);
+public class ControlNodesViewContent extends TreeServerViewContent<ControlNode> {
+
+    public ControlNodesViewContent(
+        ServerInfo serverInfo,
+        Boolean available,
+        List<GeneralNode<ControlNode>> generalNodes
+    ) {
+        super(serverInfo, available, generalNodes);
     }
 
 }

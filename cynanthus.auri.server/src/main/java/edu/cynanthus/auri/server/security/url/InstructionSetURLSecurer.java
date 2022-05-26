@@ -16,8 +16,11 @@ public class InstructionSetURLSecurer extends BeanURLSecurer {
     configure(
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authorizer
     ) throws Exception {
-        return super.configure(authorizer).antMatchers(
+        return super.configure(authorizer)
+            .antMatchers(
                 HttpMethod.GET,
+                baseURL + "/only",
+                baseURL + "/only/**",
                 baseURL + "/instruction/**",
                 baseURL + "/instruction/**/**"
             ).hasAnyAuthority(ALL_ROLES)

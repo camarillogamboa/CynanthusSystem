@@ -150,6 +150,12 @@ public class Instruction implements Bean {
         this.value = value;
     }
 
+    public String getVector() {
+        StringBuilder vectorString = new StringBuilder();
+        if (value != null) for (int v : value) vectorString.append(v);
+        return vectorString.toString();
+    }
+
     /**
      * Clone instruction.
      *

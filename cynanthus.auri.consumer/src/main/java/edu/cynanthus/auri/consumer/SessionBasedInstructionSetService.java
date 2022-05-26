@@ -5,6 +5,7 @@ import edu.cynanthus.common.net.http.client.LazyRequest;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class SessionBasedInstructionSetService
@@ -16,6 +17,16 @@ public class SessionBasedInstructionSetService
         Consumer<LazyRequest> lazyRequestConsumer
     ) {
         super(auriServiceConsumer, sessionStarter, lazyRequestConsumer);
+    }
+
+    @Override
+    public InstructionSet readOnlySet(InstructionSet instructionSet) {
+        return consume(service -> service.readOnlySet(instructionSet));
+    }
+
+    @Override
+    public List<? extends InstructionSet> readOnlySets() {
+        return consume(InstructionSetService::readOnlySets);
     }
 
     @Override

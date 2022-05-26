@@ -21,7 +21,7 @@
 
         <!-- Barra de navegación de servidores -->
         <section class="col-lg-2 p-1">
-            <div th:replace="components/navegation::serversBar"></div>
+            <div th:replace="~{this::roundedPlate(~{components/navegation::serverNavegationBar})}"></div>
         </section>
 
         <!-- Area de contenido -->
@@ -29,19 +29,19 @@
 
             <th:block th:switch="${viewOption}">
                 <th:block th:case="'WELCOME_VIEW'">
-                    <div th:replace="components/welcome::welcomeView"></div>
+                    <div th:replace="~{components/welcome::welcomeView}"></div>
                 </th:block>
 
                 <th:block th:case="'SERVER_VIEW'">
-                    <div th:replace="components/server::bestServerView"></div>
+                    <div th:replace="~{this::roundedPlate(~{components/server::serverView})}"></div>
                 </th:block>
 
                 <th:block th:case="'USERS_VIEW'">
-                    <div th:replace="components/users::usersView"></div>
+                    <div th:replace="~{this::roundedPlate(~{components/users::usersView})}"></div>
                 </th:block>
 
                 <th:block th:case="'INSTRUCTIONS_VIEW'">
-                    <div th:replace="components/instructions::instructionsView"></div>
+                    <div th:replace="~{this::roundedPlate(~{components/instructions::instructionsView})}"></div>
                 </th:block>
             </th:block>
 
@@ -50,6 +50,13 @@
     </div>
 
 </section>
+
+<div
+        th:fragment="roundedPlate(content)" class="d-flex flex-column h-100 bg-light rounded border"
+        th:insert="${content}"
+>
+
+</div>
 
 </body>
 </html>

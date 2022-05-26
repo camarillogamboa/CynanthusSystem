@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class TransactionalInstructionSetService
     extends TransactionalBeanService<InstructionSet> implements InstructionSetService {
@@ -26,6 +28,18 @@ public class TransactionalInstructionSetService
         InstructionRepository instructionRepository
     ) {
         this(new BasicInstructionSetService(instructionSetRepository, instructionRepository));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public InstructionSet readOnlySet(InstructionSet bean) {
+        return instructionSetService.readOnlySet(bean);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<? extends InstructionSet> readOnlySets() {
+        return instructionSetService.readOnlySets();
     }
 
     @Override

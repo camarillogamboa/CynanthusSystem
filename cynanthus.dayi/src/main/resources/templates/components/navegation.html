@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html
-        lang="en"
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org"
         xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
@@ -14,7 +13,7 @@
 <nav th:fragment="bar" class="navbar navbar-expand-sm navbar-dark p-0">
     <div class="container-fluid dayi-nav">
 
-        <a th:href="@{/}" class="navbar-brand">Cynanthus Dayi</a>
+        <a th:href="@{/}" class="navbar-brand rounded nav-link">Cynanthus Dayi</a>
 
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -24,7 +23,7 @@
 
             <ul class="navbar-nav">
                 <li class="nav-item mr-3">
-                    <a th:href="@{/instructions}" class="nav-link">
+                    <a th:href="@{/sets}" class="nav-link rounded text-white">
                         <span>Conjuntos de instrucciones</span>
                     </a>
                 </li>
@@ -32,7 +31,7 @@
 
             <ul sec:authorize="hasRole('ADMIN')" class="navbar-nav">
                 <li class="nav-item mr-3">
-                    <a th:href="@{/users}" class="nav-link">
+                    <a th:href="@{/users}" class="nav-link rounded text-white">
                         <span>Usuarios</span>
                     </a>
                 </li>
@@ -40,7 +39,7 @@
 
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown ml-md-auto">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                    <a href="#" class="nav-link dropdown-toggle rounded text-white" data-toggle="dropdown">
                         <i class="fas fa-user"></i>
                         <span>Bienvenido </span>
                         <span sec:authentication="name">Usuario</span>
@@ -65,8 +64,7 @@
     </div>
 </nav>
 
-<div th:fragment="serversBar" class="d-flex flex-column h-100 p-0 bg-light rounded border">
-
+<th:block th:fragment="serverNavegationBar">
     <div class="row m-0 pt-1 pr-1 pb-0 pl-1 border-bottom">
         <h5 class="w-100 text-center">Servidores</h5>
     </div>
@@ -109,11 +107,11 @@
                         <!-- Items de la seccion -->
                         <nav class="nav nav-pills flex-column w-100 pb-1">
                             <ul class="row m-0 p-0" th:id="${sectionId}">
-                                <li th:each="server :${serverSection.servers}" class="section-item m-0 p-0">
+                                <li th:each="server :${serverSection.servers}" class="nav-item m-0 p-0">
 
                                     <a
                                             th:id="'server'+${server.id}"
-                                            th:href="@{/server/}+${server.id}"
+                                            th:href="@{/server/{serverId}(serverId=${server.id})}"
                                             class="nav-link ml-2 my-1"
                                             th:with="isSelected = ${currentServer} and ${server.id} == ${currentServer.id}"
                                             th:classappend="${isSelected}? 'active bg-info'"
@@ -152,9 +150,7 @@
             </span>
         </button>
     </div>
-
-
-</div>
+</th:block>
 
 </body>
 </html>

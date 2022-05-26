@@ -16,9 +16,10 @@ class BeanURLSecurer extends CommonURLSecurer {
     configure(
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authorizer
     ) throws Exception {
-        return authorizer.antMatchers(HttpMethod.POST, baseURL).hasAnyAuthority(TOP_LEVEL_ROLES)
+        return authorizer
+            .antMatchers(HttpMethod.POST, baseURL).hasAnyAuthority(TOP_LEVEL_ROLES)
             .antMatchers(HttpMethod.GET, baseURL, baseURL + "/**").hasAnyAuthority(ALL_ROLES)
-            .antMatchers(HttpMethod.PUT, baseURL).hasAnyRole(TOP_LEVEL_ROLES)
+            .antMatchers(HttpMethod.PUT, baseURL).hasAnyAuthority(TOP_LEVEL_ROLES)
             .antMatchers(HttpMethod.DELETE, baseURL, baseURL + "/**").hasAnyAuthority(TOP_LEVEL_ROLES);
     }
 

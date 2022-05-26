@@ -24,9 +24,22 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     }
 
     @Override
+    public InstructionSet readOnlySet(InstructionSet bean) {
+        checkNotNull(bean);
+        return consume(
+            lazyRequest -> lazyRequest.GET(resourcePath + "/only/" + getId(bean)), InstructionSet.class
+        );
+    }
+
+    @Override
+    public List<? extends InstructionSet> readOnlySets() {
+        return consume(lazyRequest -> lazyRequest.GET(resourcePath + "/only"), INSTRUCTION_SET_LIST_TYPE);
+    }
+
+    @Override
     public Instruction readInstruction(Integer id) {
         checkId(id);
-        return consume(lazyRequest -> lazyRequest.GET("/instruction/" + id), Instruction.class);
+        return consume(lazyRequest -> lazyRequest.GET(resourcePath + "/instruction/" + id), Instruction.class);
     }
 
     @Override
@@ -34,7 +47,7 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
         checkIdSet(idSet);
         checkName(name);
         return consume(
-            lazyRequest -> lazyRequest.GET("/instruction/" + idSet + "/" + name), Instruction.class
+            lazyRequest -> lazyRequest.GET(resourcePath + "/instruction/" + idSet + "/" + name), Instruction.class
         );
     }
 
@@ -43,7 +56,7 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
         checkSetName(setName);
         checkName(name);
         return consume(
-            lazyRequest -> lazyRequest.GET("/instruction/" + setName + "/" + name),
+            lazyRequest -> lazyRequest.GET(resourcePath + "/instruction/" + setName + "/" + name),
             Instruction.class
         );
     }
@@ -51,7 +64,7 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
     @Override
     public Instruction deleteInstruction(Integer id) {
         checkId(id);
-        return consume(lazyRequest -> lazyRequest.DELETE("/instruction/" + id), Instruction.class);
+        return consume(lazyRequest -> lazyRequest.DELETE(resourcePath + "/instruction/" + id), Instruction.class);
     }
 
     @Override
@@ -59,7 +72,7 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
         checkIdSet(idSet);
         checkName(name);
         return consume(
-            lazyRequest -> lazyRequest.DELETE("/instruction/" + idSet + "/" + name),
+            lazyRequest -> lazyRequest.DELETE(resourcePath + "/instruction/" + idSet + "/" + name),
             Instruction.class
         );
     }
@@ -69,7 +82,7 @@ class InstructionSetServiceConsumer extends BeanServiceConsumer<InstructionSet> 
         checkSetName(setName);
         checkName(name);
         return consume(
-            lazyRequest -> lazyRequest.DELETE("/instruction/" + setName + "/" + name),
+            lazyRequest -> lazyRequest.DELETE(resourcePath + "/instruction/" + setName + "/" + name),
             Instruction.class
         );
     }

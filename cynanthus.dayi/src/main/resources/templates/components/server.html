@@ -12,98 +12,124 @@
 <body>
 
 <!-- Vista de un servidor seleccionado -->
-<div th:fragment="bestServerView" class="d-flex flex-fill bg-light rounded border h-100">
-    <div class="d-flex flex-fill flex-column p-2">
-        <!-- Parte superior -->
-        <div class="row m-0 mb-2">
+<th:block th:fragment="serverView" th:object="${currentServer}">
 
-            <!-- Indicador de disponibilidad -->
-            <div class="col-xs p-3" id="availableIndicatorE">
-                <div class="spinner-border text-info"></div>
-            </div>
+    <!-- Parte superior -->
+    <div class="row m-2">
 
-            <!-- Area de titulo -->
-            <div class="col">
-                <div class="row m-0">
-                    <h2 id="serverNameE" th:text="${currentServer.name}">Nombre servidor</h2>
-                </div>
-                <div class="row m-0">
-                    <h6 id="addressE" th:text="${currentServer.address}+':'+${currentServer.port}">
-                        Dirección del servidor en la red local
-                    </h6>
-                </div>
-            </div>
-
-            <!-- Acciones disponibles para el servidor (Solo si el usuario es ADMIN) -->
-            <div sec:authorize="hasRole('ADMIN')" class="col-xs">
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#updateServerModal">
-                    <span><i class="fas fa-pen"></i></span>
-                </button>
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#deleteServerModal">
-                    <span><i class="fas fa-trash"></i></span>
-                </button>
-            </div>
-
+        <!-- Indicador de disponibilidad -->
+        <div class="col-xs p-3" id="availableIndicatorE">
+            <div class="spinner-border text-info"></div>
         </div>
 
-        <div id="unavailableMessageE" class="row m-0"></div>
-
-        <!-- Selector -->
-        <div class="row m-0">
-            <ul class="nav nav-tabs w-100 bg-light">
-
-                <!-- Opcion para vista de nodos (solo si el servidor actual es de flujo de datos o de control) -->
-                <li class="nav-item" th:if="${currentServer.serverType.name} != 'STORAGE'">
-                    <a
-                            class="nav-link"
-                            th:classappend="${serverOption} == 'SERVER_NODES' ? 'active':''"
-                            th:href="@{/server/}+${currentServer.id}+@{/nodes}"
-                    >
-                        Nodos
-                    </a>
-                </li>
-
-                <!-- Opción de vista de propiedades (disponible para todos los servidores) -->
-                <li class="nav-item">
-                    <a
-                            class="nav-link"
-                            th:classappend="${serverOption} == 'SERVER_PROPERTIES' ? 'active':''"
-                            th:href="@{/server/}+${currentServer.id}+@{/properties}"
-                    >
-                        Propiedades
-                    </a>
-                </li>
-
-                <!-- Opción de vista de registro de eventos -->
-                <li class="nav-item">
-                    <a
-                            class="nav-link"
-                            th:classappend="${serverOption} == 'SERVER_LOG' ? 'active':''"
-                            th:href="@{/server/}+${currentServer.id}+@{/log}"
-                    >
-                        Registro del servidor
-                    </a>
-                </li>
-            </ul>
+        <!-- Area de titulo -->
+        <div class="col">
+            <div class="row m-0">
+                <h2 id="serverNameE" th:text="*{name}">Nombre servidor</h2>
+            </div>
+            <div class="row m-0">
+                <h6 id="addressE" th:text="(*{address})+':'+(*{port})">
+                    Dirección del servidor en la red local
+                </h6>
+            </div>
         </div>
 
-        <!-- Contenido del selector según opción de vista elegida o por defecto -->
-        <div class="row m-0 flex-fill bg-white border-left border-bottom border-right rounded-bottom">
-            <div id="serverMainContentE" class="container-fluid p-0">
-                <div class="row h-100 m-0">
-                    <div class="col text-center m-auto">
-                        <div class="spinner-grow text-info" role="status"></div>
-                        <div class="spinner-grow text-info" role="status"></div>
-                        <div class="spinner-grow text-info" role="status"></div>
-                    </div>
-                </div>
-            </div>
+        <!-- Acciones disponibles para el servidor (Solo si el usuario es ADMIN) -->
+        <div sec:authorize="hasRole('ADMIN')" class="col-xs">
+            <button
+                    type="button"
+                    class="btn btn-light"
+                    data-toggle="modal"
+                    data-target="#updateServer"
+                    title="Editar información del servidor"
+            >
+                <span><i class="fas fa-pen"></i></span>
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-light"
+                    data-toggle="modal"
+                    data-target="#deleteServerModal"
+                    title="Eliminar información del servidor"
+            >
+                <span><i class="fas fa-trash"></i></span>
+            </button>
         </div>
 
     </div>
 
-    <section th:replace="this::deleteServerModal"></section>
-    <section th:replace="this::updateServerModal"></section>
+    <div id="unavailableMessageE" class="row m-0"></div>
+
+    <!-- Selector -->
+    <div class="row m-0 ml-2 mr-2">
+        <ul class="nav nav-tabs w-100">
+
+            <!-- Opcion para vista de nodos (solo si el servidor actual es de flujo de datos o de control) -->
+            <li class="nav-item" th:if="(*{serverType.name}) != 'STORAGE'">
+                <a
+                        class="nav-link"
+                        th:classappend="${serverOption} == 'SERVER_NODES' ? 'active':''"
+                        th:href="@{/server/{serverId}/nodes(serverId=*{id})}"
+                >
+                    Nodos
+                </a>
+            </li>
+
+            <!-- Opción de vista de propiedades (disponible para todos los servidores) -->
+            <li class="nav-item">
+                <a
+                        class="nav-link"
+                        th:classappend="${serverOption} == 'SERVER_PROPERTIES' ? 'active':''"
+                        th:href="@{/server/{serverId}/properties(serverId=*{id})}"
+                >
+                    Propiedades
+                </a>
+            </li>
+
+            <!-- Opción de vista de registro de eventos -->
+            <li class="nav-item">
+                <a
+                        class="nav-link"
+                        th:classappend="${serverOption} == 'SERVER_LOG' ? 'active':''"
+                        th:href="@{/server/{serverId}/log(serverId=*{id})}"
+                >
+                    Registro del servidor
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Contenido del selector según opción de vista elegida o por defecto -->
+    <div class="row m-0 mr-2 ml-2 flex-fill bg-white border-left border-bottom border-right rounded-bottom">
+        <div id="serverMainContentE" class="container-fluid p-0">
+            <div class="row h-100 m-0">
+                <div class="col text-center m-auto">
+                    <div class="spinner-grow text-info" role="status"></div>
+                    <div class="spinner-grow text-info" role="status"></div>
+                    <div class="spinner-grow text-info" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row m-0 p-1">
+        <p
+                id="serverInfoE"
+                class="m-0 p-0 w-100 text-center" th:text="${#strings.isEmpty(info)}?*{info}:'No hay información'"
+        >
+        </p>
+    </div>
+
+    <section th:replace="~{this::saveServerModal('updateServer','Actualizar información',${currentServer})}">
+    </section>
+
+    <section
+            th:replace="~{components/modals::deleteModalDialog('deleteServerModal','Eliminar servidor','¿Seguro que desea eliminar '+*{name}+'?',@{/server/{serverId}/delete(serverId=*{id})})}"
+    >
+    </section>
+
+    <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+    <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
 
     <script th:src="@{/js/server.js}"></script>
 
@@ -133,174 +159,106 @@
         </th:block>
     </th:block>
 
-    <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
-    <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
-
     <script type="text/javascript">
         registerSubscription([[${currentServer.id}]]);
     </script>
 
+</th:block>
+
+<!-- Modal para salvar la información de un servidor -->
+<section th:fragment="saveServerModal(modalId,headerTitle,serverInfo)">
+    <div th:replace="~{components/modals::frame(${modalId},'lg',~{this::saveServerContent(${modalId},${headerTitle},${serverInfo})})}">
+    </div>
+</section>
+
+<div th:fragment="saveServerContent(sectionId,headerTitle,serverInfo)" class="modal-content">
+    <div th:replace="~{components/modals::contentHeader(${headerTitle})}"></div>
+
+    <form
+            th:action="@{/server}"
+            th:object="${serverInfo}"
+            method="POST"
+            class="was-validated"
+    >
+        <input
+                th:id="${sectionId}+'-id'"
+                th:value="*{id}"
+                name="id"
+                type="hidden"
+                required="false"
+        />
+
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label th:for="${sectionId}+'-name'" th:text="'Nombre de servidor'"></label>
+                <input
+                        th:id="${sectionId}+'-name'"
+                        th:value="*{name}"
+                        name="name"
+                        type="text"
+                        class="form-control"
+                        required
+                >
+            </div>
+            <div class="form-group">
+                <label th:for="${sectionId}+'-address'" th:text="'Dirección en red del servidor'"></label>
+                <input
+                        th:id="${sectionId}+'-address'"
+                        th:value="*{address}"
+                        name="address"
+                        type="text"
+                        class="form-control"
+                        required
+                >
+            </div>
+            <div class="form-group">
+                <label th:for="${sectionId}+'-port'" th:text="'Puerto'"></label>
+                <input
+                        th:id="${sectionId}+'-port'"
+                        th:value="*{port}"
+                        name="port"
+                        type="number"
+                        class="form-control"
+                        required
+                >
+            </div>
+            <div class="form-group">
+                <label th:for="${sectionId}+'-serverType'" th:text="'Tipo de servidor'"></label>
+                <select
+                        th:id="${sectionId}+'-serverType'"
+                        th:with="selectTo = *{serverType}? *{serverType.name}:'STORAGE'"
+                        name="serverType"
+                        class="custom-select"
+                        required
+                >
+
+                    <option
+                            th:each="serverType : ${T(edu.cynanthus.domain.ServerType).values()}"
+                            th:value="${serverType.name}"
+                            th:text="${serverType.alias}"
+                            th:selected="${selectTo}==${serverType.name}"
+                    ></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label th:for="${sectionId}+'-info'" th:text="'Información adicional'"></label>
+                <textarea
+                        th:id="${sectionId}+'-info'"
+                        th:text="*{info}"
+                        name="info"
+                        class="form-control"
+                        rows="2"
+                >
+                </textarea>
+            </div>
+
+        </div>
+
+        <div th:replace="~{components/modals::saveActionFooter}"></div>
+
+    </form>
 </div>
-
-<!-- Modal para añadir un servidor -->
-<section th:fragment="addServerModal">
-    <div class="modal fade" th:id="'addServerModal'">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header text-white dayi-primary">
-                    <h5 class="modal-title">Información del servidor</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <form
-                        th:action="@{/server}"
-                        th:object="${emptyServer}"
-                        method="POST"
-                        class="was-validated"
-                >
-                    <input type="hidden" name="id" th:field="*{id}" required="false"/>
-                    <div class="modal-body">
-
-                        <div class="form-group">
-                            <label th:for="${#ids.next('name')}">Nombre servidor</label>
-                            <input type="text" class="form-control" th:field="*{name}" required="true">
-                        </div>
-                        <div class="form-group">
-                            <label th:for="${#ids.next('address')}">Dirección en red del servidor</label>
-                            <input type="text" class="form-control" th:field="*{address}" required="true">
-                        </div>
-                        <div class="form-group">
-                            <label th:for="${#ids.next('port')}">Puerto</label>
-                            <input type="number" class="form-control" th:field="*{port}" required="true">
-                        </div>
-                        <div class="form-group">
-                            <label th:for="${#ids.next('serverType')}">Tipo de servidor</label>
-                            <select class="form-select" th:field="*{serverType}" required="true">
-                                <option value="STORAGE" selected>Servidor de almacenamiento</option>
-                                <option value="STREAM_DATA">Servidor de flujo de datos</option>
-                                <option value="CONTROL">Servidor de control</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label th:for="${#ids.next('info')}">Información adicional</label>
-                            <textarea cols="80" rows="2" th:field="*{info}" required="false"></textarea>
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-
-                </form>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- Modal para la actualizar el servidor actual -->
-<section th:fragment="updateServerModal">
-    <div class="modal fade" th:id="'updateServerModal'">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header text-white dayi-primary">
-                    <h5 class="modal-title">Información del servidor</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <form
-                        th:action="@{/server}"
-                        th:object="${currentServer}"
-                        method="POST"
-                        class="was-validated"
-                >
-                    <input type="hidden" name="id" th:field="*{id}" required="false"/>
-                    <div class="modal-body">
-
-                        <div class="form-group">
-                            <label th:for="${#ids.next('name')}">Nombre servidor</label>
-                            <input type="text" class="form-control" th:field="*{name}" required="true">
-                        </div>
-                        <div class="form-group">
-                            <label th:for="${#ids.next('address')}">Dirección en red del servidor</label>
-                            <input type="text" class="form-control" th:field="*{address}" required="true">
-                        </div>
-                        <div class="form-group">
-                            <label th:for="${#ids.next('port')}">Puerto</label>
-                            <input type="number" class="form-control" th:field="*{port}" required="true">
-                        </div>
-                        <div class="form-group">
-                            <label th:for="${#ids.next('serverType')}">Tipo de servidor</label>
-                            <select class="form-select" th:field="*{serverType}" required="true">
-                                <option value="STORAGE" selected>Servidor de almacenamiento</option>
-                                <option value="STREAM_DATA">Servidor de flujo de datos</option>
-                                <option value="CONTROL">Servidor de control</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label th:for="${#ids.next('info')}">Información adicional</label>
-                            <textarea cols="80" rows="2" th:field="*{info}" required="false"></textarea>
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-
-                </form>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- Modal para eliminar el servidor actual -->
-<section th:fragment="deleteServerModal">
-    <div class="modal fade" id="deleteServerModal">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header text-white dayi-primary">
-                    <h5 class="modal-title">Eliminar servidor</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <span>
-                        <p>¿Desea eliminar [[${currentServer.name}]]?</p>
-                    </span>
-                </div>
-
-                <div class="modal-footer bg-light">
-                    <button class="btn btn-secondary" data-dismiss="modal">
-                        <span>Cancelar</span>
-                    </button>
-                    <form th:action="@{/server/}+${currentServer.id}+@{/delete}" method="GET">
-                        <button type="submit" class="btn btn-danger">
-                            <span>Eliminar</span>
-                        </button>
-                    </form>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
 
 </body>
 </html>

@@ -1,7 +1,6 @@
 package edu.cynanthus.domain;
 
 import edu.cynanthus.bean.Bean;
-import edu.cynanthus.bean.JProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
