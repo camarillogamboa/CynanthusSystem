@@ -64,7 +64,7 @@ public class BasicStrisServerService
 
         Instruction instruction = instructionSetService.readInstruction(getIdSet(nodeInfo), instructionName);
 
-        Indication indication = new Indication(nodeInfo.getMac(), instruction.getValue());
+        Indication indication = new Indication(nodeInfo.getMac(), instruction.getVector());
 
         return sendIndication(serverInfo, indication);
     }

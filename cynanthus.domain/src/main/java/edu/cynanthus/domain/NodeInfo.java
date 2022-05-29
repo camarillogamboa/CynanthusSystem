@@ -13,33 +13,33 @@ public class NodeInfo extends Host {
     /**
      * El Id.
      */
-    @NotNull(groups = IdCandidate.class, message = "{NotNull.nodeInfo.id}")
-    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "{Positive.nodeinfo.id}")
+    @NotNull(groups = IdCandidate.class, message = "#{NotNull.nodeInfo.id}")
+    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "#{Positive.nodeinfo.id}")
     @JProperty
     private Integer id;
 
     /**
      * El Name.
      */
-    @NotEmpty(groups = Required.class, message = "{NotEmpty.nodeInfo.name}")
-    @Size(max = 45, groups = {Required.class, ValidInfo.class}, message = "{Size.nodeInfo.name}")
-    @Pattern(regexp = Patterns.NAME, groups = {Required.class, ValidInfo.class}, message = "{Pattern.nodeInfo.name}")
+    @NotEmpty(groups = Required.class, message = "#{NotEmpty.nodeInfo.name}")
+    @Size(max = 45, groups = {Required.class, ValidInfo.class}, message = "#{Size.nodeInfo.name}")
+    @Pattern(regexp = Patterns.NAME, groups = {Required.class, ValidInfo.class}, message = "#{Pattern.nodeInfo.name}")
     @JProperty
     private String name;
 
     /**
      * El Id server info.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.nodeInfo.idServerInfo}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.nodeInfo.idServerInfo}")
+    @NotNull(groups = Required.class, message = "#{NotNull.nodeInfo.idServerInfo}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.nodeInfo.idServerInfo}")
     @JProperty
     private Integer idServerInfo;
 
     /**
      * El Id set.
      */
-    @NotEmpty(message = "{NotEmpty.nodeInfo.idset}")
-    @Positive(groups = ValidInfo.class, message = "{Positive.nodeInfo.idSet}")
+    @NotEmpty(message = "#{NotEmpty.nodeInfo.idset}")
+    @Positive(groups = ValidInfo.class, message = "#{Positive.nodeInfo.idSet}")
     @JProperty
     private Integer idSet;
 

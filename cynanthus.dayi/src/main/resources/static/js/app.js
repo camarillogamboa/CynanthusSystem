@@ -1,13 +1,42 @@
-console.log("Iniciando Cynanthus Dayi JS...");
+console.log("Iniciando Cynanthus Dayi Client Application...");
 
-let startActions = [];
+/*--------------------------------------------------GENERAL-VIEW------------------------------------------------------*/
+class GeneralViewController extends DelegateAndSelectorController {
 
-let finishActions = [];
+    constructor(viewLoader) {
+        super(viewLoader, "#mainArea");
+    }
 
-function start() {
-    startActions.forEach(startAction => startAction())
+    loadServerListView() {
+        this._viewLoader.loadAndPlaceTo("/servers", $("#serverListContainer"));
+    }
+
+    loadServer(idServer, selectable) {
+        this.loadAndSelectView(`/server/${idServer}`, selectable);
+        this.loadDelegate(new ServerViewController(this._viewLoader, idServer, "/dayi-socket"));
+    }
+
+    loadInstructions(selectable) {
+        this.loadAndSelectView("/sets", selectable);
+        this.loadDelegate(new InstructionsViewController(this._viewLoader));
+    }
+
+    loadUsers(selectable) {
+        this.loadAndSelectView("/users", selectable);
+        this.loadDelegate(new UsersViewController());
+    }
+
+    start() {
+        super.start();
+        this.loadServerListView();
+    }
+
+    toString() {
+        return "GeneralViewController";
+    }
+
 }
 
-function finalize() {
-    finishActions.forEach(finishAction => finishAction())
-}
+let appController = new GeneralViewController(new ViewLoader(null, autoCetenredFailLoadMessage));
+
+$(document).ready(() => appController.start());

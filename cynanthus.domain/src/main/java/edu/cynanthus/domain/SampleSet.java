@@ -19,23 +19,23 @@ public class SampleSet implements Bean {
     /**
      * El Initial mark.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sampleSet.initialMark}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sampleSet.initialMark}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sampleSet.initialMark}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sampleSet.initialMark}")
     @JProperty
     private Long initialMark;
 
     /**
      * El End mark.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sampleSet.endMark}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sampleset.endMark}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sampleSet.endMark}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sampleset.endMark}")
     @JProperty
     private Long endMark;
 
     /**
      * El Samples.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sampleSet.samples}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sampleSet.samples}")
     @Valid
     private Sample[] samples;
 

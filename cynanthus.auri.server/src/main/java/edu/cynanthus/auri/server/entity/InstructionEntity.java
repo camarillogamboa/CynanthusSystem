@@ -13,8 +13,8 @@ public class InstructionEntity extends Instruction {
     @JProperty
     private Integer idSet;
 
-    public InstructionEntity(Integer idInstruction, Integer idSet, String name, int[] value) {
-        super(idInstruction, name, value);
+    public InstructionEntity(Integer idInstruction, Integer idSet, String name, String vector) {
+        super(idInstruction, name, vector);
         this.idSet = idSet;
     }
 
@@ -44,15 +44,7 @@ public class InstructionEntity extends Instruction {
         return super.getName();
     }
 
-    @Column(name = "value", nullable = false)
-    @Convert(converter = InstructionValueConverter.class)
-    @Override
-    public int[] getValue() {
-        return super.getValue();
-    }
-
-    @Override
-    @Transient
+    @Column(name = "vector", nullable = false)
     public String getVector() {
         return super.getVector();
     }

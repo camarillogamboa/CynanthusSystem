@@ -4,14 +4,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * El tipo Instructions.
+ * El tipo InstructionMap.
  */
-public class Instructions extends TreeMap<String, Map<String, int[]>> {
+public class InstructionMap extends TreeMap<String, Map<String, int[]>> {
 
     /**
-     * Instancia un nuevo Instructions.
+     * Instancia un nuevo InstructionMap.
      */
-    public Instructions() {
+    public InstructionMap() {
         super(String::compareTo);
     }
 
@@ -22,11 +22,11 @@ public class Instructions extends TreeMap<String, Map<String, int[]>> {
      * @param instruccionName el instruccion name
      * @return el instructions
      */
-    public Instructions select(String groupName, String instruccionName) {
+    public InstructionMap select(String groupName, String instruccionName) {
         if (groupName.equals("*")) {
             if (instruccionName.equals("*")) return this;
             else {
-                Instructions selection = new Instructions();
+                InstructionMap selection = new InstructionMap();
                 forEach((name, group) -> {
                     int[] selectedVector = group.get(instruccionName);
                     if (selectedVector != null) {
@@ -41,13 +41,13 @@ public class Instructions extends TreeMap<String, Map<String, int[]>> {
             Map<String, int[]> selectedGroup = get(groupName);
             if (selectedGroup != null)
                 if (instruccionName.equals("*")) {
-                    Instructions selection = new Instructions();
+                    InstructionMap selection = new InstructionMap();
                     selection.put(groupName, selectedGroup);
                     return selection;
                 } else {
                     int[] selectedVector = selectedGroup.get(instruccionName);
                     if (selectedVector != null) {
-                        Instructions selection = new Instructions();
+                        InstructionMap selection = new InstructionMap();
                         Map<String, int[]> groupContainer = new TreeMap<>(String::compareTo);
                         groupContainer.put(instruccionName, selectedVector);
                         selection.put(groupName, groupContainer);

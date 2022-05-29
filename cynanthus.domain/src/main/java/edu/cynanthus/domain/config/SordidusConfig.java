@@ -15,9 +15,9 @@ public class SordidusConfig implements Config {
     /**
      * El Port.
      */
-    @NotNull(message = "{NotNull.sordidusConfig.port}")
-    @Positive(groups = ValidInfo.class, message = "{Positive.sordidusConfig.port}")
-    @Max(value = 65536, groups = ValidInfo.class, message = "{Max.sordidusConfig.port}")
+    @NotNull(message = "#{NotNull.sordidusConfig.port}")
+    @Positive(groups = ValidInfo.class, message = "#{Positive.sordidusConfig.port}")
+    @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.sordidusConfig.port}")
     @JProperty(
         alias = "cynanthus.sordidus.webServer.port",
         defaultValue = "8000",
@@ -28,7 +28,7 @@ public class SordidusConfig implements Config {
     /**
      * El Data directory.
      */
-    @NotEmpty(message = "{NotEmpty.sordidusConfig.dataDirectory}")
+    @NotEmpty(message = "#{NotEmpty.sordidusConfig.dataDirectory}")
     @JProperty(
         alias = "cynanthus.sordidus.dataWriter.dataDirectory",
         defaultValue = "data",
@@ -39,11 +39,11 @@ public class SordidusConfig implements Config {
     /**
      * El Data format.
      */
-    @NotEmpty(message = "{NotEmpty.sordidusConfig.dataFormat}")
+    @NotEmpty(message = "#{NotEmpty.sordidusConfig.dataFormat}")
     @Pattern(
         regexp = "(ssv\\((.*)\\))|json",
         groups = ValidInfo.class,
-        message = "{Pattern.sordidusConfig.dataFormat}"
+        message = "#{Pattern.sordidusConfig.dataFormat}"
     )
     @JProperty(
         alias = "cynanthus.sordidus.dataWriter.dataFormat",

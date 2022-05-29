@@ -125,7 +125,7 @@ public final class BeanValidation {
         constraintViolations.forEach(constraintViolation -> {
             String message = constraintViolation.getMessageTemplate();
             if (messages != null) {
-                Object obj = messages.get(message.substring(1, message.length() - 1));
+                Object obj = messages.get(message.substring(2, message.length() - 1));
                 if (obj != null) message = obj.toString();
             }
             list.add(message);

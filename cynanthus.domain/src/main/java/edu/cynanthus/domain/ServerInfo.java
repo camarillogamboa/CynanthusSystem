@@ -13,24 +13,24 @@ public class ServerInfo implements Bean {
     /**
      * El Id.
      */
-    @NotNull(groups = IdCandidate.class, message = "{NotNull.serverInfo.id}")
-    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "{Positive.serverInfo.id}")
+    @NotNull(groups = IdCandidate.class, message = "#{NotNull.serverInfo.id}")
+    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "#{Positive.serverInfo.id}")
     @JProperty
     private Integer id;
 
     /**
      * El Name.
      */
-    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "{NotEmpty.serverInfo.name}")
+    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "#{NotEmpty.serverInfo.name}")
     @Size(
         max = 45,
         groups = {Required.class, ValidInfo.class, NaturalIdCandidate.class},
-        message = "{Size.serverInfo.name}"
+        message = "#{Size.serverInfo.name}"
     )
     @Pattern(
         regexp = Patterns.NAME,
         groups = {Required.class, ValidInfo.class, NaturalIdCandidate.class},
-        message = "{Pattern.serverInfo.name}"
+        message = "#{Pattern.serverInfo.name}"
     )
     @JProperty
     private String name;
@@ -38,32 +38,32 @@ public class ServerInfo implements Bean {
     /**
      * El Address.
      */
-    @NotEmpty(groups = Required.class, message = "{NotEmpty.serverInfo.address}")
-    @Size(max = 60, groups = {Required.class, ValidInfo.class}, message = "{Size.serverInfo.address}")
+    @NotEmpty(groups = Required.class, message = "#{NotEmpty.serverInfo.address}")
+    @Size(max = 60, groups = {Required.class, ValidInfo.class}, message = "#{Size.serverInfo.address}")
     @JProperty
     private String address;
 
     /**
      * El Port.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.serverInfo.port}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.serverInfo.port}")
-    @Max(value = 65536, groups = {Required.class, ValidInfo.class}, message = "{Max.serverInfo.port}")
+    @NotNull(groups = Required.class, message = "#{NotNull.serverInfo.port}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.serverInfo.port}")
+    @Max(value = 65536, groups = {Required.class, ValidInfo.class}, message = "#{Max.serverInfo.port}")
     @JProperty
     private Integer port;
 
     /**
      * El Server type.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.serverInfo.serverType}")
+    @NotNull(groups = Required.class, message = "#{NotNull.serverInfo.serverType}")
     @JProperty
     private ServerType serverType;
 
     /**
      * El Info.
      */
-    @NotEmpty(message = "{NotEmpty.serverInfo.info}")
-    @Size(max = 300, groups = ValidInfo.class, message = "{Size.serverInfo.info}")
+    @NotEmpty(message = "#{NotEmpty.serverInfo.info}")
+    @Size(max = 300, groups = ValidInfo.class, message = "#{Size.serverInfo.info}")
     @JProperty
     private String info;
 

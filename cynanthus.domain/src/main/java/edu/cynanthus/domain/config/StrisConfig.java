@@ -17,9 +17,9 @@ public class StrisConfig implements Config {
     /**
      * El Web server port.
      */
-    @NotNull(message = "{NotNull.strisConfig.webServerPort}")
-    @Positive(groups = ValidInfo.class, message = "{Positive.strisConfig.webServerPort}")
-    @Max(value = 65536, groups = ValidInfo.class, message = "{Max.strisConfig.webServerPort}")
+    @NotNull(message = "#{NotNull.strisConfig.webServerPort}")
+    @Positive(groups = ValidInfo.class, message = "#{Positive.strisConfig.webServerPort}")
+    @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.strisConfig.webServerPort}")
     @JProperty(
         alias = "cynanthus.stris.webServer.port",
         defaultValue = "8002",
@@ -30,9 +30,9 @@ public class StrisConfig implements Config {
     /**
      * El Tcp server port.
      */
-    @NotNull(message = "{NotNull.strisConfig.tcpServerPort}")
-    @Positive(groups = ValidInfo.class, message = "{Positive.strisConfig.tcpServerPort}")
-    @Max(value = 65536, groups = ValidInfo.class, message = "{Max.strisConfig.tcpServerPort}")
+    @NotNull(message = "#{NotNull.strisConfig.tcpServerPort}")
+    @Positive(groups = ValidInfo.class, message = "#{Positive.strisConfig.tcpServerPort}")
+    @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.strisConfig.tcpServerPort}")
     @JProperty(
         alias = "cynanthus.stris.tcpServer.port",
         defaultValue = "8003",

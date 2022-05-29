@@ -11,22 +11,26 @@
 </head>
 <body>
 
-<th:block th:fragment="instructionsView">
+<!-- Vista general de instrucciones -->
+<div th:fragment="instructionsView" class="d-flex flex-column h-100 bg-light rounded border">
 
     <!-- Parte superior -->
     <div class="row m-2">
         <div class="col">
-            <h2>Conjuntos de instrucciones</h2>
+            <h2 id="instructionsTitle" th:text="'Conjuntos de instrucciones'"></h2>
         </div>
         <div sec:authorize="hasRole('ADMIN')" class="col-xs">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSet">
-                <span><i class="fas fa-plus"></i></span> Agregar nuevo conjunto
+
+            <button id="addSetButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSetDialog">
+                <i class="fas fa-plus"></i><span id="addSetButton-text" th:text="'Agregar nuevo conjunto'"></span>
             </button>
+            <section th:replace="~{this::saveInstructionSetDialog('addSetDialog','Agregar nuevo conjunto',${emptySet})}"></section>
         </div>
     </div>
 
     <!-- Contenido -->
     <div
+            id="instructionsContainer"
             class="row flex-fill m-2 bg-white border rounded"
             th:with="hasSets = !${#lists.isEmpty(sets)}"
     >
@@ -36,7 +40,7 @@
 
             <!-- Lista de conjuntos de instrucciones disponibles -->
             <div class="col-md-2 p-0 border-right overflow-auto">
-                <nav class="navbar navbar-light p-1 w-100 align-items-start">
+                <nav id="instructionsNavBar" class="navbar navbar-light p-1 w-100 align-items-start">
                     <nav class="nav nav-pills flex-column w-100 m-0">
                         <ul class="row m-0 p-0">
                             <!-- Iteración por los conjuntos disponibles -->
@@ -44,7 +48,7 @@
                                 <a
                                         th:id="'set-'+${set.id}"
                                         class="nav-link section-bar text-center"
-                                        th:onclick="'loadInstructionSet(this,'+${set.id}+')'"
+                                        th:onclick="'appController.delegate.loadInstructionSet('+${set.id}+',this)'"
                                         href="#"
                                         th:text="${set.name}"
                                 ></a>
@@ -55,13 +59,11 @@
             </div>
 
             <!-- Contenido de la vista de conjunto de instrucciones seleccionada -->
-            <div id="currentSetViewE" class="col-md-10 p-1">
+            <div id="currentSetContainer" class="col-md-10 p-1">
                 <div class="d-flex h-100 p-0">
                     <h6 class="m-auto" th:text="'Selecciona un conjunto de instrucciones'"></h6>
                 </div>
             </div>
-
-            <script th:src="@{/js/instructions.js}"></script>
 
         </th:block>
 
@@ -74,50 +76,58 @@
 
     </div>
 
-    <section th:replace="this::saveInstructionSetModal('addSet','Agregar conjunto',${emptySet})"></section>
+</div>
 
-</th:block>
-
+<!--Vista de conjunto de instruccion actual -->
 <div
         th:fragment="currentSetView"
         th:object="${currentSet}"
         class="d-flex flex-fill flex-column h-100 m-0 p-0 rounded-right border bg-light"
 >
 
-    <!-- Cabecero de la vista de conjunto selccionado -->
+    <!-- Cabecero de la vista de conjunto seleccionado -->
     <div class="row m-0 border-bottom p-1">
         <div class="col align-middle m-auto">
             <h5 th:text="*{name}"></h5>
         </div>
 
         <div sec:authorize="hasRole('ADMIN')" class="col-xs p-0">
+
             <button
+                    id="addInstructionButton"
                     type="button"
                     class="btn btn-light"
                     data-toggle="modal"
-                    data-target="#addInstructionModal"
-                    title="Agregar una instrucción"
+                    data-target="#addInstructionDialog"
+                    th:title="'Agregar una instrucción'"
             >
                 <span><i class="fas fa-plus"></i></span>
             </button>
             <button
+                    id="updateCurrentSetButton"
                     type="button"
                     class="btn btn-light"
                     data-toggle="modal"
-                    data-target="#updateSetModal"
-                    title="Editar información del conjunto"
+                    data-target="#updateCurrentSetDialog"
+                    th:title="'Editar información del conjunto'"
             >
                 <span><i class="fas fa-pen"></i></span>
             </button>
             <button
+                    id="deleteCurrentSetButton"
                     type="button"
                     class="btn btn-light"
                     data-toggle="modal"
-                    data-target="#deleteSetModal"
+                    data-target="#deleteCurrentSetDialog"
                     title="Eliminar conjunto"
             >
                 <span><i class="fas fa-trash"></i></span>
             </button>
+
+            <section th:replace="~{this::saveInstructionDialog('addInstructionDialog','Agregar instrucción',${emptyInstruction})}"></section>
+            <section th:replace="~{this::saveInstructionSetDialog('updateCurrentSetDialog','Actualizar conjunto',${currentSet})}"></section>
+            <section th:replace="~{components/modals::deleteDialog('deleteCurrentSetDialog',*{name},'appController.delegate.delegate.deleteInstrutionSet()')}"></section>
+
         </div>
     </div>
 
@@ -134,7 +144,7 @@
         <!-- Si no tiene instrucciones -->
         <th:block th:unless="${hasInstructions}">
             <div class="d-flex flex-fill text-center align-middle">
-                <h6 class="m-auto">No hay instrucciones registradas</h6>
+                <h6 class="m-auto" th:text="'No hay instrucciones registradas'"></h6>
             </div>
         </th:block>
 
@@ -142,21 +152,24 @@
 
     <!-- Tira informativa del conjunto -->
     <div class="row m-0 p-1 border-top">
-        <p th:text="${#strings.isEmpty(info)}?*{info}:'No hay información'" class="w-100 m-0 p-0 text-center">
+        <p
+                id="currentSet-info"
+                th:text="${#strings.isEmpty(info)}?*{info}:'No hay información'"
+                class="w-100 m-0 p-0 text-center"
+        >
         </p>
     </div>
+
 </div>
 
 <div th:fragment="instructionsTable" class="container-fluid p-0">
     <table class="table table-striped table-borderless">
+
+        <!--Cabezera de la table -->
         <thead class="dayi-bg text-white sticky-top">
         <tr>
-            <th class="col-2 p-2 text-center align-middle" scope="col">
-                Nombre
-            </th>
-            <th class="col p-2 text-center align-middle" scope="col">
-                Vector
-            </th>
+            <th class="col-2 p-2 text-center align-middle" scope="col" th:text="'Nombre'"></th>
+            <th class="col p-2 text-center align-middle" scope="col" th:text="'Vector'"></th>
             <th class="col-xs" scope="col"></th>
             <th:block sec:authorize="hasRole('ADMIN')">
                 <th class="col-xs" scope="col"></th>
@@ -164,24 +177,28 @@
             </th:block>
         </tr>
         </thead>
+
+        <!--Cuerpo de la tabla -->
         <tbody>
         <tr
                 th:each="instruction : ${currentSet.instructions}"
                 th:object="${instruction}"
+                th:with="rowId ='set-'+*{id}"
                 class="border-top"
         >
-            <td class='font-weight-bold border-right' th:text="*{name}">Nombre</td>
-            <td class="col text-truncate" style="max-width: 50px" th:text="*{vector}">Vector</td>
+            <td class='font-weight-bold border-right' th:text="*{name}"></td>
+            <td class="col text-truncate" style="max-width: 50px" th:text="*{vector}"></td>
             <td class="p-2 text-center align-middle w-auto">
                 <button
                         type="button"
                         class="btn btn-light pt-0 pl-1 pb-0 pr-1"
                         data-toggle="modal"
-                        data-target="#showInstructionModal"
-                        title="Editar instrucción"
+                        th:attrappend="data-target=|#${rowId}-show|"
+                        th:title="'Mostrar vector completo'"
                 >
                     <span><i class="fas fa-eye"></i></span>
                 </button>
+                <section th:replace="~{this::showVector(${rowId}+'-show',${instruction})}"></section>
             </td>
             <th:block sec:authorize="hasRole('ADMIN')">
                 <td class="p-2 text-center align-middle w-auto">
@@ -189,22 +206,25 @@
                             type="button"
                             class="btn btn-light pt-0 pl-1 pb-0 pr-1"
                             data-toggle="modal"
-                            data-target="#updateInstructionModal"
-                            title="Editar instrucción"
+                            th:attrappend="data-target=|#${rowId}-update|"
+                            th:title="'Editar instrucción'"
                     >
                         <span><i class="fas fa-pen"></i></span>
                     </button>
+
+                    <section th:replace="~{this::saveInstructionDialog(${rowId}+'-update','Agregar instrucción',${instruction})}"></section>
                 </td>
                 <td class="p-2 text-center align-middle w-auto">
                     <button
                             type="button"
                             class="btn btn-light pt-0 pl-1 pb-0 pr-1"
                             data-toggle="modal"
-                            data-target="#deleteInstructionModal"
-                            title="Eliminar instrucción"
+                            th:attrappend="data-target=|#${rowId}-delete|"
+                            th:title="'Eliminar instrucción'"
                     >
                         <span><i class="fas fa-trash"></i></span>
                     </button>
+                    <section th:replace="~{components/modals::deleteDialog(${rowId}+'-delete',*{name},'appController.delegate.delegate.deleteInstruction('+*{id}+')')}"></section>
                 </td>
             </th:block>
         </tr>
@@ -212,59 +232,138 @@
     </table>
 </div>
 
-<section th:fragment="saveInstructionSetModal(modalId,headerTitle,instructionSet)">
-    <div th:replace="~{components/modals::frame(${modalId},'lg',~{this::saveInstructionSetContent(${modalId},${headerTitle},${instructionSet})})}">
+<section th:fragment="saveInstructionSetDialog(dialogId,title,instructionSet)">
+    <div th:id="${dialogId}" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+
+                <div th:replace="~{components/modals::modalHeader(${dialogId},${title})}"></div>
+
+                <form
+                        th:id="${dialogId}+'-form'"
+                        th:object="${instructionSet}"
+                        method="POST"
+                        class="was-validated"
+                >
+                    <input
+                            th:id="${dialogId}+'-id'"
+                            th:value="*{id}"
+                            name="id"
+                            type="hidden"
+                    />
+
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label th:for="${dialogId}+'-name'" th:text="'Nombre del conjunto'"></label>
+                            <input
+                                    th:id="${dialogId}+'-name'"
+                                    th:value="*{name}"
+                                    name="name"
+                                    type="text"
+                                    class="form-control"
+                                    required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label th:for="${dialogId}+'-info'" th:text="'Información adicional'"></label>
+                            <textarea
+                                    th:id="${dialogId}+'-info'"
+                                    th:text="*{info}"
+                                    name="info"
+                                    class="form-control"
+                                    rows="2"
+                            ></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button th:replace="~{components/modals::cancelButton}"></button>
+                        <button
+                                type="submit"
+                                th:text="'Hecho'"
+                                class="btn btn-primary"
+                                data-dismiss="modal"
+                                th:attrappend="onclick=|appController.delegate.saveInstructionSet('${idDialog}')|"
+                        ></button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
     </div>
 </section>
 
-<div th:fragment="saveInstructionSetContent(sectionId,headerTitle,instructionSet)" class="modal-content">
-    <div th:replace="~{components/modals::contentHeader(${headerTitle})}"></div>
+<section th:fragment="saveInstructionDialog(dialogId,title,instruction)">
+    <div th:id="${dialogId}" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div th:replace="~{components/modals::modalHeader(${dialogId},${title})}"></div>
 
-    <form
-        th:action="@{/sets}"
-        th:object="${instructionSet}"
-        method="POST"
-        class="was-validated"
-    >
-        <input
-                th:id="${sectionId}+'-id'"
-                th:value="*{id}"
-                name="id"
-                type="hidden"
-                required="false"
-        />
-
-        <div class="modal-body">
-            <div class="form-group">
-                <label th:for="${sectionId}+'-name'" th:text="'Nombre del conjunto'"></label>
-                <input
-                        th:id="${sectionId}+'-name'"
-                        th:value="*{name}"
-                        name="name"
-                        type="text"
-                        class="form-control"
-                        required
+                <form
+                    th:object="${instruction}"
+                    method="POST"
+                    class="was-validated"
                 >
-            </div>
+                    <input
+                            th:id="${dialogId}+'-id'"
+                            th:value="*{id}"
+                            name="id"
+                            type="hidden"
+                    />
 
-            <div class="form-group">
-                <label th:for="${sectionId}+'-info'" th:text="'Información adicional'"></label>
-                <textarea
-                        th:id="${sectionId}+'-info'"
-                        th:text="*{info}"
-                        name="info"
-                        class="form-control"
-                        rows="2"
-                >
-                </textarea>
-            </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label th:for="${dialogId}+'-name'" th:text="'Nombre clave'"></label>
+                            <input
+                                    th:id="${dialogId}+'-name'"
+                                    th:value="*{name}"
+                                    name="name"
+                                    type="text"
+                                    class="form-control"
+                                    required
+                            >
+                        </div>
 
+                        <div class="form-group">
+                            <label th:for="${dialogId}+'-value'" th:text="'Vector'"></label>
+                            <textarea
+                                    th:id="${dialogId}+'-value'"
+                                    th:text="*{vector}"
+                                    name="value"
+                                    class="form-control"
+                                    rows="3"
+                                    required
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button th:replace="~{components/modals::cancelButton}"></button>
+                        <button
+                                type="submit"
+                                th:text="'Hecho'"
+                                class="btn btn-primary"
+                                data-dismiss="modal"
+                                th:attrappend="onclick=|appController.delegate.delegate.saveInstruction('${idDialog}')|"
+                        ></button>
+                    </div>
+
+                </form>
+            </div>
         </div>
+    </div>
+</section>
 
-        <div th:replace="~{components/modals::saveActionFooter}"></div>
-
-    </form>
-</div>
+<section
+        th:fragment="showVector(dialogId,instruction)"
+        th:object="${instruction}"
+        th:replace="~{components/modals::informativeDialog(${dialogId},*{name},*{vector},'Cerrar','xl')}"
+>
+</section>
 
 </body>
 

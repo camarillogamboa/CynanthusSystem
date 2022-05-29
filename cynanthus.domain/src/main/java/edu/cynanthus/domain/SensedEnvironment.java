@@ -17,64 +17,64 @@ public class SensedEnvironment implements Bean {
     /**
      * El Temp.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sensedEnvironment.temp}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sensedEnvironment.temp}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.temp}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.temp}")
     @JProperty(alias = "temp")
     private Float temp;
 
     /**
      * El North laps.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sensedEnvironment.northLaps}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sensedEnvironment.northLaps}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.northLaps}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.northLaps}")
     @JProperty(alias = "vueltas_norte")
     private Integer northLaps;
 
     /**
      * El East laps.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sensedEnvironment.eastLaps}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sensedEnvironment.eastLaps}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.eastLaps}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.eastLaps}")
     @JProperty(alias = "vueltas_este")
     private Integer eastLaps;
 
     /**
      * El South laps.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sensedEnvironment.southLaps}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sensedEnvironment.southLaps}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.southLaps}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.southLaps}")
     @JProperty(alias = "vueltas_sur")
     private Integer southLaps;
 
     /**
      * El West laps.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sensedEnvironment.westLaps}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sensedEnvironment.westLaps}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.westLaps}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.westLaps}")
     @JProperty(alias = "vueltas_oeste")
     private Integer westLaps;
 
     /**
      * El Sampling time.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sensedEnvironment.samplingTime}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sensedEnvironment.samplingTime}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.samplingTime}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.samplingTime}")
     @JProperty(alias = "tiempo_muestreo")
     private Long samplingTime;
 
     /**
      * El Co 2.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sensedEnvironment.co2}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sensedEnvironment.co2}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.co2}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.co2}")
     @JProperty(alias = "co2")
     private Float co2;
 
     /**
      * El Hum.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.sensedEnvironment.hum}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "{Positive.sensedEnvironment.hum}")
+    @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.hum}")
+    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.hum}")
     @JProperty(alias = "hum")
     private Float hum;
 

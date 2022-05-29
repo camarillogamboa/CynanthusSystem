@@ -3,7 +3,6 @@ package edu.cynanthus.domain;
 import edu.cynanthus.bean.*;
 
 import javax.validation.constraints.*;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -14,51 +13,52 @@ public class Instruction implements Bean {
     /**
      * El Id.
      */
-    @NotNull(groups = IdCandidate.class, message = "{NotNull.instrucction.id}")
-    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "{Positive.instruction.id}")
+    @NotNull(groups = IdCandidate.class, message = "#{NotNull.instrucction.id}")
+    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "#{Positive.instruction.id}")
     @JProperty
     private Integer id;
 
     /**
      * El Name.
      */
-    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "{NotEmpty.instruction.name}")
+    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "#{NotEmpty.instruction.name}")
     @Size(
         max = 45,
         groups = {Required.class, NaturalIdCandidate.class, ValidInfo.class},
-        message = "{Size.instruction.name}"
+        message = "#{Size.instruction.name}"
     )
     @Pattern(
         regexp = Patterns.NAME,
         groups = {Required.class, NaturalIdCandidate.class, ValidInfo.class},
-        message = "{Pattern.instruction.name}"
+        message = "#{Pattern.instruction.name}"
     )
     @JProperty
     private String name;
 
     /**
-     * El Value.
+     * El Vector.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.instruction.value}")
-    @Size(
-        max = 255,
+    @NotEmpty(groups = Required.class, message = "#{NotEmpty.instruction.vector}")
+    @Size(max = 255, groups = {Required.class, ValidInfo.class}, message = "#{Size.instruction.vector}")
+    @Pattern(
+        regexp = Patterns.CODE_VECTOR,
         groups = {Required.class, ValidInfo.class},
-        message = "{Size.instruction.value}"
+        message = "#{Pattern.instruction.vector}"
     )
     @JProperty
-    private int[] value;
+    private String vector;
 
     /**
      * Instancia un nuevo Instruction.
      *
-     * @param id    el id
-     * @param name  el name
-     * @param value el value
+     * @param id     el id
+     * @param name   el name
+     * @param vector el vector
      */
-    public Instruction(Integer id, String name, int[] value) {
+    public Instruction(Integer id, String name, String vector) {
         this.id = id;
         this.name = name;
-        this.value = value;
+        this.vector = vector;
     }
 
     /**
@@ -73,12 +73,12 @@ public class Instruction implements Bean {
     /**
      * Instancia un nuevo Instruction.
      *
-     * @param name  el name
-     * @param value el value
+     * @param name   el name
+     * @param vector el vector
      */
-    public Instruction(String name, int[] value) {
+    public Instruction(String name, String vector) {
         this.name = name;
-        this.value = value;
+        this.vector = vector;
     }
 
     /**
@@ -133,27 +133,21 @@ public class Instruction implements Bean {
     }
 
     /**
-     * Get value int [ ].
+     * Permite obtener vector.
      *
-     * @return el int [ ]
+     * @return el vector
      */
-    public int[] getValue() {
-        return value;
+    public String getVector() {
+        return vector;
     }
 
     /**
-     * Permite establecer value.
+     * Permite establecer vector.
      *
-     * @param value el value
+     * @param vector el vector
      */
-    public void setValue(int[] value) {
-        this.value = value;
-    }
-
-    public String getVector() {
-        StringBuilder vectorString = new StringBuilder();
-        if (value != null) for (int v : value) vectorString.append(v);
-        return vectorString.toString();
+    public void setVector(String vector) {
+        this.vector = vector;
     }
 
     /**
@@ -163,7 +157,7 @@ public class Instruction implements Bean {
      */
     @Override
     public Instruction clone() {
-        return new Instruction(id, name, value);
+        return new Instruction(id, name, vector);
     }
 
     /**
@@ -177,9 +171,7 @@ public class Instruction implements Bean {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Instruction that = (Instruction) o;
-        return Objects.equals(id, that.id) &&
-            Objects.equals(name, that.name) &&
-            Arrays.equals(value, that.value);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(vector, that.vector);
     }
 
     /**
@@ -189,9 +181,7 @@ public class Instruction implements Bean {
      */
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name);
-        result = 31 * result + Arrays.hashCode(value);
-        return result;
+        return Objects.hash(id, name, vector);
     }
 
     /**
@@ -204,7 +194,8 @@ public class Instruction implements Bean {
         return "{" +
             "id:" + id +
             ",name:'" + name + '\'' +
-            ",value:" + Arrays.toString(value) + '}';
+            ",vector:'" + vector + '\'' +
+            '}';
     }
 
 }

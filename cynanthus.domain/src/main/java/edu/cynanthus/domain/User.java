@@ -14,24 +14,24 @@ public class User implements Bean {
     /**
      * El Id.
      */
-    @NotNull(groups = IdCandidate.class, message = "{NotNull.user.id}")
-    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "{Positive.user.id}")
+    @NotNull(groups = IdCandidate.class, message = "#{NotNull.user.id}")
+    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "#{Positive.user.id}")
     @JProperty
     private Integer id;
 
     /**
      * El Username.
      */
-    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "{NotEmpty.user.username}")
+    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "#{NotEmpty.user.username}")
     @Size(
         max = 45,
         groups = {Required.class, NaturalIdCandidate.class, ValidInfo.class},
-        message = "{Size.user.username}"
+        message = "#{Size.user.username}"
     )
     @Pattern(
         regexp = Patterns.IDENTIFIER,
         groups = {Required.class, NaturalIdCandidate.class, ValidInfo.class},
-        message = "{Pattern.user.username}"
+        message = "#{Pattern.user.username}"
     )
     @JProperty
     private String username;
@@ -39,16 +39,16 @@ public class User implements Bean {
     /**
      * El Password.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.user.password}")
-    @Size(max = 128, groups = {Required.class, ValidInfo.class}, message = "{Size.user.password}")
+    @NotNull(groups = Required.class, message = "#{NotNull.user.password}")
+    @Size(max = 128, groups = {Required.class, ValidInfo.class}, message = "#{Size.user.password}")
     @JProperty
     private String password;
 
     /**
      * El Roles.
      */
-    @NotNull(message = "{NotNull.user.roles}")
-    @Size(max = 3, groups = ValidInfo.class, message = "{Size.user.roles}")
+    @NotNull(message = "#{NotNull.user.roles}")
+    @Size(max = 3, groups = ValidInfo.class, message = "#{Size.user.roles}")
     @JProperty
     private List<@NotNull Role> roles;
 

@@ -1,6 +1,6 @@
 console.log("Cargando script de registro de servidor");
 
-let group = new SelectionGroup('click','active','bg-info');
+let group = new SelectionGroup('click', 'active', 'bg-info');
 
 class LogViewBuilder {
 

@@ -1,11 +1,14 @@
 package edu.cynanthus.domain;
 
+import edu.cynanthus.bean.JProperty;
+import edu.cynanthus.bean.Patterns;
 import edu.cynanthus.bean.Required;
 import edu.cynanthus.bean.ValidInfo;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * El tipo Indication.
@@ -13,21 +16,27 @@ import java.util.Arrays;
 public class Indication extends Host {
 
     /**
-     * El Instruction.
+     * El Vector.
      */
-    @NotNull(groups = Required.class, message = "{NotNull.indication.instruction}")
-    @Size(max = 255, groups = {Required.class, ValidInfo.class}, message = "{Size.indication.instruction}")
-    private int[] instruction;
+    @NotNull(groups = Required.class, message = "#{NotEmpty.indication.vector}")
+    @Size(max = 255, groups = {Required.class, ValidInfo.class}, message = "#{Size.indication.vector}")
+    @Pattern(
+        regexp = Patterns.CODE_VECTOR,
+        groups = {Required.class, ValidInfo.class},
+        message = "#{Pattern.indication.vector}"
+    )
+    @JProperty
+    private String vector;
 
     /**
      * Instancia un nuevo Indication.
      *
-     * @param mac         el mac
-     * @param instruction el instruction
+     * @param mac    el mac
+     * @param vector el vector
      */
-    public Indication(String mac, int[] instruction) {
+    public Indication(String mac, String vector) {
         super(mac);
-        this.instruction = instruction;
+        this.vector = vector;
     }
 
     /**
@@ -37,21 +46,21 @@ public class Indication extends Host {
     }
 
     /**
-     * Get instruction int [ ].
+     * Permite obtener vector.
      *
-     * @return el int [ ]
+     * @return el vector
      */
-    public int[] getInstruction() {
-        return instruction;
+    public String getVector() {
+        return vector;
     }
 
     /**
-     * Permite establecer instruction.
+     * Permite establecer vector.
      *
-     * @param instruction el instruction
+     * @param vector el vector
      */
-    public void setInstruction(int[] instruction) {
-        this.instruction = instruction;
+    public void setVector(String vector) {
+        this.vector = vector;
     }
 
     /**
@@ -61,7 +70,7 @@ public class Indication extends Host {
      */
     @Override
     public Indication clone() {
-        return new Indication(getMac(), instruction.clone());
+        return new Indication(getMac(), vector);
     }
 
     /**
@@ -76,7 +85,7 @@ public class Indication extends Host {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Indication that = (Indication) o;
-        return Arrays.equals(instruction, that.instruction);
+        return Objects.equals(vector, that.vector);
     }
 
     /**
@@ -86,9 +95,7 @@ public class Indication extends Host {
      */
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + Arrays.hashCode(instruction);
-        return result;
+        return Objects.hash(super.hashCode(), vector);
     }
 
     /**
@@ -100,7 +107,7 @@ public class Indication extends Host {
     public String toString() {
         return "{" +
             super.toString() + "," +
-            "intruction:" + Arrays.toString(instruction) +
+            "vector:'" + vector + '\'' +
             '}';
     }
 

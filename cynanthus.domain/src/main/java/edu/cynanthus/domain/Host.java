@@ -14,11 +14,11 @@ public class Host implements Bean {
     /**
      * El Mac.
      */
-    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "{NotEmpty.host.mac}")
+    @NotEmpty(groups = {Required.class, NaturalIdCandidate.class}, message = "#{NotEmpty.host.mac}")
     @Pattern(
         regexp = Patterns.MAC,
         groups = {Required.class, NaturalIdCandidate.class, ValidInfo.class},
-        message = "{Pattern.host.mac}"
+        message = "#{Pattern.host.mac}"
     )
     @JProperty
     private String mac;

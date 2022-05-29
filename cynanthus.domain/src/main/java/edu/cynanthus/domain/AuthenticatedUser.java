@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class AuthenticatedUser extends User {
 
-    @NotEmpty(message = "{NotEmpty.authenticatedUser.token}")
+    @NotEmpty(message = "#{NotEmpty.authenticatedUser.token}")
     @JProperty
     private String token;
 

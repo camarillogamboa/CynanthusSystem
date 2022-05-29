@@ -53,8 +53,10 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
     @RequestHandler(context = "/indication", method = RequestMethod.POST, roles = SystemRole.ROLE_AGENT)
     public Boolean performIndication(Indication indication) throws HttpException {
         if (indication != null) {
+
             BeanValidation.validateAndThrow(indication, Required.class);
             ConnectableControlNode controlNode = controlNodes.get(indication.getMac());
+
             if (controlNode != null) {
 
                 TcpExchange tcpExchange = controlNode.getTcpExchange();
@@ -62,10 +64,14 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
                 try {
                     tcpExchange.writeByte(ControlOption.EXEC_INSTRUCTION_OPTION.ordinal());
 
-                    int[] instruction = indication.getInstruction();
-                    tcpExchange.writeByte(instruction.length);
+                    String vector = indication.getVector();
+                    tcpExchange.writeByte(vector.length());
 
-                    for (int code : instruction) tcpExchange.writeByte(code);
+                    for (int i = 0; i < vector.length(); i++) {
+                        int code = Integer.parseInt("" + vector.charAt(i));
+                        tcpExchange.writeByte(code);
+                    }
+
                 } catch (IOException ex) {
                     throw new HttpException(
                         HttpStatusCode.INTERNAL_SERVER_ERROR,
@@ -74,6 +80,7 @@ public class StrisServer extends CynanthusServer<StrisConfig> {
                     );
                 }
             } else throw new HttpException(HttpStatusCode.NOT_FOUND);
+
         } else throw new HttpException(HttpStatusCode.BAD_REQUEST);
         return true;
     }

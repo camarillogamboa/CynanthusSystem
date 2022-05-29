@@ -1,92 +1,22 @@
-console.log("Cargando script de vista de servidor");
+class ServerViewController extends DelegateAndSelectorController {
 
-class WebSocketConnector {
-
-    constructor(socketName, messagePath, subscriptionPath) {
-        this._socketName = socketName;
-        this._messagePath = messagePath;
-        this._subscriptionPath = subscriptionPath;
-        this._stompClient = null;
+    constructor(viewLoader, idServer, socketPath) {
+        super(viewLoader, "", new SelectionGroup('click', 'active'));
+        this._idServer = idServer;
+        this._available = undefined;
+        this._webSocket = new WebSocketConnector(socketPath);
     }
 
-    connect(callback) {
-        let socket = new SockJS(this._socketName);
-        let stompClient = Stomp.over(socket);
-        let subscriptionPath = this._subscriptionPath;
-        stompClient.connect({}, frame => {
-            console.log("Connected: " + frame);
-            stompClient.subscribe(subscriptionPath, callback);
-        });
-        this._stompClient = stompClient;
-    }
-
-    sendMessage(obj) {
-        this._stompClient.send(this._messagePath, {}, JSON.stringify(obj));
-    }
-
-    disconnect() {
-        if (this._stompClient !== null) {
-            this._stompClient.disconnect();
-        }
-        this._stompClient = null;
-    }
-
-}
-
-let webSocket = null;
-
-function init(subPath, callback) {
-    let socketname = "/dayi-socket";
-
-    webSocket = new WebSocketConnector(
-        socketname,
-        "/app/server" + subPath,
-        "/topic/server" + subPath
-    );
-
-    startActions.push(() => webSocket.connect(callback));
-    finishActions.push(() => {
-        if (webSocket !== null) {
-            webSocket.disconnect();
-        }
-        webSocket = null;
-    })
-}
-
-function consumePublication(message) {
-    let body = message.body;
-    let obj = JSON.parse(body);
-    console.log(obj);
-    updateServerView(obj);
-}
-
-function requestPublication() {
-    console.log("Realizando peticion de publicación");
-    let obj = {};
-
-    webSocket.sendMessage(obj);
-}
-
-function enqueueSubscription(idServerInfo, option) {
-    init("/" + idServerInfo + option, consumePublication);
-    startActions.push(() => setTimeout(() => requestPublication(), 500));
-}
-
-function updateServerView(content) {
-
-    let available = content.available;
-    let serverInfo = content.serverInfo;
-
-    $("#serverNameE").html(`${serverInfo.name}`);
-    $("#addressE").html(`${serverInfo.address}:${serverInfo.port}`);
-    $("#serverInfoE").html(serverInfo.info !== null ? serverInfo.info : "No hay información")
-
-    if (available) {
+    setToAvailable() {
         $("#availableIndicatorE").html(`<i class="fas fa-2x fa-check-circle available-indicator"></i>`);
 
-        $("#server" + serverInfo.id)[0].classList.replace("bg-info", "bg-success");
-        updateAvailableContent(content);
-    } else {
+        let previusClass = this.findPreviusClass(this._available);
+
+        $("#server-" + this._idServer)[0].classList.replace(previusClass, "bg-success");
+        this._available = true;
+    }
+
+    setToUnavailable() {
         $("#availableIndicatorE").html(`<i class="fas fa-2x fa-times-circle unavailable-indicator"></i>`);
         $("#unavailableMessageE").html(
             `<div class="alert alert-warning rounded-0 border-left-0 border-right-0 p-2 w-100">
@@ -97,24 +27,51 @@ function updateServerView(content) {
             </div>`
         );
 
-        $("#server" + serverInfo.id)[0].classList.replace("bg-info", "bg-danger");
-        updateUnavailableContent(content);
+        let previusClass = this.findPreviusClass(this._available);
+
+        $("#server-" + this._idServer)[0].classList.replace(previusClass, "bg-success");
+        this._available = false;
+    }
+
+    findPreviusClass(available) {
+        if (available === undefined) return "bg-info";
+        else if (available === false) return "bg-danger";
+        else return "succes";
+    }
+
+    updateServerInfo(serverInfo) {
+        $("#serverNameE").html(`${serverInfo.name}`);
+        $("#addressE").html(`${serverInfo.address}:${serverInfo.port}`);
+        $("#serverInfoE").html(serverInfo.info !== null ? serverInfo.info : "No hay información")
+    }
+
+    updateAvailable(available) {
+        if (available) this.setToAvailable();
+        else this.setToUnavailable();
+    }
+
+    setServerMainContent(innerHtml) {
+        $("#serverMainContentE").html(innerHtml);
+    }
+
+    loadSensingNodes(serverId, selectable) {
+        this.loadAndSelectView("", selectable);
+    }
+
+    loadControlNodes(serverId, selectable) {
+        this.loadAndSelectView("", selectable);
+    }
+
+    loadProperties(serverId, selectable) {
+        this.loadAndSelectView("", selectable);
+    }
+
+    loadLog(serverId, selectable) {
+        this.loadAndSelectView("", selectable);
+    }
+
+    toString() {
+        return "ServerViewController: " + this._idServer;
     }
 
 }
-
-function setDefaultUnavailableContent(message) {
-    setMainContentE(
-        `<div class="row h-100 m-0">
-        <div class="col text-center m-auto">
-        <h6>${message}</h6>
-        </div>
-        </div>`
-    );
-}
-
-function setMainContentE(innerHTML) {
-    $("#serverMainContentE").html(innerHTML);
-}
-
-

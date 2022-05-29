@@ -49,7 +49,7 @@ class BasicInstructionSetService
                 instructions.add(
                     instJpa.save(
                         new InstructionEntity(
-                            null, entity.getId(), instruction.getName(), instruction.getValue()
+                            null, entity.getId(), instruction.getName(), instruction.getVector()
                         )
                     ).clone()
                 );
@@ -134,7 +134,7 @@ class BasicInstructionSetService
 
                     if (v.getIdSet().equals(finalEntity.getId())) {
                         ValueUpdater.updateIfNotNull(instruction.getName(), v::setName);
-                        ValueUpdater.updateIfNotNull(instruction.getValue(), v::setValue);
+                        ValueUpdater.updateIfNotNull(instruction.getVector(), v::setVector);
                         result.add(instJpa.save(v).clone());
                     }
 

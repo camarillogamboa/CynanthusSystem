@@ -15,8 +15,8 @@ public class ControlConfig implements Config {
     /**
      * El Server name.
      */
-    @NotEmpty(message = "{NotEmpty.controlConfig.serverName}")
-    @Size(min = 6, groups = ValidInfo.class, message = "{Size.controlConfig.serverName}")
+    @NotEmpty(message = "#{NotEmpty.controlConfig.serverName}")
+    @Size(min = 6, groups = ValidInfo.class, message = "#{Size.controlConfig.serverName}")
     @JProperty(
         alias = "cynanthus.control.connector.serverName",
         defaultValue = "127.0.0.1",
@@ -27,9 +27,9 @@ public class ControlConfig implements Config {
     /**
      * El Server port.
      */
-    @NotNull(message = "{NotNull.controlConfig.serverPort}")
-    @Positive(groups = ValidInfo.class, message = "{Positive.controlConfig.serverPort}")
-    @Max(value = 65536, groups = ValidInfo.class, message = "{Max.controlConfig.serverPort}")
+    @NotNull(message = "#{NotNull.controlConfig.serverPort}")
+    @Positive(groups = ValidInfo.class, message = "#{Positive.controlConfig.serverPort}")
+    @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.controlConfig.serverPort}")
     @JProperty(
         alias = "cynanthus.control.connector.serverPort",
         defaultValue = "8003",

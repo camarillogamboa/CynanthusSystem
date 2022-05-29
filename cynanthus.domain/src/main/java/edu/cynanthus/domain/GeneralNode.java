@@ -16,14 +16,14 @@ public class GeneralNode<T extends RuntimeNode> implements Bean {
     /**
      * El Node info.
      */
-    @NotNull(message = "{NotNull.generalNode.nodeInfo}")
+    @NotNull(message = "#{NotNull.generalNode.nodeInfo}")
     @Valid
     private NodeInfo nodeInfo;
 
     /**
      * El Runtime node.
      */
-    @NotNull(message = "{NotNull.generalNode.runtimeNode}")
+    @NotNull(message = "#{NotNull.generalNode.runtimeNode}")
     @Valid
     private T runtimeNode;
 
