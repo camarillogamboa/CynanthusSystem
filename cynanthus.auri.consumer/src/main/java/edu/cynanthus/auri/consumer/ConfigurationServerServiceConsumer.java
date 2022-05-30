@@ -9,19 +9,43 @@ import edu.cynanthus.domain.ServerInfo;
 
 import java.lang.reflect.Type;
 
+/**
+ * El tipo Configuration server service consumer.
+ *
+ * @param <T> el parámetro de tipo
+ */
 class ConfigurationServerServiceConsumer<T extends Config>
     extends ServiceConsumer implements ConfigurationServerService<T> {
 
+    /**
+     * El Resource path.
+     */
     final String resourcePath;
 
+    /**
+     * El Config type.
+     */
     private final Type configType;
 
+    /**
+     * Instancia un nuevo Configuration server service consumer.
+     *
+     * @param lazyRequest  el lazy request
+     * @param resourcePath el resource path
+     * @param configType   el config type
+     */
     ConfigurationServerServiceConsumer(LazyRequest lazyRequest, String resourcePath, Type configType) {
         super(lazyRequest);
         this.resourcePath = resourcePath;
         this.configType = configType;
     }
 
+    /**
+     * Permite obtener config of.
+     *
+     * @param serverInfo el server info
+     * @return el config of
+     */
     @Override
     public T getConfigOf(ServerInfo serverInfo) {
         checkServerInfo(serverInfo);
@@ -31,6 +55,13 @@ class ConfigurationServerServiceConsumer<T extends Config>
         );
     }
 
+    /**
+     * Update config of boolean.
+     *
+     * @param serverInfo el server info
+     * @param config     el config
+     * @return el boolean
+     */
     @Override
     public Boolean updateConfigOf(ServerInfo serverInfo, T config) {
         checkServerInfo(serverInfo);
@@ -44,6 +75,12 @@ class ConfigurationServerServiceConsumer<T extends Config>
         );
     }
 
+    /**
+     * Get log files of string [ ].
+     *
+     * @param serverInfo el server info
+     * @return el string [ ]
+     */
     @Override
     public String[] getLogFilesOf(ServerInfo serverInfo) {
         checkServerInfo(serverInfo);
@@ -53,6 +90,13 @@ class ConfigurationServerServiceConsumer<T extends Config>
         );
     }
 
+    /**
+     * Permite obtener log content of.
+     *
+     * @param serverInfo  el server info
+     * @param logFileName el log file name
+     * @return el log content of
+     */
     @Override
     public String getLogContentOf(ServerInfo serverInfo, String logFileName) {
         checkServerInfo(serverInfo);
@@ -65,6 +109,11 @@ class ConfigurationServerServiceConsumer<T extends Config>
         );
     }
 
+    /**
+     * Check config.
+     *
+     * @param config el config
+     */
     void checkConfig(T config) {
         if (config == null)
             throw new InvalidArgumentException(
@@ -72,6 +121,11 @@ class ConfigurationServerServiceConsumer<T extends Config>
             );
     }
 
+    /**
+     * Check server info.
+     *
+     * @param serverInfo el server info
+     */
     void checkServerInfo(ServerInfo serverInfo) {
         if (serverInfo == null)
             throw new InvalidArgumentException(
@@ -79,6 +133,12 @@ class ConfigurationServerServiceConsumer<T extends Config>
             );
     }
 
+    /**
+     * Permite obtener server id.
+     *
+     * @param bean el bean
+     * @return el server id
+     */
     Object getServerId(ServerInfo bean) {
         if (bean.getId() != null) return bean.getId();
         else if (bean.getName() != null) return bean.getName();

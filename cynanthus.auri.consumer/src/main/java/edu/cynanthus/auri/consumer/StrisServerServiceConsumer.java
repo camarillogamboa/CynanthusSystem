@@ -11,15 +11,33 @@ import edu.cynanthus.domain.config.StrisConfig;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * El tipo Stris server service consumer.
+ */
 class StrisServerServiceConsumer
     extends TreeServerServiceConsumer<StrisConfig, ControlNode> implements StrisServerService {
 
+    /**
+     * La constante GENERAL_NODE_LIST_TYPE.
+     */
     private static final Type GENERAL_NODE_LIST_TYPE = new TypeToken<List<GeneralNode<ControlNode>>>() {}.getType();
 
+    /**
+     * Instancia un nuevo Stris server service consumer.
+     *
+     * @param lazyRequest el lazy request
+     */
     StrisServerServiceConsumer(LazyRequest lazyRequest) {
         super(lazyRequest, STRIS_SERVER_SERVICE_PATH, StrisConfig.class, GENERAL_NODE_LIST_TYPE);
     }
 
+    /**
+     * Perform indication boolean.
+     *
+     * @param serverInfo el server info
+     * @param indication el indication
+     * @return el boolean
+     */
     @Override
     public Boolean performIndication(ServerInfo serverInfo, Indication indication) {
         checkServerInfo(serverInfo);
@@ -36,6 +54,13 @@ class StrisServerServiceConsumer
         );
     }
 
+    /**
+     * Perform indication boolean.
+     *
+     * @param nodeInfo        el node info
+     * @param instructionName el instruction name
+     * @return el boolean
+     */
     @Override
     public Boolean performIndication(NodeInfo nodeInfo, String instructionName) {
         if (nodeInfo == null)
@@ -54,6 +79,12 @@ class StrisServerServiceConsumer
         );
     }
 
+    /**
+     * Permite obtener node id.
+     *
+     * @param bean el bean
+     * @return el node id
+     */
     Object getNodeId(NodeInfo bean) {
         if (bean.getId() != null) return bean.getId();
         else if (bean.getName() != null) return bean.getMac();

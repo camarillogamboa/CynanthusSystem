@@ -25,23 +25,56 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpTimeoutException;
 import java.util.function.Consumer;
 
+/**
+ * El tipo Service consumer.
+ */
 class ServiceConsumer implements AuriService {
 
+    /**
+     * La constante ERROR_MESSAGE_TYPE.
+     */
     private static final Type ERROR_MESSAGE_TYPE = new TypeToken<ErrorMessage<String>>() {}.getType();
 
+    /**
+     * El Json content type consumer.
+     */
     static final Consumer<LazyRequest> JSON_CONTENT_TYPE_CONSUMER
         = lazyRequest -> lazyRequest.addHeader("Content-Type", "application/json");
 
+    /**
+     * El Lazy request.
+     */
     private final LazyRequest lazyRequest;
 
+    /**
+     * Instancia un nuevo Service consumer.
+     *
+     * @param lazyRequest el lazy request
+     */
     ServiceConsumer(LazyRequest lazyRequest) {
         this.lazyRequest = lazyRequest;
     }
 
+    /**
+     * Send and consume t.
+     *
+     * @param <T>                 el parámetro de tipo
+     * @param lazyRequestConsumer el lazy request consumer
+     * @param returnType          el return type
+     * @return el t
+     */
     <T> T sendAndConsume(Consumer<LazyRequest> lazyRequestConsumer, Type returnType) {
         return consume(JSON_CONTENT_TYPE_CONSUMER.andThen(lazyRequestConsumer), returnType);
     }
 
+    /**
+     * Consume t.
+     *
+     * @param <T>                 el parámetro de tipo
+     * @param lazyRequestConsumer el lazy request consumer
+     * @param returnType          el return type
+     * @return el t
+     */
     <T> T consume(Consumer<LazyRequest> lazyRequestConsumer, Type returnType) {
         try {
 

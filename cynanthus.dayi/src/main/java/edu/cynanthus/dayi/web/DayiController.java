@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,10 +22,17 @@ public class DayiController extends CommonController {
         super(auriSession);
     }
 
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
     @GetMapping
     public String home(Model model) {
         model.addAttribute("emptyServer", new ServerInfo());
         return "index";
+    }
+
+    @GetMapping("/welcome")
+    public String welcomeView() {
+        return "components/welcome::welcomeView";
     }
 
     @GetMapping("/servers")
@@ -38,6 +42,8 @@ public class DayiController extends CommonController {
         return "components/navegation::serverNavList";
     }
 
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
     @GetMapping("/server/{id:\\d+}")
     public String serverView(ServerInfo serverInfo, Model model) {
         serverInfo = findServerInfo(serverInfo);
@@ -46,14 +52,25 @@ public class DayiController extends CommonController {
     }
 
     @PostMapping("/server")
-    public ResponseEntity<?> saveServer(ServerInfo serverInfo) {
+    public ResponseEntity<?> saveServer(@RequestBody ServerInfo serverInfo) {
         if (serverInfo.getId() == null) serverInfo = auriSession.serverInfoService().create(serverInfo);
         else serverInfo = auriSession.serverInfoService().update(serverInfo);
 
         System.out.println("Se guardó: " + serverInfo);
 
+        return new ResponseEntity<>(serverInfo, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/server/{id:\\d+}")
+    public ResponseEntity<?> deleteServer(ServerInfo serverInfo) {
+        serverInfo = auriSession.serverInfoService().delete(serverInfo);
+
+        System.out.println("Se eliminó " + serverInfo);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
     @GetMapping("/sets")
     public String setsView(Model model) {
@@ -66,22 +83,14 @@ public class DayiController extends CommonController {
     }
 
     @PostMapping("/sets")
-    public ResponseEntity<?> saveSet(InstructionSet instructionSet) {
+    public ResponseEntity<?> saveSet(@RequestBody InstructionSet instructionSet) {
+        System.out.println(instructionSet);
         if (instructionSet.getId() == null) instructionSet = auriSession.instructionSetService().create(instructionSet);
         else instructionSet = auriSession.instructionSetService().update(instructionSet);
 
         System.out.println("Se guardó: " + instructionSet);
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/sets/{id:\\d+}")
-    public ResponseEntity<?> saveInstruction(
-        InstructionSet instructionSet,
-        @RequestBody Instruction instruction
-    ) {
-        instructionSet.setInstructions(List.of(instruction));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(instructionSet.getId(), HttpStatus.OK);
     }
 
     @GetMapping("/sets/{id:\\d+}")
@@ -89,17 +98,41 @@ public class DayiController extends CommonController {
         instructionSet = auriSession.instructionSetService().read(instructionSet);
 
         model.addAttribute("currentSet", instructionSet);
-        model.addAttribute("emptyInstruction",new Instruction());
+        model.addAttribute("emptyInstruction", new Instruction());
 
         return "components/instructions::currentSetView";
     }
 
-    @DeleteMapping("/sets/{id:\\d+}/delete")
+    @DeleteMapping("/sets/{id:\\d+}")
     public ResponseEntity<?> deleteSet(InstructionSet instructionSet) {
         instructionSet = auriSession.instructionSetService().delete(instructionSet);
         System.out.println("Registro eliminado: " + instructionSet);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/sets/{id:\\d+}")
+    public ResponseEntity<?> saveInstruction(InstructionSet instructionSet, @RequestBody Instruction instruction) {
+        System.out.println(instructionSet);
+        System.out.println(instruction);
+        instructionSet.setInstructions(List.of(instruction));
+
+        if (instruction.getId() == null) instructionSet = auriSession.instructionSetService().create(instructionSet);
+        else instructionSet = auriSession.instructionSetService().update(instructionSet);
+
+        System.out.println("Se creó " + instructionSet);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/sets/instruction/{id:\\d+}")
+    public ResponseEntity<?> deleteInstruction(@PathVariable Integer id) {
+        Instruction instruction = auriSession.instructionSetService().deleteInstruction(id);
+        System.out.println("Se eliminó " + instruction);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
     @GetMapping("/users")
     public String usersView(Model model) {

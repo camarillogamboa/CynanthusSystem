@@ -1,34 +1,96 @@
 console.log("Iniciando Cynanthus Dayi Client Application...");
 
-/*--------------------------------------------------GENERAL-VIEW------------------------------------------------------*/
 class GeneralViewController extends DelegateAndSelectorController {
 
     constructor(viewLoader) {
         super(viewLoader, "#mainArea");
     }
 
-    loadServerListView() {
-        this._viewLoader.loadAndPlaceTo("/servers", $("#serverListContainer"));
+    async loadServerListView() {
+        return new Promise((resolve, reject) => {
+            this._viewLoader.loadAndPlaceTo("/servers", $("#serverListContainer"))
+                .then(() => {
+                        console.log("Se cargó la lista de servidores");
+                        if(this.delegate != null && this.delegate instanceof ServerViewController){
+                            this._navGroup.select($(`#serverLink-${this.delegate.serverId}`)[0]);
+                        }
+                })
+                .then(resolve)
+                .catch(error => {
+                    console.log(`Error al cargar lista de servidores. Error: ${error}`);
+                    reject();
+                });
+        });
     }
 
-    loadServer(idServer, selectable) {
-        this.loadAndSelectView(`/server/${idServer}`, selectable);
-        this.loadDelegate(new ServerViewController(this._viewLoader, idServer, "/dayi-socket"));
+    async loadWelcomeView() {
+        return new Promise((resolve, reject) => {
+            this.loadView("/welcome")
+                .then(() => this.loadDelegate(null))
+                .then(() => this._navGroup.unselect())
+                .then(resolve)
+                .catch(error => {
+                    console.log(`Error al cargar la vista de bienvenida. Error: ${error}`);
+                    reject();
+                })
+        });
     }
 
-    loadInstructions(selectable) {
-        this.loadAndSelectView("/sets", selectable);
-        this.loadDelegate(new InstructionsViewController(this._viewLoader));
+    async loadServer(serverId, selectable) {
+        return new Promise((resolve, reject) => {
+            this.loadAndSelectView(`/server/${serverId}`, selectable)
+                .then(() => this.loadDelegate(new ServerViewController(this._viewLoader, serverId)))
+                .then(resolve)
+                .catch(error => {
+                    console.log(`Error al cargar la vista de servidor: ${serverId}. Error: ${error}`);
+                    reject();
+                });
+        });
     }
 
-    loadUsers(selectable) {
-        this.loadAndSelectView("/users", selectable);
-        this.loadDelegate(new UsersViewController());
+    async loadInstructions(selectable) {
+        return new Promise((resolve, reject) => {
+            this.loadAndSelectView("/sets", selectable)
+                .then(() => this.loadDelegate(new InstructionsViewController(this._viewLoader)))
+                .then(resolve)
+                .catch(error => {
+                    console.log(`Error al cargar la vista de instrucciones. Error: ${error}`);
+                    reject();
+                });
+        });
+    }
+
+    async loadUsers(selectable) {
+        return new Promise((resolve, reject) => {
+            this.loadAndSelectView("/users", selectable)
+                .then(() => this.loadDelegate(new UsersViewController()))
+                .then(resolve)
+                .catch(error => {
+                    console.log(`Error al cargar la vista de usuarios. Error: ${error}`);
+                    reject();
+                });
+        });
+    }
+
+    addServer(form) {
+        console.log("GUARDANDO");
+
+        doPostForm("/server", form)
+            .then(response => {
+                if (processResponse(response)) {
+                    this.loadServerListView()
+                        .then(() => response.json())
+                        .then(serverInfo => this.loadServer(serverInfo.id, `#serverLink-${serverInfo.id}`))
+                        .catch(error => console.log(error));
+                }
+            })
+            .catch(error => console.log(error));
     }
 
     start() {
         super.start();
         this.loadServerListView();
+        loadDialogForm('#addServerDialog', form => this.addServer(form), commonRejected);
     }
 
     toString() {

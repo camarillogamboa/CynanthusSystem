@@ -9,10 +9,21 @@ import edu.cynanthus.domain.NodeInfo;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * El tipo Node info service consumer.
+ */
 class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements NodeInfoService {
 
+    /**
+     * La constante NODE_INFO_LIST_TYPE.
+     */
     private static final Type NODE_INFO_LIST_TYPE = new TypeToken<List<NodeInfo>>() {}.getType();
 
+    /**
+     * Instancia un nuevo Node info service consumer.
+     *
+     * @param lazyRequest el lazy request
+     */
     NodeInfoServiceConsumer(LazyRequest lazyRequest) {
         super(
             lazyRequest,
@@ -22,6 +33,12 @@ class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements N
         );
     }
 
+    /**
+     * Read all by id server info list.
+     *
+     * @param idServerInfo el id server info
+     * @return el list
+     */
     @Override
     public List<? extends NodeInfo> readAllByIdServerInfo(Integer idServerInfo) {
         if (idServerInfo == null)
@@ -35,6 +52,12 @@ class NodeInfoServiceConsumer extends BeanServiceConsumer<NodeInfo> implements N
         );
     }
 
+    /**
+     * Permite obtener id.
+     *
+     * @param bean el bean
+     * @return el id
+     */
     @Override
     Object getId(NodeInfo bean) {
         if (bean.getId() != null) return bean.getId();

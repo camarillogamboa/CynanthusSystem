@@ -222,6 +222,7 @@ class BasicInstructionSetService
 
     @Override
     Optional<InstructionSetEntity> find(InstructionSet bean) {
+        bean = new InstructionSet(bean.getId(), bean.getName(), null, null);
 
         if (BeanValidation.validate(bean, IdCandidate.class).isEmpty()) {
             return setJpa.findById(bean.getId());

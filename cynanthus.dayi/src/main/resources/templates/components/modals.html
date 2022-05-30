@@ -18,42 +18,60 @@
 </div>
 
 <div th:fragment="messageBodyModal(idPreffix,message)" class="modal-body">
-    <div class="container-fluid p-0 w-100 text-center">
-        <span th:id="${idPreffix}+'-message'" th:text="${message}"></span>
+    <div class="container-fluid p-0 w-100 text-center overflow-auto">
+        <span><p th:id="${idPreffix}+'-message'" th:text="${message}" class="text-wrap"></p></span>
     </div>
 </div>
 
-<section th:fragment="deleteDialog(idDialog,elementName,eventAction)">
-    <div th:id="${idDialog}" class="modal fade">
+<section th:fragment="deleteDialog(dialogId,class,elementId,elementName)">
+    <div th:id="${dialogId}" class="modal fade" th:classappend="${class}"
+         th:attrappend="data-element-id=|${elementId}|">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
-                <div th:replace="~{this::modalHeader(${idDialog},'Eliminar '+${elementName})}"></div>
-                <div th:replace="~{this::messageBodyModal(${idDialog},'¿Desea eliminar '+${elementName}+'?')}"></div>
-                <div class="modal-footer bg-light">
-                    <button th:replace="~{this::cancelButton}"></button>
-                    <button
-                            th:id="${idDialog}+'-submit'"
-                            type="button"
-                            class="btn btn-danger"
-                            data-dismiss="modal"
-                            th:attrappend="onclick=|${eventAction}|"
-                    >
-                        <span th:id="${idDialog}+'-submit-text'" th:text="'Eliminar'"></span>
-                    </button>
-                </div>
+                <div th:replace="~{this::modalHeader(${dialogId},'Eliminar '+${elementName})}"></div>
+                <div th:replace="~{this::messageBodyModal(${dialogId},'¿Desea eliminar '+${elementName}+'?')}"></div>
+
+                <form th:id="${dialogId}+'-form'">
+                    <div class="modal-footer bg-light">
+                        <div class="m-auto">
+                            <button th:replace="~{this::cancelButton}"></button>
+                            <button
+                                    type="submit"
+                                    class="btn btn-danger modal-button"
+                            >
+                                <span th:id="${dialogId}+'-submit-text'" th:text="'Eliminar'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>
 </section>
 
-<button th:fragment="cancelButton" type="button" class="btn btn-secondary" data-dismiss="modal">
+<button th:fragment="cancelButton" type="reset" class="btn btn-secondary modal-button" data-dismiss="modal">
     <span th:text="'Cancelar'"></span>
 </button>
 
 <div th:fragment="hiderFooter(text)" class="modal-footer">
-    <button type="button" class="btn btn-primary" data-dismiss="modal">
-        <span th:text="${text}"></span>
-    </button>
+    <div class="m-auto">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+            <span th:text="${text}"></span>
+        </button>
+    </div>
+</div>
+
+<div th:fragment="submitFooter" class="modal-footer bg-light">
+    <div class="m-auto">
+        <button th:replace="~{this::cancelButton}"></button>
+        <button
+                type="submit"
+                class="btn btn-primary modal-button"
+        >
+            <span th:text="'Hecho'"></span>
+        </button>
+    </div>
 </div>
 
 <section th:fragment="informativeDialog(dialogId,title,message,continueText,size)">

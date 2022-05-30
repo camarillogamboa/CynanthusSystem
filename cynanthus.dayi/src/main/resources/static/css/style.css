@@ -90,3 +90,7 @@ a:hover {
 .dayi-light {
     background: var(--dayi-light-color);
 }
+
+.modal-button {
+    width: 100px;
+}

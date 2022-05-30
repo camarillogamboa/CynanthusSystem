@@ -2,10 +2,13 @@ package edu.cynanthus.auri.server.controller;
 
 import edu.cynanthus.auri.api.InstructionSetService;
 import edu.cynanthus.bean.Patterns;
+import edu.cynanthus.bean.ValidInfo;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +25,14 @@ public class InstructionSetController extends BeanController<InstructionSet> imp
     ) {
         super(instructionSetService);
         this.instructionSetService = instructionSetService;
+    }
+
+
+    @Override
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public InstructionSet create(@Validated({ValidInfo.class}) @RequestBody InstructionSet bean) {
+        return super.create(bean);
     }
 
     @GetMapping("/{name:" + Patterns.NAME + "}")

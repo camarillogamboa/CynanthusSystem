@@ -58,7 +58,8 @@
 
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown ml-md-auto">
-                    <a id="userLink" href="#" class="nav-link dropdown-toggle rounded text-white" data-toggle="dropdown">
+                    <a id="userLink" href="#" class="nav-link dropdown-toggle rounded text-white"
+                       data-toggle="dropdown">
                         <i class="fas fa-user"></i>
                         <span id="userLink-text" th:text="'Bienvenido '"></span>
                         <span sec:authentication="name">Usuario</span>
@@ -111,7 +112,7 @@
     </div>
 
     <!-- Boton de creación de nuevo registro de servidor (solo si el usuario es ADMIN) -->
-    <div sec:authorize="hasRole('ADMIN')" class="row m-0">
+    <div sec:authorize="hasRole('ADMIN')" class="row m-0" th:with="text = 'Agregar servidor'">
         <button
                 id="addServerButton"
                 type="button"
@@ -120,8 +121,11 @@
                 onclick="this.blur()"
                 data-target="#addServerDialog"
         >
-            <i class="fas fa-plus"></i> <span id="addServerButton-text" th:text="'Agregar servidor'"></span>
+            <i class="fas fa-plus"></i> <span id="addServerButton-text" th:text="${text}"></span>
         </button>
+
+        <section
+                th:replace="~{components/server::saveServerDialog('addServerDialog',${text},${emptyServer})}"></section>
     </div>
 
 </div>

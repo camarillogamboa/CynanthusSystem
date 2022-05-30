@@ -6,9 +6,19 @@ import edu.cynanthus.domain.config.SordidusConfig;
 
 import java.util.function.Consumer;
 
+/**
+ * El tipo Session based sordidus server service.
+ */
 class SessionBasedSordidusServerService
     extends SessionBasedCynanthusServerService<SordidusConfig, SordidusServerService> implements SordidusServerService {
 
+    /**
+     * Instancia un nuevo Session based sordidus server service.
+     *
+     * @param auriServiceConsumer el auri service consumer
+     * @param sessionStarter      el session starter
+     * @param lazyRequestConsumer el lazy request consumer
+     */
     SessionBasedSordidusServerService(
         AuriServiceConsumer<SordidusServerService> auriServiceConsumer,
         SessionStarter sessionStarter,

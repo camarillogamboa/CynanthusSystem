@@ -24,14 +24,8 @@
 
         <!-- Area de titulo -->
         <div class="col">
-            <div class="row m-0">
-                <h2 th:text="*{name}">Nombre servidor</h2>
-            </div>
-            <div class="row m-0">
-                <h6 th:text="(*{address})+':'+(*{port})">
-                    Dirección del servidor en la red local
-                </h6>
-            </div>
+            <div class="row m-0"><h2 th:text="*{name}"></h2></div>
+            <div class="row m-0"><h6 th:text="(*{address})+':'+(*{port})"></h6></div>
         </div>
 
         <!-- Acciones disponibles para el servidor (Solo si el usuario es ADMIN) -->
@@ -152,10 +146,10 @@
         <!-- Area de titulo -->
         <div class="col">
             <div class="row m-0">
-                <h2 id="serverNameE" th:text="*{name}">Nombre servidor</h2>
+                <h2 id="serverTitle" th:text="*{name}">Nombre servidor</h2>
             </div>
             <div class="row m-0">
-                <h6 id="addressE" th:text="(*{address})+':'+(*{port})">Dirección</h6>
+                <h6 id="serverAddress" th:text="(*{address})+':'+(*{port})">Dirección</h6>
             </div>
         </div>
 
@@ -165,7 +159,7 @@
                     type="button"
                     class="btn btn-light"
                     data-toggle="modal"
-                    data-target="#updateServer"
+                    data-target="#updateServerDialog"
                     title="Editar información del servidor"
             >
                 <span><i class="fas fa-pen"></i></span>
@@ -174,11 +168,15 @@
                     type="button"
                     class="btn btn-light"
                     data-toggle="modal"
-                    data-target="#deleteServerModal"
+                    data-target="#deleteServerDialog"
                     title="Eliminar información del servidor"
             >
                 <span><i class="fas fa-trash"></i></span>
             </button>
+
+            <section
+                    th:replace="~{this::saveServerDialog('updateServerDialog','Actualizar información',${currentServer})}"></section>
+            <section th:replace="~{components/modals::deleteDialog('deleteServerDialog','',*{id},*{name})}"></section>
         </div>
 
     </div>
@@ -251,115 +249,150 @@
     <!-- Parte de información adicional del servidor -->
     <div class="row m-0 p-1">
         <p
-                id="serverInfoE"
+                id="serverInfoText"
                 class="m-0 p-0 w-100 text-center" th:text="${#strings.isEmpty(info)}?*{info}:'No hay información'"
         >
         </p>
     </div>
 
-    <!-- Modal para actualizar la información del servidor actual -->
-
-    <!-- Modal para eliminar el servidor actual -->
-
 </div>
 
-<section th:fragment="saveServerDialog(dialogId,title,serverInfo,mode)">
+<section th:fragment="saveServerDialog(dialogId,title,serverInfo)">
     <div th:id="${dialogId}" class="modal fade">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div th:replace="~{components/modals::modalHeader(${title})}"></div>
+                <div th:replace="~{components/modals::modalHeader(${dialogId},${title})}"></div>
 
                 <form
                         th:id="${dialogId}+'-form'"
-                        th:action="@{/server}"
                         th:object="${serverInfo}"
                         method="POST"
-                        class="was-validated"
+                        novalidate
                 >
                     <input
-                            th:id="${sectionId}+'-id'"
+                            th:id="${dialogId}+'-id'"
                             th:value="*{id}"
                             name="id"
                             type="hidden"
-                            required="false"
                     />
 
                     <div class="modal-body">
 
-                        <div class="form-group">
-                            <label th:for="${sectionId}+'-name'" th:text="'Nombre de servidor'"></label>
-                            <input
-                                    th:id="${sectionId}+'-name'"
-                                    th:value="*{name}"
-                                    name="name"
-                                    type="text"
-                                    class="form-control"
-                                    required
-                            >
-                        </div>
-                        <div class="form-group">
-                            <label th:for="${sectionId}+'-address'" th:text="'Dirección en red del servidor'"></label>
-                            <input
-                                    th:id="${sectionId}+'-address'"
-                                    th:value="*{address}"
-                                    name="address"
-                                    type="text"
-                                    class="form-control"
-                                    required
-                            >
-                        </div>
-                        <div class="form-group">
-                            <label th:for="${sectionId}+'-port'" th:text="'Puerto'"></label>
-                            <input
-                                    th:id="${sectionId}+'-port'"
-                                    th:value="*{port}"
-                                    name="port"
-                                    type="number"
-                                    class="form-control"
-                                    required
-                            >
-                        </div>
-                        <div class="form-group">
-                            <label th:for="${sectionId}+'-serverType'" th:text="'Tipo de servidor'"></label>
-                            <select
-                                    th:id="${sectionId}+'-serverType'"
-                                    th:with="selectTo = *{serverType}? *{serverType.name}:'STORAGE'"
-                                    name="serverType"
-                                    class="custom-select"
-                                    required
-                            >
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <!-- Campo name -->
+                                <div class="form-group">
+                                    <label th:for="${dialogId}+'-name'" th:text="'Nombre de servidor'"></label>
+                                    <input
+                                            th:id="${dialogId}+'-name'"
+                                            th:value="*{name}"
+                                            name="name"
+                                            type="text"
+                                            class="form-control"
+                                            th:placeholder="'Ingrese nombre de servidor a registrar'"
+                                            required
+                                            maxlength="45"
+                                            pattern="[a-zA-Z_$][a-zA-Z\s\d_$]*"
+                                    >
+                                    <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                                    <div class="invalid-feedback"
+                                         th:text="'Ingresa un dato válido para este campo'"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <!-- campo serverType -->
+                                <div class="form-group">
+                                    <label th:for="${dialogId}+'-serverType'" th:text="'Tipo de servidor'"></label>
+                                    <select
+                                            th:id="${dialogId}+'-serverType'"
+                                            th:with="selectTo = *{serverType}? *{serverType.name}:'STORAGE'"
+                                            name="serverType"
+                                            class="custom-select"
+                                            required
+                                    >
 
-                                <option
-                                        th:each="serverType : ${T(edu.cynanthus.domain.ServerType).values()}"
-                                        th:value="${serverType.name}"
-                                        th:text="${serverType.alias}"
-                                        th:selected="${selectTo}==${serverType.name}"
-                                ></option>
-                            </select>
+                                        <option
+                                                th:each="serverType : ${T(edu.cynanthus.domain.ServerType).values()}"
+                                                th:value="${serverType.name}"
+                                                th:text="${serverType.alias}"
+                                                th:selected="${selectTo}==${serverType.name}"
+                                        ></option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <!-- campo address -->
+                                <div class="form-group">
+                                    <label th:for="${dialogId}+'-address'"
+                                           th:text="'Dirección en red del servidor'"></label>
+                                    <input
+                                            th:id="${sectionId}+'-address'"
+                                            th:value="*{address}"
+                                            name="address"
+                                            type="text"
+                                            class="form-control"
+                                            th:placeholder="'Ingrese dirección en red'"
+                                            required
+                                            maxlength="60"
+                                    >
+                                    <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                                    <div class="invalid-feedback"
+                                         th:text="'Ingresa un dato válido para este campo'"></div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <!-- campo port -->
+                                <div class="form-group">
+                                    <label th:for="${dialogId}+'-port'" th:text="'Puerto'"></label>
+                                    <input
+                                            th:id="${dialogId}+'-port'"
+                                            th:value="*{port}"
+                                            name="port"
+                                            type="number"
+                                            class="form-control"
+                                            th:placeholder="'Ingresa número de puerto'"
+                                            required
+                                            min="0"
+                                            max="65536"
+                                    >
+                                    <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                                    <div class="invalid-feedback"
+                                         th:text="'Ingresa un dato válido para este campo'"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- campo info -->
                         <div class="form-group">
-                            <label th:for="${sectionId}+'-info'" th:text="'Información adicional'"></label>
+                            <label th:for="${dialogId}+'-info'" th:text="'Información adicional'"></label>
                             <textarea
-                                    th:id="${sectionId}+'-info'"
+                                    th:id="${dialogId}+'-info'"
                                     th:text="*{info}"
                                     name="info"
                                     class="form-control"
+                                    th:placeholder="'Agrega información adicional (opcional)'"
                                     rows="2"
+                                    maxlength="300"
                             >
-                </textarea>
+                            </textarea>
+                            <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                            <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
                         </div>
 
                     </div>
+
+                    <div th:replace="~{components/modals::submitFooter}"></div>
+
                 </form>
 
             </div>
         </div>
     </div>
 </section>
-
-<div th:fragment="save(sectionId,headerTitle,serverInfo)" class="modal-content">
-
-</div>
 
 </body>
 </html>

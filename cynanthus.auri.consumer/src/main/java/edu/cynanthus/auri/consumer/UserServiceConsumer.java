@@ -9,10 +9,21 @@ import edu.cynanthus.domain.User;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * El tipo User service consumer.
+ */
 class UserServiceConsumer extends BeanServiceConsumer<User> implements UserService {
 
+    /**
+     * La constante USER_LIST_TYPE.
+     */
     private static final Type USER_LIST_TYPE = new TypeToken<List<User>>() {}.getType();
 
+    /**
+     * Instancia un nuevo User service consumer.
+     *
+     * @param lazyRequest el lazy request
+     */
     UserServiceConsumer(LazyRequest lazyRequest) {
         super(
             lazyRequest,
@@ -22,6 +33,12 @@ class UserServiceConsumer extends BeanServiceConsumer<User> implements UserServi
         );
     }
 
+    /**
+     * Permite obtener id.
+     *
+     * @param bean el bean
+     * @return el id
+     */
     @Override
     Object getId(User bean) {
         if (bean.getId() != null) return bean.getId();

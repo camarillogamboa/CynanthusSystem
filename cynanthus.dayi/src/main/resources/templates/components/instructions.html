@@ -19,13 +19,17 @@
         <div class="col">
             <h2 id="instructionsTitle" th:text="'Conjuntos de instrucciones'"></h2>
         </div>
-        <div sec:authorize="hasRole('ADMIN')" class="col-xs">
 
-            <button id="addSetButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSetDialog">
+        <!-- Añadir nuevo conjunto de instrucciones -->
+        <div sec:authorize="hasRole('ADMIN')" class="col-xs">
+            <button id="addSetButton" type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#addSetDialog">
                 <i class="fas fa-plus"></i><span id="addSetButton-text" th:text="'Agregar nuevo conjunto'"></span>
             </button>
-            <section th:replace="~{this::saveInstructionSetDialog('addSetDialog','Agregar nuevo conjunto',${emptySet})}"></section>
+            <section
+                    th:replace="~{this::saveInstructionSetDialog('addSetDialog','Agregar nuevo conjunto',${emptySet})}"></section>
         </div>
+
     </div>
 
     <!-- Contenido -->
@@ -39,23 +43,8 @@
         <th:block th:if="${hasSets}">
 
             <!-- Lista de conjuntos de instrucciones disponibles -->
-            <div class="col-md-2 p-0 border-right overflow-auto">
-                <nav id="instructionsNavBar" class="navbar navbar-light p-1 w-100 align-items-start">
-                    <nav class="nav nav-pills flex-column w-100 m-0">
-                        <ul class="row m-0 p-0">
-                            <!-- Iteración por los conjuntos disponibles -->
-                            <li th:each="set :${sets}" class="nav-item w-100 pb-1">
-                                <a
-                                        th:id="'set-'+${set.id}"
-                                        class="nav-link section-bar text-center"
-                                        th:onclick="'appController.delegate.loadInstructionSet('+${set.id}+',this)'"
-                                        href="#"
-                                        th:text="${set.name}"
-                                ></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </nav>
+            <div id="instructionSetListContainer" class="col-md-2 p-0 border-right overflow-auto">
+                <nav th:replace="~{this::setNavList}"></nav>
             </div>
 
             <!-- Contenido de la vista de conjunto de instrucciones seleccionada -->
@@ -103,6 +92,7 @@
             >
                 <span><i class="fas fa-plus"></i></span>
             </button>
+
             <button
                     id="updateCurrentSetButton"
                     type="button"
@@ -124,9 +114,12 @@
                 <span><i class="fas fa-trash"></i></span>
             </button>
 
-            <section th:replace="~{this::saveInstructionDialog('addInstructionDialog','Agregar instrucción',${emptyInstruction})}"></section>
-            <section th:replace="~{this::saveInstructionSetDialog('updateCurrentSetDialog','Actualizar conjunto',${currentSet})}"></section>
-            <section th:replace="~{components/modals::deleteDialog('deleteCurrentSetDialog',*{name},'appController.delegate.delegate.deleteInstrutionSet()')}"></section>
+            <section
+                    th:replace="~{this::saveInstructionDialog('addInstructionDialog','Agregar instrucción','',${emptyInstruction})}"></section>
+            <section
+                    th:replace="~{this::saveInstructionSetDialog('updateCurrentSetDialog','Actualizar conjunto',${currentSet})}"></section>
+            <section
+                    th:replace="~{components/modals::deleteDialog('deleteCurrentSetDialog','',*{id},*{name})}"></section>
 
         </div>
     </div>
@@ -212,7 +205,8 @@
                         <span><i class="fas fa-pen"></i></span>
                     </button>
 
-                    <section th:replace="~{this::saveInstructionDialog(${rowId}+'-update','Agregar instrucción',${instruction})}"></section>
+                    <section
+                            th:replace="~{this::saveInstructionDialog(${rowId}+'-update','Editar instrucción','update-list',${instruction})}"></section>
                 </td>
                 <td class="p-2 text-center align-middle w-auto">
                     <button
@@ -224,7 +218,8 @@
                     >
                         <span><i class="fas fa-trash"></i></span>
                     </button>
-                    <section th:replace="~{components/modals::deleteDialog(${rowId}+'-delete',*{name},'appController.delegate.delegate.deleteInstruction('+*{id}+')')}"></section>
+                    <section
+                            th:replace="~{components/modals::deleteDialog(${rowId}+'-delete','delete-list',*{id},*{name})}"></section>
                 </td>
             </th:block>
         </tr>
@@ -243,7 +238,7 @@
                         th:id="${dialogId}+'-form'"
                         th:object="${instructionSet}"
                         method="POST"
-                        class="was-validated"
+                        novalidate
                 >
                     <input
                             th:id="${dialogId}+'-id'"
@@ -254,6 +249,7 @@
 
                     <div class="modal-body">
 
+                        <!-- campo name -->
                         <div class="form-group">
                             <label th:for="${dialogId}+'-name'" th:text="'Nombre del conjunto'"></label>
                             <input
@@ -262,10 +258,17 @@
                                     name="name"
                                     type="text"
                                     class="form-control"
+                                    th:placeholder="'Nombre del conjunto'"
                                     required
+                                    maxlength="25"
+                                    pattern="[a-zA-Z_$][a-zA-Z\s\d_$]*"
                             >
+                            <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                            <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+
                         </div>
 
+                        <!-- campo info -->
                         <div class="form-group">
                             <label th:for="${dialogId}+'-info'" th:text="'Información adicional'"></label>
                             <textarea
@@ -273,22 +276,17 @@
                                     th:text="*{info}"
                                     name="info"
                                     class="form-control"
+                                    th:placeholder="'Agrega una descripción (opcional)'"
                                     rows="2"
+                                    maxlength="300"
                             ></textarea>
+                            <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                            <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
                         </div>
 
                     </div>
 
-                    <div class="modal-footer bg-light">
-                        <button th:replace="~{components/modals::cancelButton}"></button>
-                        <button
-                                type="submit"
-                                th:text="'Hecho'"
-                                class="btn btn-primary"
-                                data-dismiss="modal"
-                                th:attrappend="onclick=|appController.delegate.saveInstructionSet('${idDialog}')|"
-                        ></button>
-                    </div>
+                    <div th:replace="~{components/modals::submitFooter}"></div>
 
                 </form>
 
@@ -297,16 +295,17 @@
     </div>
 </section>
 
-<section th:fragment="saveInstructionDialog(dialogId,title,instruction)">
-    <div th:id="${dialogId}" class="modal fade">
+<section th:fragment="saveInstructionDialog(dialogId,title,class,instruction)">
+    <div th:id="${dialogId}" class="modal fade" th:classappend="${class}">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div th:replace="~{components/modals::modalHeader(${dialogId},${title})}"></div>
 
                 <form
-                    th:object="${instruction}"
-                    method="POST"
-                    class="was-validated"
+                        th:id="${dialogId}+'-form'"
+                        th:object="${instruction}"
+                        method="POST"
+                        novalidate
                 >
                     <input
                             th:id="${dialogId}+'-id'"
@@ -316,42 +315,73 @@
                     />
 
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label th:for="${dialogId}+'-name'" th:text="'Nombre clave'"></label>
-                            <input
-                                    th:id="${dialogId}+'-name'"
-                                    th:value="*{name}"
-                                    name="name"
-                                    type="text"
-                                    class="form-control"
-                                    required
-                            >
+
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="alert alert-primary m-auto">
+                                    <p>
+                                        Introduzca el vector sustituyendo cada código
+                                        de emisor de rayos infrarrojo por su clave
+                                        correspondiente:
+                                    </p>
+                                    <ul>
+                                        <li
+                                                th:each="controlCode : ${T(edu.cynanthus.domain.ControlCode).values()}"
+                                                th:text="${controlCode.ordinal}+':'+${controlCode.code}"
+                                        ></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <!-- campo name -->
+                                <div class="form-group">
+                                    <label th:for="${dialogId}+'-name'" th:text="'Nombre clave'"></label>
+                                    <input
+                                            th:id="${dialogId}+'-name'"
+                                            th:value="*{name}"
+                                            name="name"
+                                            type="text"
+                                            class="form-control"
+                                            th:placeholder="'Nombre de la instrucción'"
+                                            required
+                                            maxlength="45"
+                                            pattern="[a-zA-Z_$][a-zA-Z\s\d_$]*"
+                                    >
+                                    <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                                    <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+                                </div>
+
+                                <!-- campo vector -->
+                                <div class="form-group">
+                                    <label th:for="${dialogId}+'-vector'" th:text="'Vector'"></label>
+                                    <input
+                                            th:id="${dialogId}+'-vector'"
+                                            th:value="*{vector}"
+                                            type="text"
+                                            name="vector"
+                                            class="form-control"
+                                            th:placeholder="'Introduce la secuencia de números del vector'"
+                                            required
+                                            maxlength="255"
+                                            pattern="[0-5]*"
+                                    >
+                                    <small th:id="${dialogId}+'-vector-small-size'" class="form-text text-muted">
+                                        [[#{Size.instruction.vector}]]
+                                    </small>
+                                    <small th:id="${dialogId}+'-vector-small-size'" class="form-text text-muted">
+                                        [[#{Pattern.instruction.vector}]]
+                                    </small>
+
+                                    <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                                    <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+                                </div>
+
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label th:for="${dialogId}+'-value'" th:text="'Vector'"></label>
-                            <textarea
-                                    th:id="${dialogId}+'-value'"
-                                    th:text="*{vector}"
-                                    name="value"
-                                    class="form-control"
-                                    rows="3"
-                                    required
-                            ></textarea>
-                        </div>
                     </div>
 
-                    <div class="modal-footer bg-light">
-                        <button th:replace="~{components/modals::cancelButton}"></button>
-                        <button
-                                type="submit"
-                                th:text="'Hecho'"
-                                class="btn btn-primary"
-                                data-dismiss="modal"
-                                th:attrappend="onclick=|appController.delegate.delegate.saveInstruction('${idDialog}')|"
-                        ></button>
-                    </div>
-
+                    <div th:replace="~{components/modals::submitFooter}"></div>
                 </form>
             </div>
         </div>
@@ -364,6 +394,23 @@
         th:replace="~{components/modals::informativeDialog(${dialogId},*{name},*{vector},'Cerrar','xl')}"
 >
 </section>
+
+<nav th:fragment="setNavList" class="navbar navbar-light p-1 w-100 align-items-start">
+    <nav class="nav nav-pills flex-column w-100 m-0">
+        <ul class="row m-0 p-0">
+            <!-- Iteración por los conjuntos disponibles -->
+            <li th:each="set :${sets}" class="nav-item w-100 pb-1">
+                <a
+                        th:id="'setLink-'+${set.id}"
+                        class="nav-link section-bar text-center"
+                        th:onclick="'appController.delegate.loadInstructionSet('+${set.id}+',this)'"
+                        href="#"
+                        th:text="${set.name}"
+                ></a>
+            </li>
+        </ul>
+    </nav>
+</nav>
 
 </body>
 

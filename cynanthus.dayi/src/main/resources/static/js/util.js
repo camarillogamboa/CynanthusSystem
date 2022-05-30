@@ -58,13 +58,17 @@ class SelectionGroup {
     }
 
     unselect() {
-        if (this._selected !== null) {
+        if (this._selected != null) {
             this._selectedClasess.forEach(clazz => this._selected.classList.remove(clazz))
         }
     }
 
     select(selectable) {
         this.unselect();
+
+        if (typeof selectable == 'string') selectable = $(selectable)[0];
+
+        console.log("Seleccionando " + selectable);
         this._selected = selectable;
         this._selectedClasess.forEach(clazz => this._selected.classList.add(clazz));
         this._selected.blur();
@@ -87,7 +91,7 @@ class WebSocketConnector {
         let socket = new SockJS(this._socketPath);
         this._stompClient = Stomp.over(socket);
         this._stompClient.connect({}, frame => {
-            console.log("WebSocketConnector, connected: " + frame);
+            console("WebSocketConnector, connected: " + frame);
             connectAction();
         });
     }
@@ -124,25 +128,23 @@ class ViewLoader {
         this._failContent = failContent;
     }
 
-    loadAndPlaceTo(urlView, area) {
+    async loadAndPlaceTo(urlView, area) {
+        if (typeof area === 'string') area = $(area);
+
         if (this._waitContent != null)
             area.html(this._waitContent);
 
-        fetch(
-            urlView,
-            {
-                credentials: 'include',
-            }
-        ).then(data => data.text()).then(text => area.html(text)).catch(error => {
-            console.log(error);
-            if (this._failContent != null) {
-                area.html(this._failContent);
-            }
+        return new Promise((resolve, reject) => {
+            doGet(urlView)
+                .then(response => response.text())
+                .then(text => area.html(text))
+                .then(resolve)
+                .catch(error => {
+                    console(error);
+                    if (this._failContent != null) area.html(this._failContent);
+                    reject();
+                });
         });
-    }
-
-    loadAndPlaceToById(urlView, areaId) {
-        this.loadAndPlaceTo(urlView, $(`#${areaId}`));
     }
 
 }
@@ -165,8 +167,8 @@ class DelegatorController extends Service {
         return this._delegateWrapper.service;
     }
 
-    loadView(urlView) {
-        this._viewLoader.loadAndPlaceTo(urlView, $(this._viewAreaId));
+    async loadView(urlView) {
+        return this._viewLoader.loadAndPlaceTo(urlView, $(this._viewAreaId));
     }
 
     loadDelegate(delegate) {
@@ -189,33 +191,139 @@ class DelegateAndSelectorController extends DelegatorController {
         this._navGroup = selectionGroup || new SelectionGroup('click', 'active', 'bg-info');
     }
 
-    loadAndSelectView(urlView, selectable) {
-        this.loadView(urlView);
+    async loadAndSelectView(urlView, selectable) {
         this._navGroup.select(selectable);
+        return this.loadView(urlView);
     }
 
 }
 
-let loadSpinner = `<div class="spinner-border m-auto text-info"></div>`;
-let failLoadMessage = `<h6>No se logró cargar el elemento</h6>`;
+var loadSpinner = `<div class="spinner-border m-auto text-info"></div>`;
+var failLoadMessage = `<h6>No se logró cargar el elemento</h6>`;
 
 function centeredWrapper(html) {
     return `<div class="d-flex w-100 h-100 text-center"><div class="m-auto">${html}</div></div>`;
 }
 
-let autoCenteredLoadSpinner = centeredWrapper(loadSpinner);
-let autoCetenredFailLoadMessage = centeredWrapper(failLoadMessage);
+var autoCenteredLoadSpinner = centeredWrapper(loadSpinner);
+var autoCetenredFailLoadMessage = centeredWrapper(failLoadMessage);
 
-function deleteResource(url,thenAction,catchAction){
-    fetch(url,{method:"DELETE",credentials:"include"}).then(then).catch(catchAction);
+function serializeForm(form) {
+    let serialized = form.serializeArray();
+    let s = '';
+    let data = {};
+    for (s in serialized) {
+        let value = serialized[s]['value'];
+
+        if (value === '') value = null;
+
+        data[serialized[s]['name']] = value;
+    }
+    return JSON.stringify(data);
 }
 
 function showModal(idModal) {
     $(idModal).modal('show');
 }
 
-function hideModal(idModal) {
-    $(idModal).modal('hide');
+function hideDialog(dialogId) {
+    $(dialogId).modal('hide');
     $('body').removeClass('modal-open');
     $('.modal-backdrop').remove();
+}
+
+function loadForm(formId, resolve, reject) {
+    let form = $(formId);
+
+    if (form != null && form[0] != null) {
+        let eventListerner;
+
+        if (reject != null) {
+            eventListerner = event => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                console.log("Validando formulario " + formId);
+
+                if (form[0].checkValidity() === true) {
+                    console.log(`Formulario ${formId} válido`);
+                    form[0].classList.add('was-validated');
+                    resolve(form);
+                } else {
+                    console.log(`Formulario ${formId} inválido`);
+                    form[0].classList.add('was-validated');
+                    reject(form);
+                }
+            }
+        } else eventListerner = event => {
+            event.preventDefault();
+            event.stopPropagation();
+            resolve(form);
+        }
+
+        form[0].addEventListener('submit', eventListerner);
+
+    } else console("No se encontró el formulario con identificador " + formId);
+}
+
+function loadDialogForm(dialogId, resolve, reject) {
+    let dialog = $(dialogId);
+
+    if (dialog != null && dialog[0] != null) {
+        loadForm(
+            `${dialogId}-form`,
+            form => {
+                dialog.modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                resolve(form);
+            },
+            reject
+        );
+    } else console.log("No se encontró el diálogo con identificador " + dialogId);
+}
+
+function commonRejected(form) {
+    console.log("FORMULARIO RECHAZADO");
+}
+
+function processResponse(response) {
+    let status = response.status;
+    console.log(response);
+    return true;
+}
+
+async function doGet(url) {
+    return fetch(
+        url, {
+            credentials: "include",
+            method: "GET",
+            redirect: "manual"
+        }
+    )
+}
+
+async function doPostData(url, json) {
+    return fetch(url, {
+        credentials: "include",
+        headers: {'Content-Type': 'application/json'},
+        method: "POST",
+        redirect: "manual",
+        body: json
+    });
+}
+
+async function doPostForm(url, form) {
+    let json = serializeForm(form);
+    return doPostData(url, json);
+}
+
+async function doDelete(url) {
+    return fetch(
+        url, {
+            headers: {'Content-Type': 'application/json'},
+            method: "DELETE",
+            redirect: "manual"
+        }
+    );
 }

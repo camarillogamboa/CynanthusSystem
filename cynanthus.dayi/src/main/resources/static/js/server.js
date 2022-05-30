@@ -1,10 +1,14 @@
 class ServerViewController extends DelegateAndSelectorController {
 
-    constructor(viewLoader, idServer, socketPath) {
+    constructor(viewLoader, serverId, socketPath) {
         super(viewLoader, "", new SelectionGroup('click', 'active'));
-        this._idServer = idServer;
+        this._serverId = serverId;
         this._available = undefined;
-        this._webSocket = new WebSocketConnector(socketPath);
+        this._webSocket = new WebSocketConnector("/dayi-socket");
+    }
+
+    get serverId(){
+        return this._serverId;
     }
 
     setToAvailable() {
@@ -12,7 +16,7 @@ class ServerViewController extends DelegateAndSelectorController {
 
         let previusClass = this.findPreviusClass(this._available);
 
-        $("#server-" + this._idServer)[0].classList.replace(previusClass, "bg-success");
+        $("#server-" + this._serverId)[0].classList.replace(previusClass, "bg-success");
         this._available = true;
     }
 
@@ -29,7 +33,7 @@ class ServerViewController extends DelegateAndSelectorController {
 
         let previusClass = this.findPreviusClass(this._available);
 
-        $("#server-" + this._idServer)[0].classList.replace(previusClass, "bg-success");
+        $("#server-" + this._serverId)[0].classList.replace(previusClass, "bg-success");
         this._available = false;
     }
 
@@ -70,8 +74,25 @@ class ServerViewController extends DelegateAndSelectorController {
         this.loadAndSelectView("", selectable);
     }
 
+    deleteThis() {
+        doDelete(`/server/${this._serverId}`)
+            .then(response => {
+                if (processResponse(response)) {
+                    appController.loadServerListView()
+                        .then(() => appController.loadWelcomeView())
+                        .catch(() => console.log("Error al recargar la vista"));
+                }
+            })
+            .catch(error => console.log(`Error al eliminar ${this._serverId}. Error: ${error}`));
+    }
+
+    start() {
+        super.start();
+        loadDialogForm('#deleteServerDialog', () => this.deleteThis());
+    }
+
     toString() {
-        return "ServerViewController: " + this._idServer;
+        return "ServerViewController: " + this._serverId;
     }
 
 }

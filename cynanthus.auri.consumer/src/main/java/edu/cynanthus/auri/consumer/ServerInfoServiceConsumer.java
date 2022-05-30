@@ -9,10 +9,21 @@ import edu.cynanthus.domain.ServerInfo;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * El tipo Server info service consumer.
+ */
 class ServerInfoServiceConsumer extends BeanServiceConsumer<ServerInfo> implements ServerInfoService {
 
+    /**
+     * La constante SERVER_INFO_LIST_TYPE.
+     */
     private static final Type SERVER_INFO_LIST_TYPE = new TypeToken<List<ServerInfo>>() {}.getType();
 
+    /**
+     * Instancia un nuevo Server info service consumer.
+     *
+     * @param lazyRequest el lazy request
+     */
     ServerInfoServiceConsumer(LazyRequest lazyRequest) {
         super(
             lazyRequest,
@@ -22,6 +33,12 @@ class ServerInfoServiceConsumer extends BeanServiceConsumer<ServerInfo> implemen
         );
     }
 
+    /**
+     * Permite obtener id.
+     *
+     * @param bean el bean
+     * @return el id
+     */
     @Override
     Object getId(ServerInfo bean) {
         if (bean.getId() != null) return bean.getId();
