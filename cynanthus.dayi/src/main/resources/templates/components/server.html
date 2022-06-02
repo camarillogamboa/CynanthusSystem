@@ -11,145 +11,26 @@
 </head>
 <body>
 
-<!-- Vista de un servidor seleccionado -->
-<div th:fragment="serverView" th:object="${currentServer}" class="d-flex flex-column h-100 bg-light rounded border">
-
-    <!-- Parte superior -->
-    <div class="row m-2">
-
-        <!-- Indicador de disponibilidad -->
-        <div class="col-xs p-3">
-            <div class="spinner-border text-info"></div>
-        </div>
-
-        <!-- Area de titulo -->
-        <div class="col">
-            <div class="row m-0"><h2 th:text="*{name}"></h2></div>
-            <div class="row m-0"><h6 th:text="(*{address})+':'+(*{port})"></h6></div>
-        </div>
-
-        <!-- Acciones disponibles para el servidor (Solo si el usuario es ADMIN) -->
-        <div sec:authorize="hasRole('ADMIN')" class="col-xs">
-            <button
-                    type="button"
-                    class="btn btn-light"
-                    data-toggle="modal"
-                    data-target="#updateServer"
-                    title="Editar información del servidor"
-            >
-                <span><i class="fas fa-pen"></i></span>
-            </button>
-            <button
-                    type="button"
-                    class="btn btn-light"
-                    data-toggle="modal"
-                    data-target="#deleteServerModal"
-                    title="Eliminar información del servidor"
-            >
-                <span><i class="fas fa-trash"></i></span>
-            </button>
-        </div>
-
-    </div>
-
-    <div class="row m-0"></div>
-
-    <!-- Selector -->
-    <div class="row m-0 ml-2 mr-2">
-        <ul class="nav nav-tabs w-100" th:with="isStorageServer = (*{serverType.name}) == 'STORAGE'">
-
-            <!-- Opcion para vista de nodos (solo si el servidor actual es de flujo de datos o de control) -->
-            <li class="nav-item" th:if="!${isStorageServer}">
-                <a class="nav-link active" href="#" th:text="'Nodos'"></a>
-            </li>
-
-            <!-- Opción de vista de propiedades (disponible para todos los servidores) -->
-            <li class="nav-item">
-                <a class="nav-link" href="#" th:classappend="${isStorageServer}?'active':''" th:text="'Propiedades'">
-                </a>
-            </li>
-
-            <!-- Opción de vista de registro de eventos -->
-            <li class="nav-item">
-                <a class="nav-link" href="#" th:text="'Registro del servidor'"></a>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Contenido del selector según opción de vista elegida o por defecto -->
-    <div class="row m-0 mr-2 ml-2 flex-fill bg-white border-left border-bottom border-right rounded-bottom">
-        <div class="container-fluid p-0">
-            <div class="row h-100 m-0">
-                <div class="col text-center m-auto">
-                    <div class="spinner-grow text-info" role="status"></div>
-                    <div class="spinner-grow text-info" role="status"></div>
-                    <div class="spinner-grow text-info" role="status"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row m-0 p-1">
-        <p
-                class="m-0 p-0 w-100 text-center" th:text="${#strings.isEmpty(info)}?*{info}:'No hay información'"
-        >
-        </p>
-    </div>
-
-    <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
-    <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
-
-    <script th:src="@{/js/server2.js}"></script>
-
-    <!-- Seleccion de script según opción del servidor -->
-    <th:block th:switch="${serverOption}">
-
-        <!-- si la opcion de vista elegida es NODES -->
-        <th:block th:case="'SERVER_NODES'">
-            <th:block th:switch="${currentServer.serverType.name}">
-                <th:block th:case="'STREAM_DATA'">
-                    <script th:src="@{/js/sensingNodes.js}"></script>
-                </th:block>
-                <th:block th:case="${'CONTROL'}">
-                    <script th:src="@{/js/controlNodes.js}"></script>
-                </th:block>
-            </th:block>
-        </th:block>
-
-        <!-- si la opción de vista elegida es PROPERTIES -->
-        <th:block th:case="'SERVER_PROPERTIES'">
-            <script th:src="@{/js/serverProperties.js}"></script>
-        </th:block>
-
-        <!-- si la opción de vista elegida es LOG -->
-        <th:block th:case="'SERVER_LOG'">
-            <script th:src="@{/js/serverLog.js}"></script>
-        </th:block>
-    </th:block>
-
-    <script type="text/javascript">
-        registerSubscription([[${currentServer.id}]]);
-    </script>
-
-</div>
-
+<!-- Vista del servidor actual -->
 <div th:fragment="currentServerView" th:object="${currentServer}"
-     class="d-flex flex-column h-100 bg-light rounded border">
+     class="d-flex flex-column h-100 rounded border"
+     th:classappend="${theme.paneColor}+' '+${theme.borderColor}"
+>
     <!-- Parte superior -->
     <div class="row m-2">
 
         <!-- Indicador de disponibilidad -->
-        <div class="col-xs p-3" id="availableIndicatorE">
+        <div class="col-xs p-3" id="availableIndicatorContainer">
             <div class="spinner-border text-info"></div>
         </div>
 
         <!-- Area de titulo -->
         <div class="col">
             <div class="row m-0">
-                <h2 id="serverTitle" th:text="*{name}">Nombre servidor</h2>
+                <h2 id="serverTitle" th:text="*{name}" th:class="${theme.textColor}">Nombre servidor</h2>
             </div>
             <div class="row m-0">
-                <h6 id="serverAddress" th:text="(*{address})+':'+(*{port})">Dirección</h6>
+                <h6 id="serverAddress" th:text="(*{address})+':'+(*{port})" th:class="${theme.textColor}">Dirección</h6>
             </div>
         </div>
 
@@ -182,28 +63,39 @@
     </div>
 
     <!-- Parte de mensaje de no conexión -->
-    <div id="unavailableMessageE" class="row m-0"></div>
+    <div id="unavailableMessageContainer" class="row m-0 d-none">
+        <div class="alert alert-warning rounded-0 border-left-0 border-right-0 p-2 w-100">
+            <p class="w-100 m-auto text-center"
+               th:text="'No se logró establecer comunicación con el servidor. Verifique la dirección y puerto de referencia o asegurese que el microservicio correspondiente se esté ejecutando'">
+            </p>
+        </div>
+    </div>
 
     <!-- Selector de contenido de vista de servidor -->
     <div class="row m-0 ml-2 mr-2">
-        <ul class="nav nav-tabs w-100" th:with="isStorageServer = (*{serverType.name}) == 'STORAGE'">
+        <ul
+                class="nav nav-tabs w-100"
+                th:classappend="${theme.borderColor}"
+                th:with="isStorageServer = (*{serverType.name}) == 'STORAGE', linkTheme = ${theme.borderColor}+' '+${theme.textColor}"
+        >
 
             <th:block th:if="!${isStorageServer}" th:switch="*{serverType.name}">
                 <li th:case="'STREAM_DATA'" class="nav-item">
                     <a
-                            class="nav-link active"
+                            class="nav-link"
+                            th:classappend="${linkTheme}"
                             href="#"
                             th:text="'Nodos de sensado'"
-                            th:onclick="'appController.delegate.loadSensingNodes('+(*{id})+',this)'"
-                            onclick="appController.delegate.loadSensingNodes()"
+                            onclick="appController.delegate.loadSensingNodesView(this)"
                     ></a>
                 </li>
                 <li th:case="'CONTROL'" class="nav-item">
                     <a
-                            class="nav-link active"
+                            class="nav-link"
+                            th:classappend="${linkTheme}"
                             href="#"
                             th:text="'Nodos de control'"
-                            th:onclick="'appController.delegate.loadControlNodes('+(*{id})+',this)'"
+                            onclick="appController.delegate.loadControlNodesView(this)"
                     ></a>
                 </li>
             </th:block>
@@ -212,10 +104,10 @@
             <li class="nav-item">
                 <a
                         class="nav-link"
+                        th:classappend="${linkTheme}"
                         href="#"
-                        th:classappend="${isStorageServer}?'active':''"
                         th:text="'Propiedades'"
-                        th:onclick="'appController.delegate.loadProperties('+(*{id})+',this)'"
+                        onclick="appController.delegate.loadPropertiesView(this)"
                 >
                 </a>
             </li>
@@ -224,9 +116,10 @@
             <li class="nav-item">
                 <a
                         class="nav-link"
+                        th:classappend="${linkTheme}"
                         href="#"
                         th:text="'Registro del servidor'"
-                        th:onclick="'appController.delegate.loadLog('+(*{id})+',this)'"
+                        onclick="appController.delegate.loadLogView(this)"
                 ></a>
             </li>
 
@@ -234,15 +127,12 @@
     </div>
 
     <!-- Contenido del selector según opción de vista elegida o por defecto -->
-    <div class="row m-0 mr-2 ml-2 flex-fill bg-white border-left border-bottom border-right rounded-bottom">
-        <div id="serverMainContentE" class="container-fluid p-0">
-            <div class="row h-100 m-0">
-                <div class="col text-center m-auto">
-                    <div class="spinner-grow text-info" role="status"></div>
-                    <div class="spinner-grow text-info" role="status"></div>
-                    <div class="spinner-grow text-info" role="status"></div>
-                </div>
-            </div>
+    <div
+            class="row m-0 mr-2 ml-2 flex-fill border-left border-bottom border-right rounded-bottom"
+            th:classappend="${theme.background}+' '+${theme.borderColor}"
+    >
+        <div id="serverMainContainer" class="container-fluid p-0">
+            <div th:replace="~{this::serverSummaryView}"></div>
         </div>
     </div>
 
@@ -250,11 +140,18 @@
     <div class="row m-0 p-1">
         <p
                 id="serverInfoText"
-                class="m-0 p-0 w-100 text-center" th:text="${#strings.isEmpty(info)}?*{info}:'No hay información'"
+                class="m-0 p-0 w-100 text-center" th:text="(!${#strings.isEmpty(currentServer.info)})?*{info}:'---'"
+                th:classappend="${theme.textColor}"
         >
         </p>
     </div>
 
+</div>
+
+<div th:fragment="serverSummaryView" class="row h-100 m-0">
+    <div class="col m-auto text-center">
+        <h6 th:text="'Selecciona una pestaña'"></h6>
+    </div>
 </div>
 
 <section th:fragment="saveServerDialog(dialogId,title,serverInfo)">
@@ -276,7 +173,7 @@
                             type="hidden"
                     />
 
-                    <div class="modal-body">
+                    <div class="modal-body" th:classappend="${theme.background}">
 
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
@@ -393,6 +290,63 @@
         </div>
     </div>
 </section>
+
+<div th:fragment="nodePane" class="container-fluid p-1 bg-light border-top border-bottom">
+    <div class="row m-0">
+        <div class="col p-0">
+
+        </div>
+        <div class="col-xs p-0">
+            <button
+                    id="addNodeButton"
+                    type="button"
+                    class="btn btn-primary pt-1 pr-2 pb-1 pl-2"
+                    data-toggle="modal"
+                    data-target="#addNodeDialog"
+            >
+                <i class="fas fa-plus"></i> <span id="addNodeButton-text" th:text="${'Regitsrar nodo'}"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="sensingView" class="row m-0 pt-2 h-100">
+    <div class="col p-0">
+        <div class="d-flex flex-column h-100">
+            <div class="row m-0">
+                <div th:replace="~{this::nodePane}"></div>
+            </div>
+            <div class="row flex-fill m-0">
+                <div class="container-fluid h-100 p-0">
+                    <div th:replace="~{this::loadingView}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="controlView" class="row pt-2 m-0 h-100">
+    <div class="col p-0">
+        <div class="d-flex flex-column h-100">
+            <div class="row m-0">
+                <div th:replace="~{this::nodePane}"></div>
+            </div>
+            <div class="row flex-fill m-0">
+                <div class="container-fluid h-100 p-0">
+                    <div th:replace="~{this::loadingView}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="loadingView" class="row h-100 m-0">
+    <div class="col text-center m-auto">
+        <div class="spinner-grow text-info" role="status"></div>
+        <div class="spinner-grow text-info" role="status"></div>
+        <div class="spinner-grow text-info" role="status"></div>
+    </div>
+</div>
 
 </body>
 </html>

@@ -62,7 +62,7 @@ public class ControlNode extends Node implements RuntimeNode {
      *
      * @return el available
      */
-    public Boolean getAvailable() {
+    public Boolean isAvailable() {
         return available;
     }
 

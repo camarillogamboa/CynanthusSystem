@@ -39,29 +39,15 @@
             th:with="hasSets = !${#lists.isEmpty(sets)}"
     >
 
-        <!-- Si hay conjuntos de instrucciones -->
-        <th:block th:if="${hasSets}">
+        <!-- Lista de conjuntos de instrucciones disponibles -->
+        <div id="instructionSetListContainer" class="col-md-2 p-1 border-right overflow-auto">
+            <div th:replace="~{this::setsBar}"></div>
+        </div>
 
-            <!-- Lista de conjuntos de instrucciones disponibles -->
-            <div id="instructionSetListContainer" class="col-md-2 p-0 border-right overflow-auto">
-                <nav th:replace="~{this::setNavList}"></nav>
-            </div>
-
-            <!-- Contenido de la vista de conjunto de instrucciones seleccionada -->
-            <div id="currentSetContainer" class="col-md-10 p-1">
-                <div class="d-flex h-100 p-0">
-                    <h6 class="m-auto" th:text="'Selecciona un conjunto de instrucciones'"></h6>
-                </div>
-            </div>
-
-        </th:block>
-
-        <!-- Si no hay conjuntos de instrucciones -->
-        <th:block th:unless="${hasSets}">
-            <div class="d-flex flex-fill text-center align-middle">
-                <h6 class="m-auto" th:text="'No hay conjuntos registrados'"></h6>
-            </div>
-        </th:block>
+        <!-- Contenido de la vista de conjunto de instrucciones seleccionada -->
+        <div id="currentSetContainer" class="col-md-10 p-1">
+            <div th:replace="~{this::instructionsSummaryView}"></div>
+        </div>
 
     </div>
 
@@ -77,7 +63,7 @@
     <!-- Cabecero de la vista de conjunto seleccionado -->
     <div class="row m-0 border-bottom p-1">
         <div class="col align-middle m-auto">
-            <h5 th:text="*{name}"></h5>
+            <h5 id="currentSet-title" th:text="*{name}"></h5>
         </div>
 
         <div sec:authorize="hasRole('ADMIN')" class="col-xs p-0">
@@ -147,7 +133,7 @@
     <div class="row m-0 p-1 border-top">
         <p
                 id="currentSet-info"
-                th:text="${#strings.isEmpty(info)}?*{info}:'No hay información'"
+                th:text="(!${#strings.isEmpty(currentSet.info)})?*{info}:'---'"
                 class="w-100 m-0 p-0 text-center"
         >
         </p>
@@ -156,6 +142,7 @@
 </div>
 
 <div th:fragment="instructionsTable" class="container-fluid p-0">
+
     <table class="table table-striped table-borderless">
 
         <!--Cabezera de la table -->
@@ -225,9 +212,11 @@
         </tr>
         </tbody>
     </table>
+
 </div>
 
 <section th:fragment="saveInstructionSetDialog(dialogId,title,instructionSet)">
+
     <div th:id="${dialogId}" class="modal fade">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -293,9 +282,11 @@
             </div>
         </div>
     </div>
+
 </section>
 
 <section th:fragment="saveInstructionDialog(dialogId,title,class,instruction)">
+
     <div th:id="${dialogId}" class="modal fade" th:classappend="${class}">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -348,7 +339,8 @@
                                             pattern="[a-zA-Z_$][a-zA-Z\s\d_$]*"
                                     >
                                     <div class="valid-feedback" th:text="'¡Correcto!'"></div>
-                                    <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+                                    <div class="invalid-feedback"
+                                         th:text="'Ingresa un dato válido para este campo'"></div>
                                 </div>
 
                                 <!-- campo vector -->
@@ -373,7 +365,8 @@
                                     </small>
 
                                     <div class="valid-feedback" th:text="'¡Correcto!'"></div>
-                                    <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+                                    <div class="invalid-feedback"
+                                         th:text="'Ingresa un dato válido para este campo'"></div>
                                 </div>
 
                             </div>
@@ -386,6 +379,7 @@
             </div>
         </div>
     </div>
+
 </section>
 
 <section
@@ -395,22 +389,38 @@
 >
 </section>
 
-<nav th:fragment="setNavList" class="navbar navbar-light p-1 w-100 align-items-start">
-    <nav class="nav nav-pills flex-column w-100 m-0">
-        <ul class="row m-0 p-0">
-            <!-- Iteración por los conjuntos disponibles -->
-            <li th:each="set :${sets}" class="nav-item w-100 pb-1">
-                <a
-                        th:id="'setLink-'+${set.id}"
-                        class="nav-link section-bar text-center"
-                        th:onclick="'appController.delegate.loadInstructionSet('+${set.id}+',this)'"
-                        href="#"
-                        th:text="${set.name}"
-                ></a>
-            </li>
-        </ul>
-    </nav>
-</nav>
+<div
+        th:fragment="setsBar" class="d-flex flex-column h-100"
+        th:with="hasSets = !${#lists.isEmpty(sets)}"
+>
+    <th:block th:if="${hasSets}">
+        <nav class="nav nav-pills flex-column w-100 m-0">
+            <ul class="row m-0 p-0">
+                <!-- Iteración por los conjuntos disponibles -->
+                <li th:each="set :${sets}" class="nav-item w-100 pb-1">
+                    <a
+                            th:id="'setLink-'+${set.id}"
+                            class="nav-link section-bar text-center"
+                            th:onclick="'appController.delegate.loadInstructionSetView('+${set.id}+',this)'"
+                            href="#"
+                            th:text="${set.name}"
+                    ></a>
+                </li>
+            </ul>
+        </nav>
+    </th:block>
+
+    <th:block th:unless="${hasSets}">
+        <div class="d-flex flex-fill text-center align-middle">
+            <h6 class="m-auto" th:text="'No hay conjuntos registrados'"></h6>
+        </div>
+    </th:block>
+
+</div>
+
+<div th:fragment="instructionsSummaryView" class="d-flex h-100 p-0">
+    <h6 class="m-auto" th:text="'Selecciona un conjunto de instrucciones'"></h6>
+</div>
 
 </body>
 

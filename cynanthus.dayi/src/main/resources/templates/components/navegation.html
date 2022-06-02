@@ -20,6 +20,7 @@
                         id="appNameLink"
                         th:href="@{/}"
                         class="nav-link rounded text-white"
+                        th:title="'Recargar aplicación'"
                 >
                     <span th:text="'Cynanthus Dayi'"></span>
                 </a>
@@ -36,8 +37,10 @@
                 <li class="nav-item mr-3">
                     <a
                             id="instructionsLink"
-                            href="#" class="nav-link rounded text-white"
-                            onclick="appController.loadInstructions(this)"
+                            href="#"
+                            class="nav-link rounded text-white"
+                            th:title="'Ir a sección de conjunto de instrucciones'"
+                            onclick="appController.loadInstructionsView(this)"
                     >
                         <span id="instructionsLink-text" th:text="'Conjunto de instrucciones'"></span>
                     </a>
@@ -48,8 +51,10 @@
                 <li class="nav-item mr-3">
                     <a
                             id="usersLink"
-                            href="#" class="nav-link rounded text-white"
-                            onclick="appController.loadUsers(this)"
+                            href="#"
+                            class="nav-link rounded text-white"
+                            th:title="'Ir a sección de administración de usuarios'"
+                            onclick="appController.loadUsersView(this)"
                     >
                         <span id="usersLink-text" th:text="'Usuarios'"></span>
                     </a>
@@ -58,12 +63,19 @@
 
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown ml-md-auto">
-                    <a id="userLink" href="#" class="nav-link dropdown-toggle rounded text-white"
-                       data-toggle="dropdown">
+
+                    <a
+                            id="userLink"
+                            href="#"
+                            class="nav-link dropdown-toggle rounded text-white"
+                            th:title="'Ver opciones de usuario'"
+                            data-toggle="dropdown"
+                    >
                         <i class="fas fa-user"></i>
                         <span id="userLink-text" th:text="'Bienvenido '"></span>
                         <span sec:authentication="name">Usuario</span>
                     </a>
+
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
 
                         <a id="updateUserInfoLink" class="dropdown-item" href="#">
@@ -108,11 +120,11 @@
 
     <!-- Contenedor de la lista de servidores -->
     <div id="serverListContainer" class="row flex-fill m-0">
-        <div class="spinner-border m-auto text-info"></div>
+        <div th:replace="~{this::serverNavList}"></div>
     </div>
 
     <!-- Boton de creación de nuevo registro de servidor (solo si el usuario es ADMIN) -->
-    <div sec:authorize="hasRole('ADMIN')" class="row m-0" th:with="text = 'Agregar servidor'">
+    <div sec:authorize="hasRole('ADMIN')" class="row m-0" th:with="text = 'Registrar servidor'">
         <button
                 id="addServerButton"
                 type="button"
@@ -176,7 +188,7 @@
                                         href="#"
                                         class="nav-link ml-2 my-1"
                                         th:text="${server.name}"
-                                        th:onclick="'appController.loadServer('+${server.id}+',this)'"
+                                        th:attrappend="onclick=|appController.loadServerView(${server.id},'${server.serverType.name}',this)|"
                                 >
                                 </a>
                             </li>

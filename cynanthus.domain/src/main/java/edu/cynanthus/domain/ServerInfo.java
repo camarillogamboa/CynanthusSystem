@@ -110,6 +110,16 @@ public class ServerInfo implements Bean {
         this.info = info;
     }
 
+    public ServerInfo(Integer id, ServerType serverType) {
+        this.id = id;
+        this.serverType = serverType;
+    }
+
+    public ServerInfo(String name, ServerType serverType) {
+        this.name = name;
+        this.serverType = serverType;
+    }
+
     /**
      * Instancia un nuevo Server info.
      *

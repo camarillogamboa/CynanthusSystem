@@ -1,4 +1,32 @@
-class Service {
+class ViewLoader {
+
+    constructor(waitContent, failContent) {
+        this._waitContent = waitContent;
+        this._failContent = failContent;
+    }
+
+    async loadAndPlaceTo(url, area) {
+        if (typeof area === 'string') area = $(area);
+
+        if (this._waitContent != null)
+            area.html(this._waitContent);
+
+        return new Promise((resolve, reject) => {
+            doGet(url)
+                .then(response => response.text())
+                .then(text => area.html(text))
+                .then(resolve)
+                .catch(error => {
+                    console(error);
+                    if (this._failContent != null) area.html(this._failContent);
+                    reject();
+                });
+        });
+    }
+
+}
+
+class ControllerService {
 
     constructor() {
         this._startActions = [];
@@ -21,6 +49,10 @@ class Service {
 
     addFinishAction(finishAction) {
         this._finishActions.push(finishAction);
+    }
+
+    toString() {
+        return `${this.constructor.name}`;
     }
 
 }
@@ -51,15 +83,15 @@ class ServiceWrapper {
 
 class SelectionGroup {
 
-    constructor(eventName, ...selectedClasess) {
-        this._eventName = eventName;
+    constructor(...selectedClasess) {
         this._selected = null;
         this._selectedClasess = selectedClasess;
     }
 
     unselect() {
         if (this._selected != null) {
-            this._selectedClasess.forEach(clazz => this._selected.classList.remove(clazz))
+            this._selectedClasess.forEach(clazz => this._selected.classList.remove(clazz));
+            this._selected = null;
         }
     }
 
@@ -73,11 +105,6 @@ class SelectionGroup {
         this._selectedClasess.forEach(clazz => this._selected.classList.add(clazz));
         this._selected.blur();
     }
-
-    addToGroup(selectable) {
-        selectable.addEventListener(this._eventName, () => this.select(selectable))
-    }
-
 }
 
 class WebSocketConnector {
@@ -121,35 +148,7 @@ class WebSocketConnector {
 
 }
 
-class ViewLoader {
-
-    constructor(waitContent, failContent) {
-        this._waitContent = waitContent;
-        this._failContent = failContent;
-    }
-
-    async loadAndPlaceTo(urlView, area) {
-        if (typeof area === 'string') area = $(area);
-
-        if (this._waitContent != null)
-            area.html(this._waitContent);
-
-        return new Promise((resolve, reject) => {
-            doGet(urlView)
-                .then(response => response.text())
-                .then(text => area.html(text))
-                .then(resolve)
-                .catch(error => {
-                    console(error);
-                    if (this._failContent != null) area.html(this._failContent);
-                    reject();
-                });
-        });
-    }
-
-}
-
-class DelegatorController extends Service {
+class DelegatorController extends ControllerService {
 
     constructor(viewLoader, viewAreaId) {
         super();
@@ -167,8 +166,8 @@ class DelegatorController extends Service {
         return this._delegateWrapper.service;
     }
 
-    async loadView(urlView) {
-        return this._viewLoader.loadAndPlaceTo(urlView, $(this._viewAreaId));
+    async loadView(url) {
+        return this._viewLoader.loadAndPlaceTo(url, $(this._viewAreaId));
     }
 
     loadDelegate(delegate) {
@@ -177,29 +176,78 @@ class DelegatorController extends Service {
         this._delegateWrapper.start();
     }
 
+    start() {
+        super.start();
+        this._delegateWrapper.start();
+    }
+
     finalize() {
-        super.finalize();
         this._delegateWrapper.finalize();
+        super.finalize();
     }
 
 }
 
-class DelegateAndSelectorController extends DelegatorController {
+class DelegationAndNavegationController extends DelegatorController {
 
     constructor(viewLoader, viewAreaId, selectionGroup) {
         super(viewLoader, viewAreaId);
-        this._navGroup = selectionGroup || new SelectionGroup('click', 'active', 'bg-info');
+        this._navGroup = selectionGroup || new SelectionGroup('active', 'bg-info');
     }
 
-    async loadAndSelectView(urlView, selectable) {
-        this._navGroup.select(selectable);
-        return this.loadView(urlView);
+    async loadView(url, selectable) {
+        if (selectable != null) this._navGroup.select(selectable);
+        return super.loadView(url);
+    }
+
+}
+
+class NavegationAndLoadController extends DelegationAndNavegationController {
+
+    constructor(viewLoader, viewAreaId, selectionGroup) {
+        super(viewLoader, viewAreaId, selectionGroup);
+    }
+
+    async loadSummaryView(url, controllerFactory) {
+        return new Promise((resolve, reject) => {
+            super.loadView(url)
+                .then(() => this.loadDelegate(controllerFactory()))
+                .then(resolve)
+                .catch(error => {
+                    console.log(`Error al cargar la vista de bienvenida. Error: ${error}`);
+                    reject();
+                })
+        });
+    }
+
+    async loadView(url, selectable, controllerFactory) {
+        if (controllerFactory != null) {
+            return new Promise((resolve, reject) => {
+                super.loadView(url, selectable)
+                    .then(() => this.loadDelegate(controllerFactory(this._viewLoader)))
+                    .then(resolve)
+                    .catch(error => {
+                        console.log(`Error al cargar la vista ${url}. Error: ${error}`);
+                        reject();
+                    })
+            });
+        } else return super.loadView(url, selectable);
     }
 
 }
 
 var loadSpinner = `<div class="spinner-border m-auto text-info"></div>`;
 var failLoadMessage = `<h6>No se logró cargar el elemento</h6>`;
+
+var loadingIndicator = `
+    <div class="row h-100 m-0">
+        <div class="col text-center m-auto">
+            <div class="spinner-grow text-info" role="status"></div>
+            <div class="spinner-grow text-info" role="status"></div>
+            <div class="spinner-grow text-info" role="status"></div>
+        </div>
+    </div>
+`;
 
 function centeredWrapper(html) {
     return `<div class="d-flex w-100 h-100 text-center"><div class="m-auto">${html}</div></div>`;

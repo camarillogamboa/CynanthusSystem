@@ -1,19 +1,27 @@
-/*--preference: rgb(119, 120, 178)*/
+/*--preference: rgb(119, 120, 178) rgb(63, 109, 145)*/
 :root {
-    --dayi-primary-color: rgb(119, 120, 178);
-    --dayi-secondary-color: rgb(63, 109, 145);
+    --dayi-primary-color: rgb(105, 106, 162);
+    --dayi-secondary-color: rgb(68, 121, 161);
     --dayi-third-color: rgb(221, 233, 243);
     --dayi-light-color: #f5f5f5;
     --dayi-bg-gradient: linear-gradient(to right, var(--dayi-primary-color), var(--dayi-secondary-color));
+}
+
+.bg-black {
+    background-color: rgb(30, 30, 30);
 }
 
 .dayi-bg {
     background: var(--dayi-bg-gradient);
 }
 
+.dayi-pane-bg {
+    background: rgba(255, 255, 255, 0.7);
+}
+
 .dayi-logo-style {
-    width: 350px;
-    height: 350px;
+    width: 60%;
+    height: 60%;
 }
 
 .empty {
@@ -40,7 +48,9 @@
 .dayi-body {
     font-size: 14px;
     line-height: 18px;
-    background: var(--dayi-bg-gradient);
+    background-origin: border-box;
+    background: url("/img/lines.svg") no-repeat center fixed, var(--dayi-bg-gradient);
+    background-size: cover;
 }
 
 .dayi-box {

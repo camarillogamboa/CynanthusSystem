@@ -15,13 +15,13 @@
 </header>
 
 <!--Contenido de la UI -->
-<section th:fragment="contentUI" class="container-fluid flex-fill p-0 bg-white rounded">
+<section th:fragment="contentUI" class="container-fluid flex-fill p-0 rounded dayi-pane-bg">
     <div class="row m-0 h-100">
         <div class="col-lg-2 p-1">
             <div th:replace="~{components/navegation::serversBar}"></div>
         </div>
         <div id="mainArea" class="col-lg-10 p-1">
-            <div th:replace="~{components/welcome::welcomeView}"></div>
+            <div th:replace="~{components/summary::dayiSummary}"></div>
         </div>
     </div>
 </section>

@@ -37,13 +37,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
             .antMatchers(
-                "/server/**/delete",
-                "/server"
+                "/servers/**/delete",
+                "/servers"
             ).hasRole("ADMIN")
             .antMatchers(
                 "/",
-                "/server/**",
-                "/instructions",
+                "/servers/**",
+                "/sets",
                 "/users"
             ).hasAnyRole("ADMIN", "USER")
             .and().formLogin().loginPage("/login").defaultSuccessUrl("/").permitAll();
