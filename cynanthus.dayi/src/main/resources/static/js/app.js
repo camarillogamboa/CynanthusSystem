@@ -9,7 +9,7 @@ class GeneralViewController extends NavegationAndLoadController {
 
     async loadServerListView() {
         return new Promise((resolve, reject) => {
-            this._viewLoader.loadAndPlaceTo("/servers/list", $("#serverListContainer"))
+            this._viewLoader.loadAndPlaceTo("/server/list", $("#serverListContainer"))
                 .then(() => {
                     console.log("Se cargó la lista de servidores");
                     if (this.delegate instanceof ServerViewController) {
@@ -30,7 +30,7 @@ class GeneralViewController extends NavegationAndLoadController {
 
     async loadServerView(serverId, serverType, selectable) {
         return this.loadView(
-            `/servers/${serverId}`,
+            `/server/${serverId}`,
             selectable,
             viewLoader => createServerViewController(viewLoader, serverId, serverType)
         );
@@ -38,34 +38,25 @@ class GeneralViewController extends NavegationAndLoadController {
 
     async loadInstructionsView(selectable) {
         return this.loadView(
-            `sets`,
+            `set`,
             selectable,
             viewLoader => new InstructionsViewController(viewLoader)
         );
     }
 
     async loadUsersView(selectable) {
-        /*return new Promise((resolve, reject) => {
-            this.loadView("/user", selectable)
-                .then(() => this.loadDelegate(new UsersViewController()))
-                .then(resolve)
-                .catch(error => {
-                    console.log(`Error al cargar la vista de usuarios. Error: ${error}`);
-                    reject();
-                });
-        });*/
-
         return this.loadView(
-            `/users`,
+            `/user`,
             selectable,
             viewLoader => new UsersViewController(viewLoader)
         );
     }
 
     addServer(form) {
-        doPostForm("/servers", form)
+        doPostForm("/server", form)
             .then(response => {
                 if (processResponse(response)) {
+                    resetForm(form);
                     this.loadServerListView()
                         .then(() => response.json())
                         .then(serverInfo => this.loadServerView(serverInfo.id, serverInfo.serverType, `#serverLink-${serverInfo.id}`))

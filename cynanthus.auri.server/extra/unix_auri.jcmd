@@ -1,1 +1,1 @@
---module-path ".:lib/" --module cynanthus.auri.server/edu.cynanthus.auri.server.CynanthusAuriServer
+-cp cynanthus.auri.server.jar:lib/* edu.cynanthus.auri.server.CynanthusAuriServer

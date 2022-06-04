@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -22,26 +23,24 @@ public class DayiDinamicController extends CommonController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    @MessageMapping("/server/{id:\\d+}")
-    public void loadServerState(@DestinationVariable Integer id){
-
+    @MessageMapping("/server/{id:\\d+}/state")
+    @SendTo
+    public Boolean loadServerState(@DestinationVariable Integer id) {
+        return isAvailable(id);
     }
 
     @MessageMapping("/server/{id:\\d+}/sensing}")
-    public void loadSensingData(@DestinationVariable Integer id){
+    public void loadSensingData(@DestinationVariable Integer id) {
         ServerInfo serverInfo = new ServerInfo(id, ServerType.STREAM_DATA);
-
-
-
     }
 
     @MessageMapping("/server/{id:\\d+}/control")
-    public void loadControlData(@DestinationVariable Integer id){
+    public void loadControlData(@DestinationVariable Integer id) {
 
     }
 
     @EventListener
-    public void onDisconnectEvent(SessionDisconnectEvent event){
+    public void onDisconnectEvent(SessionDisconnectEvent event) {
 
     }
 

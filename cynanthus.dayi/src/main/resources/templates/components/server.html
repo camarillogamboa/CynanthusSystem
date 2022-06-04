@@ -13,8 +13,7 @@
 
 <!-- Vista del servidor actual -->
 <div th:fragment="currentServerView" th:object="${currentServer}"
-     class="d-flex flex-column h-100 rounded border"
-     th:classappend="${theme.paneColor}+' '+${theme.borderColor}"
+     class="d-flex flex-column h-100 rounded border bg-light"
 >
     <!-- Parte superior -->
     <div class="row m-2">
@@ -27,15 +26,16 @@
         <!-- Area de titulo -->
         <div class="col">
             <div class="row m-0">
-                <h2 id="serverTitle" th:text="*{name}" th:class="${theme.textColor}">Nombre servidor</h2>
+                <h3 id="serverTitle" th:text="*{name}">Nombre servidor</h3>
             </div>
             <div class="row m-0">
-                <h6 id="serverAddress" th:text="(*{address})+':'+(*{port})" th:class="${theme.textColor}">Dirección</h6>
+                <h6 id="serverAddress" th:text="(*{address})+':'+(*{port})">Dirección</h6>
             </div>
         </div>
 
         <!-- Acciones disponibles para el servidor (Solo si el usuario es ADMIN) -->
         <div sec:authorize="hasRole('ADMIN')" class="col-xs">
+            <!-- Editar servidor actual -->
             <button
                     type="button"
                     class="btn btn-light"
@@ -45,6 +45,8 @@
             >
                 <span><i class="fas fa-pen"></i></span>
             </button>
+
+            <!-- Eliminar servidor actual -->
             <button
                     type="button"
                     class="btn btn-light"
@@ -54,10 +56,6 @@
             >
                 <span><i class="fas fa-trash"></i></span>
             </button>
-
-            <section
-                    th:replace="~{this::saveServerDialog('updateServerDialog','Actualizar información',${currentServer})}"></section>
-            <section th:replace="~{components/modals::deleteDialog('deleteServerDialog','',*{id},*{name})}"></section>
         </div>
 
     </div>
@@ -75,15 +73,13 @@
     <div class="row m-0 ml-2 mr-2">
         <ul
                 class="nav nav-tabs w-100"
-                th:classappend="${theme.borderColor}"
-                th:with="isStorageServer = (*{serverType.name}) == 'STORAGE', linkTheme = ${theme.borderColor}+' '+${theme.textColor}"
+                th:with="isStorageServer = (*{serverType.name}) == 'STORAGE'"
         >
-
+            <!-- Si el servidor no es de almacenamiento se añade pestaña de vista de nodos -->
             <th:block th:if="!${isStorageServer}" th:switch="*{serverType.name}">
                 <li th:case="'STREAM_DATA'" class="nav-item">
                     <a
                             class="nav-link"
-                            th:classappend="${linkTheme}"
                             href="#"
                             th:text="'Nodos de sensado'"
                             onclick="appController.delegate.loadSensingNodesView(this)"
@@ -92,7 +88,6 @@
                 <li th:case="'CONTROL'" class="nav-item">
                     <a
                             class="nav-link"
-                            th:classappend="${linkTheme}"
                             href="#"
                             th:text="'Nodos de control'"
                             onclick="appController.delegate.loadControlNodesView(this)"
@@ -104,19 +99,16 @@
             <li class="nav-item">
                 <a
                         class="nav-link"
-                        th:classappend="${linkTheme}"
                         href="#"
                         th:text="'Propiedades'"
                         onclick="appController.delegate.loadPropertiesView(this)"
-                >
-                </a>
+                ></a>
             </li>
 
             <!-- Opción de vista de registro de eventos -->
             <li class="nav-item">
                 <a
                         class="nav-link"
-                        th:classappend="${linkTheme}"
                         href="#"
                         th:text="'Registro del servidor'"
                         onclick="appController.delegate.loadLogView(this)"
@@ -127,10 +119,7 @@
     </div>
 
     <!-- Contenido del selector según opción de vista elegida o por defecto -->
-    <div
-            class="row m-0 mr-2 ml-2 flex-fill border-left border-bottom border-right rounded-bottom"
-            th:classappend="${theme.background}+' '+${theme.borderColor}"
-    >
+    <div class="row m-0 mr-2 ml-2 flex-fill border-left border-bottom border-right rounded-bottom bg-white">
         <div id="serverMainContainer" class="container-fluid p-0">
             <div th:replace="~{this::serverSummaryView}"></div>
         </div>
@@ -141,19 +130,26 @@
         <p
                 id="serverInfoText"
                 class="m-0 p-0 w-100 text-center" th:text="(!${#strings.isEmpty(currentServer.info)})?*{info}:'---'"
-                th:classappend="${theme.textColor}"
         >
         </p>
     </div>
 
+    <th:block sec:authorize="hasAnyRole('ADMIN')">
+        <section th:replace="~{this::saveServerDialog('updateServerDialog','Actualizar información',${currentServer})}">
+        </section>
+        <section th:replace="~{components/modals::deleteDialog('deleteServerDialog','',*{id},*{name})}"></section>
+    </th:block>
+
 </div>
 
+<!-- Vista de beinvenida al servidor -->
 <div th:fragment="serverSummaryView" class="row h-100 m-0">
     <div class="col m-auto text-center">
         <h6 th:text="'Selecciona una pestaña'"></h6>
     </div>
 </div>
 
+<!-- Dialogo para añadir y actualizar servidores -->
 <section th:fragment="saveServerDialog(dialogId,title,serverInfo)">
     <div th:id="${dialogId}" class="modal fade">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -173,15 +169,15 @@
                             type="hidden"
                     />
 
-                    <div class="modal-body" th:classappend="${theme.background}">
+                    <div class="modal-body">
 
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
                                 <!-- Campo name -->
-                                <div class="form-group">
-                                    <label th:for="${dialogId}+'-name'" th:text="'Nombre de servidor'"></label>
+                                <div class="form-group" th:with="elementId= ${dialogId}+'-name'">
+                                    <label th:for="${elementId}" th:text="'Nombre de servidor'"></label>
                                     <input
-                                            th:id="${dialogId}+'-name'"
+                                            th:id="${elementId}"
                                             th:value="*{name}"
                                             name="name"
                                             type="text"
@@ -198,10 +194,10 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <!-- campo serverType -->
-                                <div class="form-group">
-                                    <label th:for="${dialogId}+'-serverType'" th:text="'Tipo de servidor'"></label>
+                                <div class="form-group" th:with="elementId = ${dialogId}+'-serverType'">
+                                    <label th:for="${elementId}" th:text="'Tipo de servidor'"></label>
                                     <select
-                                            th:id="${dialogId}+'-serverType'"
+                                            th:id="${elementId}"
                                             th:with="selectTo = *{serverType}? *{serverType.name}:'STORAGE'"
                                             name="serverType"
                                             class="custom-select"
@@ -222,11 +218,11 @@
                         <div class="form-row">
                             <div class="col-md-6 mb-3">
                                 <!-- campo address -->
-                                <div class="form-group">
-                                    <label th:for="${dialogId}+'-address'"
+                                <div class="form-group" th:with="elementId= ${dialogId}+'-address'">
+                                    <label th:for="${elementId}"
                                            th:text="'Dirección en red del servidor'"></label>
                                     <input
-                                            th:id="${sectionId}+'-address'"
+                                            th:id="${elementId}"
                                             th:value="*{address}"
                                             name="address"
                                             type="text"
@@ -243,10 +239,10 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <!-- campo port -->
-                                <div class="form-group">
-                                    <label th:for="${dialogId}+'-port'" th:text="'Puerto'"></label>
+                                <div class="form-group" th:with="elementId = ${dialogId}+'-port'">
+                                    <label th:for="${elementId}" th:text="'Puerto'"></label>
                                     <input
-                                            th:id="${dialogId}+'-port'"
+                                            th:id="${elementId}"
                                             th:value="*{port}"
                                             name="port"
                                             type="number"
@@ -264,10 +260,10 @@
                         </div>
 
                         <!-- campo info -->
-                        <div class="form-group">
-                            <label th:for="${dialogId}+'-info'" th:text="'Información adicional'"></label>
+                        <div class="form-group" th:with="elementId = ${dialogId}+'-info'">
+                            <label th:for="${elementId}" th:text="'Información adicional'"></label>
                             <textarea
-                                    th:id="${dialogId}+'-info'"
+                                    th:id="${elementId}"
                                     th:text="*{info}"
                                     name="info"
                                     class="form-control"
@@ -291,6 +287,7 @@
     </div>
 </section>
 
+<!-- Panel superior en vista de nodos (contiene el boton de añadir nodo) -->
 <div th:fragment="nodePane" class="container-fluid p-1 bg-light border-top border-bottom">
     <div class="row m-0">
         <div class="col p-0">
@@ -310,6 +307,7 @@
     </div>
 </div>
 
+<!-- Vista de nodos de sensado -->
 <div th:fragment="sensingView" class="row m-0 pt-2 h-100">
     <div class="col p-0">
         <div class="d-flex flex-column h-100">
@@ -325,6 +323,7 @@
     </div>
 </div>
 
+<!-- Vista de nodos de control -->
 <div th:fragment="controlView" class="row pt-2 m-0 h-100">
     <div class="col p-0">
         <div class="d-flex flex-column h-100">
@@ -340,11 +339,396 @@
     </div>
 </div>
 
+<!-- Vista de carga -->
 <div th:fragment="loadingView" class="row h-100 m-0">
     <div class="col text-center m-auto">
         <div class="spinner-grow text-info" role="status"></div>
         <div class="spinner-grow text-info" role="status"></div>
         <div class="spinner-grow text-info" role="status"></div>
+    </div>
+</div>
+
+<!-- Tabla de propiedades de cualquier servidor -->
+<table th:fragment="propertiesTable" class="table table-striped table-borderless">
+    <thead class="dayi-bg text-white sticky-top">
+    <tr>
+        <th class="p-2 text-center align-middle" scope="col">
+            <h6 th:text="'Clave'" class="m-auto"></h6>
+        </th>
+        <th class="p-2 text-center align-middle" scope="col">
+            <h6 th:text="'Valor'" class="m-auto"></h6>
+        </th>
+        <th class="p-2" scope="col">
+            <div class="container-fluid h-100 p-0">
+                <div class="row m-0">
+                    <div class="col text-center">
+                        <h6 th:text="'Información'" class="m-auto"></h6>
+                    </div>
+                    <div sec:authorize="hasRole('ADMIN')" class="col-xs p-0 ml-auto">
+                        <button
+                                type="button"
+                                class="btn btn-light m-0 pt-0 pl-1 pb-0 pr-1"
+                                data-toggle="modal"
+                                data-target="#editPropertiesDialog"
+                        >
+                            <span><i class="fas fa-pen"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="propertyInfo: ${propertyInfos}" class="border-top">
+        <td class="font-weight-bold border-right" th:text="${propertyInfo.key}"></td>
+        <td class="border-right" th:text="${propertyInfo.value}"></td>
+        <td th:text="${propertyInfo.info}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Vista de propiedades para servidores Sordidus (de almacenamiento) -->
+<div th:fragment="sordidusPropertiesView" class="row m-0">
+    <table th:replace="~{this::propertiesTable}"></table>
+
+    <th:block sec:authorize="hasRole('ADMIN')">
+        <section th:replace="~{this::editPropertiesDialog(~{this::sordidusPropertiesFormContent})}"></section>
+    </th:block>
+</div>
+
+<!-- Vista de propiedades para servidores Latiro (de flujo de datos) -->
+<div th:fragment="latiroPropertiesView" class="row m-0">
+    <table th:replace="~{this::propertiesTable}"></table>
+
+    <th:block sec:authorize="hasRole('ADMIN')">
+        <section th:replace="~{this::editPropertiesDialog(~{this::latiroPropertiesFormContent})}"></section>
+    </th:block>
+</div>
+
+<!-- Vista de propiedades para servidores Stris (de control) -->
+<div th:fragment="strisPropertiesView" class="row m-0">
+    <table th:replace="~{this::propertiesTable}"></table>
+
+    <th:block sec:authorize="hasRole('ADMIN')">
+        <section th:replace="~{this::editPropertiesDialog(~{this::strisPropertiesFormContent})}"></section>
+    </th:block>
+</div>
+
+<!-- Diálogo general para la edicion de propiedades -->
+<section th:fragment="editPropertiesDialog(formContent)" th:with="dialogId = 'editPropertiesDialog'">
+
+    <div th:id="${dialogId}" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div th:replace="~{components/modals::modalHeader(${dialogId},'Editar propiedades')}"></div>
+
+                <form
+                        th:id="${dialogId}+'-form'"
+                        th:object="${config}"
+                        method="POST"
+                        novalidate
+                >
+                    <div th:replace="${formContent}"></div>
+                    <div th:replace="~{components/modals::submitFooter}"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- Contenido del formulario para edicion de propieades de servidores Sordidus -->
+<div th:fragment="sordidusPropertiesFormContent" class="modal-body">
+
+    <div class="form-row">
+        <!-- Campo port -->
+        <div class="col-md-6 mb-3">
+            <div class="form-group" th:with="elementId= ${dialogId}+'-port'">
+                <label th:for="${elementId}" th:text="'Puerto'"></label>
+                <input
+                        th:id="${elementId}"
+                        th:field="*{port}"
+                        type="number"
+                        class="form-control"
+                        th:placeholder="'Ingresa el número de puerto'"
+                        required
+                        min="0"
+                        max="65536"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+        <!-- campo dataFormat -->
+        <div class="col-md-6 mb-3">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-dataFormat'">
+                <label th:for="${elementId}" th:text="'Formato de datos'"></label>
+                <select
+                        th:id="${elementId}"
+                        th:field="*{dataFormat}"
+                        class="custom-select"
+                        required
+                >
+                    <option value="ssv( )" th:text="'Pares clave-valor separados por espacios'"></option>
+                    <option value="json" th:text="'Formato JSON'"></option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campo dataDirectory -->
+    <div class="form-group" th:with="elementId = ${dialogId}+'-dataDirectory'">
+        <label th:for="${elementId}" th:text="'Directorio de datos'"></label>
+        <input
+                th:id="${elementId}"
+                type="text"
+                class="form-control"
+                th:field="*{dataDirectory}"
+                th:placeholder="'Introduzca una ruta de directorio'"
+                required
+                pattern="(.*)/([^/]*)"
+        >
+        <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+        <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+    </div>
+
+</div>
+
+<!-- Contenido del formulario para edición de propiedades de servidores Latiro -->
+<div th:fragment="latiroPropertiesFormContent" class="modal-body">
+
+    <div class="form-row">
+        <!-- Campo port -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-port'">
+                <label th:for="${elementId}" th:text="'Puerto activo en este servidor'"></label>
+                <input
+                        th:id="${elementId}"
+                        type="number"
+                        class="form-control"
+                        th:placeholder="'Ingrese número de puerto'"
+                        th:field="*{port}"
+                        required
+                        min="0"
+                        max="65536"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+        <!-- Campo emptySampleSetShipping -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-emptySampleSetShipping'">
+                <label th:for="${elementId}" th:text="'Enviar conjuntos de muestras vacios'"></label>
+
+                <select
+                        th:id="${elementId}"
+                        th:field="*{emptySampleSetShipping}"
+                        class="custom-select"
+                        required
+                >
+                    <option value="true" th:text="'Sí'"></option>
+                    <option value="false" th:text="'No'"></option>
+                </select>
+
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <!-- campo serverName -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-serverName'">
+                <label th:for="${elementId}" th:text="'Dirección de servidor Sordidus'"></label>
+                <input
+                        th:id="${elementId}"
+                        th:field="*{serverName}"
+                        th:placeholder="'Introduzca la dirección del servidor sordidus'"
+                        type="text"
+                        class="form-control"
+                        required
+                        minlength="6"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+        <!-- campo serverPort -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-serverPort'">
+                <label th:for="${elementId}" th:text="'Puerto del servidor sordidus'"></label>
+                <input
+                        th:id="${elementId}"
+                        th:field="*{serverPort}"
+                        type="number"
+                        class="form-control"
+                        required
+                        th:placeholder="'Introduzca el puerto del servidor sordidus'"
+                        min="0"
+                        max="65536"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <!-- Campo buffering time -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-bufferingTime'">
+                <label th:for="${elementId}" th:text="'Tiempo de muestreo del servidor'"></label>
+                <input
+                        th:id="${elementId}"
+                        th:field="*{bufferingTime}"
+                        type="number"
+                        class="form-control"
+                        th:placeholder="'Introduzca el tiempo en milisegundos'"
+                        required
+                        min="0"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+        <!-- Campo timeOut -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-timeOut'">
+                <label th:for="${elementId}" th:text="'Tiempo muerto del servidor'"></label>
+                <input
+                        th:id="${elementId}"
+                        th:field="*{timeOut}"
+                        type="number"
+                        class="form-control"
+                        th:placeholder="'Introduzca el tiempo en milisegundos'"
+                        required
+                        min="0"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <!-- Campo sendAttemps -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-sendAttemps'">
+                <label th:for="${elementId}" th:text="'Número de intentos de envío'"></label>
+                <input
+                        th:id="${elementId}"
+                        th:field="*{sendAttemps}"
+                        type="number"
+                        class="form-control"
+                        required
+                        min="0"
+                        th:placeholder="'Introduzca el número de intentos'"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+        <!-- Campo waitTimeBetweenAttempts -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-waitTimeBetweenAttempts'">
+                <label th:for="${elementId}" th:text="'Tiempo de espera entre envios'"></label>
+                <input
+                        th:id="${elementId}"
+                        th:field="*{waitTimeBetweenAttempts}"
+                        type="number"
+                        class="form-control"
+                        th:placeholder="'Introduzca el tiempo en milisegundos'"
+                        required
+                        min="0"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <!-- Campo sensorTimeOut -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-sensorTimeOut'">
+                <label th:for="${elementId}" th:text="'Tiempo muerto del sensor'"></label>
+                <input
+                        th:id="${elementId}"
+                        th:field="*{sensorTimeOut}"
+                        type="number"
+                        class="form-control"
+                        required
+                        th:placeholder="'Introduzca el tiempo en milisegundos'"
+                        min="0"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+        <!-- Campo sensorSamplingTime -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-sensorSamplingTime'">
+                <label th:for="${elementId}" th:text="'Tiempo de muestreo del sensor'"></label>
+                <input
+                        th:id="${elementId}"
+                        th:field="*{sensorSamplingTime}"
+                        type="number"
+                        class="form-control"
+                        required
+                        th:placeholder="'Introduzca el tiempo en milisegundos'"
+                        min="0"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Contenido del formulario para edición de propiedades de servidores Stris -->
+<div th:fragment="strisPropertiesFormContent" class="modal-body">
+    <div class="form-row">
+        <!-- Campo webServerPort -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-webServerPort'">
+                <label th:for="${elementId}" th:text="'Puerto del servidor HTTP'"></label>
+                <input
+                        th:id="${elementId}"
+                        type="number"
+                        class="form-control"
+                        th:placeholder="'Ingrese número de puerto del servidor HTTP'"
+                        th:field="*{webServerPort}"
+                        required
+                        min="0"
+                        max="65536"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
+        <!-- Campo tcpServerPort -->
+        <div class="col-md-6">
+            <div class="form-group" th:with="elementId = ${dialogId}+'-tcpServerPort'">
+                <label th:for="${elementId}" th:text="'Puerto del servidor TCP'"></label>
+                <input
+                        th:id="${elementId}"
+                        type="number"
+                        class="form-control"
+                        th:placeholder="'Ingrese número de puerto del servidor TCP'"
+                        th:field="*{tcpServerPort}"
+                        required
+                        min="0"
+                        max="65536"
+                >
+                <div class="valid-feedback" th:text="'¡Correcto!'"></div>
+                <div class="invalid-feedback" th:text="'Ingresa un dato válido para este campo'"></div>
+            </div>
+        </div>
     </div>
 </div>
 

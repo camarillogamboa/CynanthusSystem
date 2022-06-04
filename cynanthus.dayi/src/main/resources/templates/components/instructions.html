@@ -16,8 +16,8 @@
 
     <!-- Parte superior -->
     <div class="row m-2">
-        <div class="col">
-            <h2 id="instructionsTitle" th:text="'Conjuntos de instrucciones'"></h2>
+        <div class="col p-0">
+            <h3 id="instructionsTitle" th:text="'Conjuntos de instrucciones'"></h3>
         </div>
 
         <!-- Añadir nuevo conjunto de instrucciones -->
@@ -26,8 +26,6 @@
                     data-target="#addSetDialog">
                 <i class="fas fa-plus"></i><span id="addSetButton-text" th:text="'Agregar nuevo conjunto'"></span>
             </button>
-            <section
-                    th:replace="~{this::saveInstructionSetDialog('addSetDialog','Agregar nuevo conjunto',${emptySet})}"></section>
         </div>
 
     </div>
@@ -50,6 +48,11 @@
         </div>
 
     </div>
+
+    <th:block sec:authorize="hasRole('ADMIN')">
+        <section th:replace="~{this::saveInstructionSetDialog('addSetDialog','Agregar nuevo conjunto',${emptySet})}">
+        </section>
+    </th:block>
 
 </div>
 
@@ -99,14 +102,6 @@
             >
                 <span><i class="fas fa-trash"></i></span>
             </button>
-
-            <section
-                    th:replace="~{this::saveInstructionDialog('addInstructionDialog','Agregar instrucción','',${emptyInstruction})}"></section>
-            <section
-                    th:replace="~{this::saveInstructionSetDialog('updateCurrentSetDialog','Actualizar conjunto',${currentSet})}"></section>
-            <section
-                    th:replace="~{components/modals::deleteDialog('deleteCurrentSetDialog','',*{id},*{name})}"></section>
-
         </div>
     </div>
 
@@ -138,6 +133,15 @@
         >
         </p>
     </div>
+
+    <th:block sec:authorize="hasRole('ADMIN')">
+        <section
+                th:replace="~{this::saveInstructionDialog('addInstructionDialog','Agregar instrucción','',${emptyInstruction})}"></section>
+        <section
+                th:replace="~{this::saveInstructionSetDialog('updateCurrentSetDialog','Actualizar conjunto',${currentSet})}"></section>
+        <section
+                th:replace="~{components/modals::deleteDialog('deleteCurrentSetDialog','',*{id},*{name})}"></section>
+    </th:block>
 
 </div>
 
@@ -178,7 +182,6 @@
                 >
                     <span><i class="fas fa-eye"></i></span>
                 </button>
-                <section th:replace="~{this::showVector(${rowId}+'-show',${instruction})}"></section>
             </td>
             <th:block sec:authorize="hasRole('ADMIN')">
                 <td class="p-2 text-center align-middle w-auto">
@@ -192,8 +195,7 @@
                         <span><i class="fas fa-pen"></i></span>
                     </button>
 
-                    <section
-                            th:replace="~{this::saveInstructionDialog(${rowId}+'-update','Editar instrucción','update-list',${instruction})}"></section>
+
                 </td>
                 <td class="p-2 text-center align-middle w-auto">
                     <button
@@ -205,9 +207,13 @@
                     >
                         <span><i class="fas fa-trash"></i></span>
                     </button>
-                    <section
-                            th:replace="~{components/modals::deleteDialog(${rowId}+'-delete','delete-list',*{id},*{name})}"></section>
                 </td>
+
+                <section th:replace="~{this::showVector(${rowId}+'-show',${instruction})}"></section>
+                <section
+                        th:replace="~{this::saveInstructionDialog(${rowId}+'-update','Editar instrucción','update-list',${instruction})}"></section>
+                <section
+                        th:replace="~{components/modals::deleteDialog(${rowId}+'-delete','delete-list',*{id},*{name})}"></section>
             </th:block>
         </tr>
         </tbody>
@@ -239,10 +245,10 @@
                     <div class="modal-body">
 
                         <!-- campo name -->
-                        <div class="form-group">
-                            <label th:for="${dialogId}+'-name'" th:text="'Nombre del conjunto'"></label>
+                        <div class="form-group" th:with="elementId = ${dialogId}+'-name'">
+                            <label th:for="${elementId}" th:text="'Nombre del conjunto'"></label>
                             <input
-                                    th:id="${dialogId}+'-name'"
+                                    th:id="${elementId}"
                                     th:value="*{name}"
                                     name="name"
                                     type="text"
@@ -258,10 +264,10 @@
                         </div>
 
                         <!-- campo info -->
-                        <div class="form-group">
-                            <label th:for="${dialogId}+'-info'" th:text="'Información adicional'"></label>
+                        <div class="form-group" th:with="elementId = ${dialogId}+'-info'">
+                            <label th:for="${elementId}" th:text="'Información adicional'"></label>
                             <textarea
-                                    th:id="${dialogId}+'-info'"
+                                    th:id="${elementId}"
                                     th:text="*{info}"
                                     name="info"
                                     class="form-control"
@@ -325,10 +331,10 @@
                             </div>
                             <div class="col-md-9">
                                 <!-- campo name -->
-                                <div class="form-group">
-                                    <label th:for="${dialogId}+'-name'" th:text="'Nombre clave'"></label>
+                                <div class="form-group" th:with="elementId = ${dialogId}+'-name'">
+                                    <label th:for="${elementId}" th:text="'Nombre clave'"></label>
                                     <input
-                                            th:id="${dialogId}+'-name'"
+                                            th:id="${elementId}"
                                             th:value="*{name}"
                                             name="name"
                                             type="text"
@@ -344,10 +350,10 @@
                                 </div>
 
                                 <!-- campo vector -->
-                                <div class="form-group">
-                                    <label th:for="${dialogId}+'-vector'" th:text="'Vector'"></label>
+                                <div class="form-group" th:with="elementId = ${dialogId}+'-vector'">
+                                    <label th:for="${elementId}" th:text="'Vector'"></label>
                                     <input
-                                            th:id="${dialogId}+'-vector'"
+                                            th:id="${elementId}"
                                             th:value="*{vector}"
                                             type="text"
                                             name="vector"

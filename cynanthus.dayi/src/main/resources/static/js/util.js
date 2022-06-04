@@ -1,3 +1,7 @@
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-CLASES DE UTILIDADES->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
 class ViewLoader {
 
     constructor(waitContent, failContent) {
@@ -26,7 +30,7 @@ class ViewLoader {
 
 }
 
-class ControllerService {
+class Service {
 
     constructor() {
         this._startActions = [];
@@ -114,25 +118,32 @@ class WebSocketConnector {
         this._stompClient = null;
     }
 
-    connect(connectAction) {
+    connect() {
         let socket = new SockJS(this._socketPath);
         this._stompClient = Stomp.over(socket);
-        this._stompClient.connect({}, frame => {
-            console("WebSocketConnector, connected: " + frame);
-            connectAction();
+
+        return new Promise((resolve, reject) => {
+            this._stompClient.connect(
+                {},
+                frame => {
+                    console.log("WebSocketConnector: " + frame);
+                    resolve();
+                },
+                error => reject(error)
+            );
         });
     }
 
-    subscribeTo(subscriptionPath, eventConsumer) {
-        return this._stompClient.subscribe(subscriptionPath, eventConsumer);
+    subscribeTo(subscriptionPath, messageConsumer) {
+        return this._stompClient.subscribe(subscriptionPath, messageConsumer);
     }
 
     unsubscribe(id) {
         this._stompClient.unsubscribe(id);
     }
 
-    connectAndSubscribeTo(subscriptionPath, eventConsumer) {
-        this.connect(() => this.subscribeTo(subscriptionPath, eventConsumer));
+    connectAndSubscribeTo(subscriptionPath, messageConsumer) {
+        return this.connect().then(() => this.subscribeTo(subscriptionPath, messageConsumer));
     }
 
     sendMessageTo(path, message) {
@@ -140,15 +151,21 @@ class WebSocketConnector {
     }
 
     disconnect() {
-        if (this._stompClient !== null) {
-            this._stompClient.disconnect();
-        }
-        this._stompClient = null;
+        return new Promise((resolve, reject) => {
+            try {
+                if (this._stompClient != null) {
+                    this._stompClient.disconnect(resolve);
+                } else resolve();
+                this._stompClient = null;
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 
 }
 
-class DelegatorController extends ControllerService {
+class DelegatorController extends Service {
 
     constructor(viewLoader, viewAreaId) {
         super();
@@ -256,6 +273,10 @@ function centeredWrapper(html) {
 var autoCenteredLoadSpinner = centeredWrapper(loadSpinner);
 var autoCetenredFailLoadMessage = centeredWrapper(failLoadMessage);
 
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-FORMULARIOS->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
+
 function serializeForm(form) {
     let serialized = form.serializeArray();
     let s = '';
@@ -268,16 +289,6 @@ function serializeForm(form) {
         data[serialized[s]['name']] = value;
     }
     return JSON.stringify(data);
-}
-
-function showModal(idModal) {
-    $(idModal).modal('show');
-}
-
-function hideDialog(dialogId) {
-    $(dialogId).modal('hide');
-    $('body').removeClass('modal-open');
-    $('.modal-backdrop').remove();
 }
 
 function loadForm(formId, resolve, reject) {
@@ -324,9 +335,9 @@ function loadDialogForm(dialogId, resolve, reject) {
                 dialog.modal('hide');
                 $('body').removeClass('modal-open');
                 $('.modal-backdrop').remove();
-                resolve(form);
+                resolve(form, dialog);
             },
-            reject
+            form => reject(form, dialog)
         );
     } else console.log("No se encontró el diálogo con identificador " + dialogId);
 }
@@ -340,6 +351,15 @@ function processResponse(response) {
     console.log(response);
     return true;
 }
+
+function resetForm(form){
+    form[0].reset();
+    form[0].classList.remove('was-validated');
+}
+
+/*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-PETICIONES->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
 async function doGet(url) {
     return fetch(

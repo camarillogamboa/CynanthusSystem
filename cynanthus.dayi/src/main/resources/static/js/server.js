@@ -1,4 +1,4 @@
-class ServerViewControllerChild extends ControllerService {
+class ServerViewControllerChild extends Service {
 
     constructor(parent) {
         super();
@@ -53,9 +53,18 @@ class PropertiesViewController extends ServerViewControllerChild {
         super(parent);
     }
 
+    updateProperties(form) {
+        console.log("actualizando propiedades");
+    }
+
+    start() {
+        super.start();
+        loadDialogForm("#editPropertiesDialog", form => this.updateProperties(form), commonRejected);
+    }
+
 }
 
-class ServerLogViewController extends ControllerService {
+class ServerLogViewController extends Service {
 
     constructor(serverId) {
         super();
@@ -71,72 +80,85 @@ class ServerViewController extends NavegationAndLoadController {
         this._serverId = serverId;
         this._available = undefined;
 
-        this._delegateWrapper.service = new ServerSummaryViewController(this);
+        this._onavailable = [];
+        this._onunavailable = [];
+
+        this._onavailable.push(() => {
+            $("#availableIndicatorContainer").html(`<i class="fas fa-2x fa-check-circle available-indicator"></i>`);
+            $("#unavailableMessageContainer")[0].classList.add('d-none');
+            let previusClass = this.findPreviusClass();
+            $(`#serverLink-${this._serverId}`)[0].classList.replace(previusClass, "bg-success");
+        });
+
+        this._onunavailable.push(() => {
+            $("#availableIndicatorContainer").html(`<i class="fas fa-2x fa-times-circle unavailable-indicator"></i>`);
+            $("#unavailableMessageContainer")[0].classList.remove('d-none');
+            let previusClass = this.findPreviusClass();
+            $("#serverLink-" + this._serverId)[0].classList.replace(previusClass, "bg-danger");
+        })
 
         this._webSocket = new WebSocketConnector('/dayi-socket');
-    }
 
-    get isAvailable() {
-        return this._available;
-    }
+        this._subscription = null;
 
-    get webSocket() {
-        return this._webSocket;
-    }
-
-    async loadSummaryView() {
-        return super.loadSummaryView(
-            `/servers/${this._serverId}/summary`,
-            () => new ServerSummaryViewController(this)
-        );
+        this._delegateWrapper.service = new ServerSummaryViewController(this);
     }
 
     get serverId() {
         return this._serverId;
     }
 
+    get serverType() {
+        return 'NONE';
+    }
+
+    get isAvailable() {
+        return this._available;
+    }
+
+    set available(available) {
+        if (available) this._onavailable.forEach(action => action());
+        else this._onunavailable.forEach(action => action());
+
+        this._available = available;
+    }
+
+    set onavailable(onavailable) {
+        this._onavailable.push(onavailable);
+    }
+
+    set onunavailable(onunavailable) {
+        this._onunavailable.push(onunavailable);
+    }
+
+    get webSocket() {
+        return this._webSocket;
+    }
+
     loading() {
         $(`#serverMainContainer`).html(loadingIndicator);
     }
 
-    setToAvailable() {
-        $("#availableIndicatorContainer").html(`<i class="fas fa-2x fa-check-circle available-indicator"></i>`);
-        $("#unavailableMessageContainer")[0].classList.add('d-none');
-
-        let previusClass = this.findPreviusClass(this._available);
-
-        $(`#serverLink-${this._serverId}`)[0].classList.replace(previusClass, "bg-success");
-        this._available = true;
+    async loadSummaryView() {
+        return super.loadSummaryView(
+            `/server/${this._serverId}/summary`,
+            () => new ServerSummaryViewController(this)
+        );
     }
 
-    setToUnavailable() {
-        $("#availableIndicatorContainer").html(`<i class="fas fa-2x fa-times-circle unavailable-indicator"></i>`);
-        $("#unavailableMessageContainer")[0].classList.remove('d-none');
-
-        let previusClass = this.findPreviusClass(this._available);
-
-        $("#server-" + this._serverId)[0].classList.replace(previusClass, "bg-success");
-        this._available = false;
+    findPreviusClass() {
+        if (this._available === undefined) return "bg-info";
+        else if (this._available === false) return "bg-danger";
+        else return "bg-success";
     }
 
-    findPreviusClass(available) {
-        if (available === undefined) return "bg-info";
-        else if (available === false) return "bg-danger";
-        else return "succes";
-    }
-
-    updateAvailable(available) {
-        if (available) this.setToAvailable();
-        else this.setToUnavailable();
-    }
-
-    setServerMainContent(innerHtml) {
-        $("#serverMainContentE").html(innerHtml);
-    }
-
-    loadPropertiesView(selectable) {
-        this._navGroup.select(selectable);
+    async loadPropertiesView(selectable) {
         this.loading();
+        return this.loadView(
+            `/server/${this._serverId}/properties`,
+            selectable,
+            () => new PropertiesViewController(this)
+        );
     }
 
     loadLogView(selectable) {
@@ -147,12 +169,12 @@ class ServerViewController extends NavegationAndLoadController {
     updateInfo(serverInfo) {
         $("#serverTitle").html(`${serverInfo.name}`);
         $("#serverAddress").html(`${serverInfo.address}:${serverInfo.port}`);
-        $("#serverInfoText").html(serverInfo.info !== null ? serverInfo.info : "");
+        $("#serverInfoText").html(serverInfo.info !== null ? serverInfo.info : "---");
         $(`#serverLink-${serverInfo.id}`).text(serverInfo.name);
     }
 
     updateThis(form) {
-        doPostForm("/servers", form)
+        doPostForm("/server", form)
             .then(response => {
                 if (processResponse(response)) {
                     response.json().then(serverInfo => this.updateInfo(serverInfo)).catch(error => console.log(error));
@@ -162,7 +184,7 @@ class ServerViewController extends NavegationAndLoadController {
     }
 
     deleteThis() {
-        doDelete(`/servers/${this._serverId}`)
+        doDelete(`/server/${this._serverId}`)
             .then(response => {
                 if (processResponse(response)) {
                     appController.loadSummaryView()
@@ -177,6 +199,22 @@ class ServerViewController extends NavegationAndLoadController {
         super.start();
         loadDialogForm('#updateServerDialog', form => this.updateThis(form));
         loadDialogForm('#deleteServerDialog', () => this.deleteThis());
+
+        this._webSocket.connectAndSubscribeTo(
+            `/topic/server/${this._serverId}/state`,
+            message => this.available = JSON.parse(message.body)
+        )
+            .then(subscription => this._subscription = subscription)
+            .then(() => this._webSocket.sendMessageTo(`/app/server/${this._serverId}/state`, ''))
+            .catch(error => console.log(error));
+    }
+
+    finalize() {
+        $(`#serverLink-${this._serverId}`)[0].classList.remove(this.findPreviusClass());
+
+        if (this._subscription != null) this._subscription.unsubscribe();
+        this._webSocket.disconnect();
+        super.finalize();
     }
 
     toString() {
@@ -191,12 +229,20 @@ class StorageServerViewController extends ServerViewController {
         super(viewLoader, serverId);
     }
 
+    get serverType() {
+        return 'STORAGE';
+    }
+
 }
 
 class StreamDataServerViewController extends ServerViewController {
 
     constructor(viewLoader, serverId) {
         super(viewLoader, serverId);
+    }
+
+    get serverType() {
+        return 'STREAM_DATA';
     }
 
     loadSensingNodesView(selectable) {
@@ -206,13 +252,16 @@ class StreamDataServerViewController extends ServerViewController {
             () => new SensingNodesViewController(this)
         );
     }
-
 }
 
 class ControlServerViewController extends ServerViewController {
 
     constructor(viewLoader, serverId) {
         super(viewLoader, serverId);
+    }
+
+    get serverType() {
+        return 'CONTROL';
     }
 
     async loadControlNodesView(selectable) {

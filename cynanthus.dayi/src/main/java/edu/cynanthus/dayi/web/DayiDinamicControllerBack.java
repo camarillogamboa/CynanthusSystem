@@ -10,9 +10,7 @@ import edu.cynanthus.domain.GeneralNode;
 import edu.cynanthus.domain.SensingNode;
 import edu.cynanthus.domain.ServerInfo;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 
 import java.util.LinkedList;
 import java.util.List;

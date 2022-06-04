@@ -24,4 +24,8 @@ class CommonController {
         return isAvailable(auriSession.cynanthusServerService(serverInfo.getServerType()), serverInfo);
     }
 
+    Boolean isAvailable(Integer id) {
+        return isAvailable(findServerInfo(new ServerInfo(id)));
+    }
+
 }

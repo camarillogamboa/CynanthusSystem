@@ -1,4 +1,4 @@
-class InstrucctionsSummaryViewController extends ControllerService {
+class InstrucctionsSummaryViewController extends Service {
 
     constructor() {
         super();
@@ -6,7 +6,7 @@ class InstrucctionsSummaryViewController extends ControllerService {
 
 }
 
-class InstructionSetViewController extends ControllerService {
+class InstructionSetViewController extends Service {
 
     constructor(setId) {
         super();
@@ -18,7 +18,7 @@ class InstructionSetViewController extends ControllerService {
     }
 
     deleteThis() {
-        doDelete(`/sets/${this._setId}`)
+        doDelete(`/set/${this._setId}`)
             .then(response => {
                 if (processResponse(response)) {
                     appController.delegate.loadSummaryView()
@@ -30,7 +30,7 @@ class InstructionSetViewController extends ControllerService {
     }
 
     deleteInstruction(instructionId) {
-        doDelete(`/sets/instruction/${instructionId}`)
+        doDelete(`/set/instruction/${instructionId}`)
             .then(response => {
                 if (processResponse(response)) {
                     reloadInstructionSet(this._setId);
@@ -45,7 +45,7 @@ class InstructionSetViewController extends ControllerService {
     }
 
     updateThis(form) {
-        doPostForm("/sets", form)
+        doPostForm("/set", form)
             .then(response => {
                 if (processResponse(response)) {
                     response.json()
@@ -58,7 +58,7 @@ class InstructionSetViewController extends ControllerService {
 
     saveInstruction(form) {
         console.log("añadiendo nueva instrucción");
-        doPostForm(`/sets/${this._setId}`, form)
+        doPostForm(`/set/${this._setId}`, form)
             .then(response => {
                 if (processResponse(response)) {
                     reloadInstructionSet(this._setId);
@@ -107,7 +107,7 @@ class InstructionsViewController extends NavegationAndLoadController {
 
     async loadSetListView() {
         return new Promise((resolve, reject) => {
-            this._viewLoader.loadAndPlaceTo("/sets/list", $("#instructionSetListContainer"))
+            this._viewLoader.loadAndPlaceTo("/set/list", $("#instructionSetListContainer"))
                 .then(() => console.log("Se cargó la lista de conjuntos"))
                 .then(resolve)
                 .catch(error => {
@@ -118,21 +118,22 @@ class InstructionsViewController extends NavegationAndLoadController {
     }
 
     async loadSummaryView() {
-        return super.loadSummaryView("/sets/summary", () => new InstrucctionsSummaryViewController());
+        return super.loadSummaryView("/set/summary", () => new InstrucctionsSummaryViewController());
     }
 
     async loadInstructionSetView(setId, selectable) {
         return this.loadView(
-            `/sets/${setId}`,
+            `/set/${setId}`,
             selectable,
             () => new InstructionSetViewController(setId)
         );
     }
 
     addSet(form) {
-        doPostForm("/sets", form)
+        doPostForm("/set", form)
             .then(response => {
                 if (processResponse(response)) {
+                    resetForm(form);
                     this.loadSetListView()
                         .then(() => response.json())
                         .then(set => reloadInstructionSet(set.id))

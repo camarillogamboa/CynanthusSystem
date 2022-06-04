@@ -137,7 +137,7 @@
         </button>
 
         <section
-                th:replace="~{components/server::saveServerDialog('addServerDialog',${text},${emptyServer})}"></section>
+                th:replace="~{components/server::saveServerDialog('addServerDialog',${text},${defaultServer})}"></section>
     </div>
 
 </div>
@@ -160,20 +160,20 @@
                 >
 
                     <!-- Barra de seccion de servidor (Titulo de categoria) -->
-                    <div class="nav-link section-bar">
+                    <div class="nav-link p-0 section-bar">
                         <button
                                 th:id="${sectionId}+'-button'"
-                                class="btn btn-block p-0 text-left"
+                                class="btn btn-block text-left"
                                 type="button"
                                 data-toggle="collapse"
-                                th:href="'#'+${sectionId}"
+                                th:attrprepend="data-target=|#${sectionId}|"
                                 onclick="this.blur()"
-                                role="button"
                                 aria-expanded="false"
+                                role="button"
                         >
-                            <h6>
+                            <h6 class="m-0">
                                 <i class="fas fa-caret-right"></i>
-                                <i class="pr-2" th:classappend="${serverSection.iconName}"></i>
+                                <i th:classappend="${serverSection.iconName}"></i>
                                 <span th:id="${sectionId}+'-button-text'" th:text="${serverSection.name}"></span>
                             </h6>
                         </button>
@@ -181,7 +181,7 @@
 
                     <!-- Items de la seccion -->
                     <nav th:id="${sectionId}+'-navItemscontainer'" class="nav nav-pills flex-column w-100 pb-1">
-                        <ul class="row m-0 p-0" th:id="${sectionId}">
+                        <ul class="row m-0 p-0 collapse show" th:id="${sectionId}">
                             <li th:each="server :${serverSection.servers}" class="nav-item m-0 p-0">
                                 <a
                                         th:id="'serverLink-'+${server.id}"

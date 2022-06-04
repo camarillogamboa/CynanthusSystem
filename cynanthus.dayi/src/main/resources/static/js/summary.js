@@ -1,4 +1,4 @@
-class SummaryViewController extends ControllerService {
+class SummaryViewController extends Service {
 
     constructor() {
         super();

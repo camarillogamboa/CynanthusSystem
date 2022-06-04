@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Main-Class: edu.cynanthus.dayi.CynanthusDayiApp
+Class-Path: spring-expression-5.3.18.jar spring-boot-starter-security-2.
+ 6.6.jar tomcat-embed-websocket-9.0.60.jar spring-webmvc-5.3.18.jar spri
+ ng-security-crypto-5.6.2.jar font-awesome-5.12.0.jar bootstrap-4.4.1-1.
+ jar commons-lang3-3.12.0.jar log4j-api-2.17.2.jar thymeleaf-spring5-3.0
+ .15.RELEASE.jar spring-beans-5.3.18.jar attoparser-2.0.5.RELEASE.jar we
+ bjars-locator-0.38.jar snakeyaml-1.29.jar spring-context-5.3.18.jar spr
+ ing-boot-starter-logging-2.6.6.jar spring-boot-autoconfigure-2.6.6.jar 
+ spring-websocket-5.3.18.jar spring-security-config-5.6.2.jar jackson-da
+ tabind-2.13.2.2.jar logback-classic-1.2.11.jar thymeleaf-extras-java8ti
+ me-3.0.4.RELEASE.jar spring-boot-starter-thymeleaf-2.6.6.jar stomp-webs
+ ocket-2.3.3.jar jakarta.validation-api-2.0.2.jar spring-boot-starter-we
+ b-2.6.6.jar webjars-locator-core-0.48.jar jackson-core-2.13.2.jar sprin
+ g-boot-2.6.6.jar log4j-to-slf4j-2.17.2.jar spring-aop-5.3.18.jar thymel
+ eaf-3.0.15.RELEASE.jar spring-security-core-5.6.2.jar spring-boot-start
+ er-websocket-2.6.6.jar logback-core-1.2.11.jar sockjs-client-1.0.2.jar 
+ spring-security-web-5.6.2.jar spring-messaging-5.3.18.jar jackson-annot
+ ations-2.13.2.jar tomcat-embed-core-9.0.60.jar hibernate-validator-6.2.
+ 3.Final.jar spring-jcl-5.3.18.jar spring-core-5.3.18.jar classmate-1.5.
+ 1.jar spring-web-5.3.18.jar jul-to-slf4j-1.7.36.jar gson-2.8.9.jar tomc
+ at-embed-el-9.0.60.jar classgraph-4.8.115.jar spring-boot-starter-2.6.6
+ .jar jquery-3.4.0.jar spring-boot-starter-tomcat-2.6.6.jar jakarta.anno
+ tation-api-1.3.5.jar slf4j-api-1.7.36.jar thymeleaf-extras-springsecuri
+ ty5-3.0.4.RELEASE.jar jboss-logging-3.4.3.Final.jar unbescape-1.1.6.REL
+ EASE.jar popper.js-1.14.3.jar
+

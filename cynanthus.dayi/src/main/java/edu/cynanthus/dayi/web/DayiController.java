@@ -1,11 +1,14 @@
 package edu.cynanthus.dayi.web;
 
 import edu.cynanthus.auri.consumer.AuriSession;
-import edu.cynanthus.dayi.domain.Theme;
+import edu.cynanthus.bean.Config;
+import edu.cynanthus.dayi.domain.PropertyInfo;
 import edu.cynanthus.dayi.util.BeanUtil;
+import edu.cynanthus.dayi.util.PropertyInfoBuilder;
 import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 import edu.cynanthus.domain.ServerInfo;
+import edu.cynanthus.domain.ServerType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -30,21 +34,27 @@ public class DayiController extends CommonController {
     @GetMapping
     public String homeView(Model model) {
         loadServers(model);
-        model.addAttribute("emptyServer", new ServerInfo());
-        setTheme(model);
+
+        ServerInfo defaulServer = new ServerInfo(
+            null,
+            "127.0.0.1",
+            9005,
+            ServerType.STORAGE,
+            null
+        );
+
+        model.addAttribute("defaultServer", defaulServer);
         return "index";
     }
 
     @GetMapping("/summary")
     public String summaryView(Model model) {
-        setTheme(model);
         return "components/summary::dayiSummary";
     }
 
-    @GetMapping("/servers/list")
+    @GetMapping("/server/list")
     public String serverListView(Model model) {
         loadServers(model);
-        setTheme(model);
         return "components/navegation::serverNavList";
     }
 
@@ -53,29 +63,23 @@ public class DayiController extends CommonController {
         model.addAttribute("serverSections", BeanUtil.toServerSections(serverInfos));
     }
 
-    private void setTheme(Model model) {
-        model.addAttribute("theme", Theme.LIGHT_THEME);
-    }
-
     /*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-SERVER->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
-    @GetMapping("/servers/{id:\\d+}")
+    @GetMapping("/server/{id:\\d+}")
     public String serverView(ServerInfo serverInfo, Model model) {
         serverInfo = findServerInfo(serverInfo);
         model.addAttribute("currentServer", serverInfo);
-        setTheme(model);
         return "components/server::currentServerView";
     }
 
-    @GetMapping("/servers/{id:\\d+}/summary")
+    @GetMapping("/server/{id:\\d+}/summary")
     public String serverSummaryView(ServerInfo serverInfo, Model model) {
-        setTheme(model);
         return "components/server::serverSummaryView";
     }
 
-    @PostMapping("/servers")
+    @PostMapping("/server")
     public ResponseEntity<?> saveServer(@RequestBody ServerInfo serverInfo) {
         if (serverInfo.getId() == null) serverInfo = auriSession.serverInfoService().create(serverInfo);
         else serverInfo = auriSession.serverInfoService().update(serverInfo);
@@ -85,7 +89,7 @@ public class DayiController extends CommonController {
         return new ResponseEntity<>(serverInfo, HttpStatus.OK);
     }
 
-    @DeleteMapping("/servers/{id:\\d+}")
+    @DeleteMapping("/server/{id:\\d+}")
     public ResponseEntity<?> deleteServer(ServerInfo serverInfo) {
         serverInfo = auriSession.serverInfoService().delete(serverInfo);
 
@@ -96,42 +100,63 @@ public class DayiController extends CommonController {
 
     @GetMapping("/sensing")
     public String sensingView(Model model) {
-        setTheme(model);
         return "components/server::sensingView";
     }
 
     @GetMapping("/control")
     public String controlView(Model model) {
-        setTheme(model);
         return "components/server::controlView";
+    }
+
+    @GetMapping("/server/{id:\\d+}/properties")
+    public String serverPropertiesOf(ServerInfo serverInfo, Model model) {
+        serverInfo = findServerInfo(serverInfo);
+
+        Config config = auriSession.cynanthusServerService(serverInfo.getServerType()).getConfigOf(serverInfo);
+
+        List<PropertyInfo> propertyInfos = new LinkedList<>();
+
+        PropertyInfoBuilder.toList(config, propertyInfos);
+
+        model.addAttribute("config", config);
+        model.addAttribute("propertyInfos", propertyInfos);
+
+        switch (serverInfo.getServerType()) {
+            case STORAGE:
+                return "components/server::sordidusPropertiesView";
+            case STREAM_DATA:
+                return "components/server::latiroPropertiesView";
+            case CONTROL:
+                return "components/server::strisPropertiesView";
+        }
+
+        throw new IllegalStateException();
     }
 
     /*||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-INSTRUCTIONS->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
-    @GetMapping("/sets")
+    @GetMapping("/set")
     public String setsView(Model model) {
         loadSetList(model);
         model.addAttribute("emptySet", new InstructionSet());
-        setTheme(model);
 
         return "components/instructions::instructionsView";
     }
 
-    @GetMapping("/sets/summary")
+    @GetMapping("/set/summary")
     public String setsSummaryView(Model model) {
-        setTheme(model);
         return "components/instructions::instructionsSummaryView";
     }
 
-    @GetMapping("/sets/list")
+    @GetMapping("/set/list")
     public String setListView(Model model) {
         loadSetList(model);
         return "components/instructions::setsBar";
     }
 
-    @PostMapping("/sets")
+    @PostMapping("/set")
     public ResponseEntity<?> saveSet(@RequestBody InstructionSet instructionSet) {
         System.out.println(instructionSet);
         if (instructionSet.getId() == null) instructionSet = auriSession.instructionSetService().create(instructionSet);
@@ -142,25 +167,24 @@ public class DayiController extends CommonController {
         return new ResponseEntity<>(instructionSet, HttpStatus.OK);
     }
 
-    @GetMapping("/sets/{id:\\d+}")
+    @GetMapping("/set/{id:\\d+}")
     public String setView(InstructionSet instructionSet, Model model) {
         instructionSet = auriSession.instructionSetService().read(instructionSet);
 
         model.addAttribute("currentSet", instructionSet);
         model.addAttribute("emptyInstruction", new Instruction());
-        setTheme(model);
 
         return "components/instructions::currentSetView";
     }
 
-    @DeleteMapping("/sets/{id:\\d+}")
+    @DeleteMapping("/set/{id:\\d+}")
     public ResponseEntity<?> deleteSet(InstructionSet instructionSet) {
         instructionSet = auriSession.instructionSetService().delete(instructionSet);
         System.out.println("Registro eliminado: " + instructionSet);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/sets/{id:\\d+}")
+    @PostMapping("/set/{id:\\d+}")
     public ResponseEntity<?> saveInstruction(InstructionSet instructionSet, @RequestBody Instruction instruction) {
         System.out.println(instructionSet);
         System.out.println(instruction);
@@ -174,7 +198,7 @@ public class DayiController extends CommonController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/sets/instruction/{id:\\d+}")
+    @DeleteMapping("/set/instruction/{id:\\d+}")
     public ResponseEntity<?> deleteInstruction(@PathVariable Integer id) {
         Instruction instruction = auriSession.instructionSetService().deleteInstruction(id);
         System.out.println("Se eliminó " + instruction);
@@ -191,9 +215,8 @@ public class DayiController extends CommonController {
     <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-USERS->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||*/
 
-    @GetMapping("/users")
+    @GetMapping("/user")
     public String usersView(Model model) {
-        setTheme(model);
         return "components/users::usersView";
     }
 

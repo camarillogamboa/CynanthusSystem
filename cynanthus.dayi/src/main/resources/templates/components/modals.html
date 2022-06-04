@@ -10,6 +10,7 @@
 </head>
 <body>
 
+<!-- Cabecera común para todos los díalogos -->
 <div th:fragment="modalHeader(idPreffix,title)" class="modal-header text-white dayi-primary">
     <h5 th:id="${idPreffix}+'-title'" class="modal-title" th:text="${title}">Title</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -17,16 +18,18 @@
     </button>
 </div>
 
+<!-- Cuerpo para diálogos con mensajes informativos -->
 <div th:fragment="messageBodyModal(idPreffix,message)" class="modal-body">
     <div class="container-fluid p-0 w-100 text-center overflow-auto">
         <span><p th:id="${idPreffix}+'-message'" th:text="${message}" class="text-wrap"></p></span>
     </div>
 </div>
 
+<!-- Diálogo para eliminación de elementos -->
 <section th:fragment="deleteDialog(dialogId,class,elementId,elementName)">
     <div th:id="${dialogId}" class="modal fade" th:classappend="${class}"
          th:attrappend="data-element-id=|${elementId}|">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                 <div th:replace="~{this::modalHeader(${dialogId},'Eliminar '+${elementName})}"></div>
                 <div th:replace="~{this::messageBodyModal(${dialogId},'¿Desea eliminar '+${elementName}+'?')}"></div>
@@ -50,10 +53,12 @@
     </div>
 </section>
 
+<!-- botón de cancelación común -->
 <button th:fragment="cancelButton" type="reset" class="btn btn-secondary modal-button" data-dismiss="modal">
     <span th:text="'Cancelar'"></span>
 </button>
 
+<!-- footer utilizado en diálogos únicamente informativos -->
 <div th:fragment="hiderFooter(text)" class="modal-footer">
     <div class="m-auto">
         <button type="button" class="btn btn-primary" data-dismiss="modal">
@@ -62,6 +67,7 @@
     </div>
 </div>
 
+<!-- Footer utilizado en formularios para activar el evento submit -->
 <div th:fragment="submitFooter" class="modal-footer bg-light">
     <div class="m-auto">
         <button th:replace="~{this::cancelButton}"></button>
@@ -74,6 +80,7 @@
     </div>
 </div>
 
+<!-- Diálogo informativo -->
 <section th:fragment="informativeDialog(dialogId,title,message,continueText,size)">
     <div th:id="${dialogId}" class="modal fade">
         <div class="modal-dialog modal-dialog-centered" th:classappend="'modal-'+${size}">

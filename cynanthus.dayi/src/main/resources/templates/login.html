@@ -22,7 +22,7 @@
 
         <!-- Contenedor logotipo -->
         <div class="col-lg-8 p-2">
-            <div class="d-flex flex-fill h-100 flex-column rounded">
+            <div class="d-flex h-100 flex-column rounded">
                 <div class="row m-0 flex-fill">
                     <img
                             th:src="@{/img/cynanthus-logo.svg}"
@@ -38,13 +38,13 @@
 
         <!-- Panel de inicio de sesión -->
         <div class="col-lg-4 p-2">
-            <div class="card h-100">
+            <div class="card h-100 bg-transparent border-0">
 
                 <div class="d-flex flex-fill flex-column">
 
-                    <div class="row m-0 h-50 ">
+                    <div class="row m-0 h-50 dayi-pane-bg rounded-top">
                         <div class="col m-0 p-0">
-                            <div class="card-header h-100 text-center">
+                            <div class="card-header bg-transparent h-100 text-center">
                                 <div class="d-flex flex-fill flex-column h-100 p-0">
                                     <div class="row flex-fill m-0">
                                         <div class="col p-0">
@@ -66,7 +66,7 @@
                     <form method="POST" class="row m-0 h-50" th:action="@{/login}">
 
                         <div class="d-flex flex-fill flex-column p-0 h-100">
-                            <div class="row m-0 flex-fill overflow-auto" style="overflow-y: scroll">
+                            <div class="row m-0 flex-fill overflow-auto bg-white" style="overflow-y: scroll">
                                 <div class="col p-0">
                                     <div class="card-body">
                                         <div class="form-group">
@@ -81,9 +81,9 @@
                                 </div>
                             </div>
 
-                            <div class="row m-0">
+                            <div class="row m-0 dayi-pane-bg rounded-bottom">
                                 <div class="col h-100 m-0 p-0">
-                                    <div class="card-footer h-100">
+                                    <div class="card-footer bg-transparent h-100">
                                         <input type="submit" value="Ingresar" class="btn btn-primary btn-block m-auto"/>
                                     </div>
                                 </div>
@@ -95,6 +95,7 @@
 
             </div>
         </div>
+
     </div>
 
 </div>

@@ -10,8 +10,21 @@
 </head>
 <body>
 
-<div th:fragment="dayiSummary" class="container-fluid p-3">
-    <h1 th:text="'Bienvenido a Cynanthus Dayi'" th:classappend="${theme.textColor}"></h1>
+<div th:fragment="dayiSummary" class="container-fluid p-0 h-100">
+    <div class="row h-25 m-0">
+        <div class="col m-auto p-0 text-center">
+            <h1 th:text="'Bienvenido a Cynanthus Dayi'" class="text-secondary"></h1>
+        </div>
+    </div>
+    <div class="row h-75 m-0">
+        <div class="col h-100 w-100 text-center p-0">
+            <img
+                    th:src="@{/img/cynanthus-logo.svg}"
+                    alt="Logo Cynanthus"
+                    class="h-75 m-auto"
+            />
+        </div>
+    </div>
 </div>
 
 </body>
