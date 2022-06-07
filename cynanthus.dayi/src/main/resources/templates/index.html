@@ -8,20 +8,53 @@
 <head>
     <title>Cynanthus Dayi</title>
     <meta name="author" content="Luis Gerardo Camarillo Gamboa"/>
+
+    <!-- Hojas de estilo de Bootstrap y font-awesome -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+
+    <!-- Librerias de Jquery y Bootstrap -->
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
     <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
     <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
-    <script th:src="@{/js/util.js}"></script>
-    <script th:src="@{/js/server.js}"></script>
-    <script th:src="@{/js/instructions.js}"></script>
-    <script th:src="@{/js/users.js}"></script>
-    <script th:src="@{/js/summary.js}"></script>
+
+    <!-- Utilidades de la aplicación (/js/util/*) -->
+    <script th:src="@{/js/util/Errors.js}"></script>
+    <script th:src="@{/js/util/HttpClient.js}"></script>
+    <script th:src="@{/js/util/HttpClientRedirector.js}"></script>
+    <script th:src="@{/js/util/Forms.js}"></script>
+    <script th:src="@{/js/util/Views.js}"></script>
+    <script th:src="@{/js/util/ViewLoader.js}"></script>
+    <script th:src="@{/js/util/SelectionGroup.js}"></script>
+    <script th:src="@{/js/util/StompClient.js}"></script>
+
+    <!-- Controladores base (/js/controller/*) -->
+    <script th:src="@{/js/controller/Controller.js}"></script>
+    <script th:src="@{/js/controller/ControllerWrapper.js}"></script>
+    <script th:src="@{/js/controller/DelegatorController.js}"></script>
+    <script th:src="@{/js/controller/ViewDelegatorController.js}"></script>
+    <script th:src="@{/js/controller/DelegationAndNavegationController.js}"></script>
+
+    <!-- Controladores de vista de resumen -->
+    <script th:src="@{/js/SummaryViewController.js}"></script>
+
+    <!-- Controladores de vista de usuarios (/js/user/*) -->
+    <script th:src="@{/js/user/UserViewController.js}"></script>
+
+    <!-- Controladores de vista de instrucciones (/js/instructions/*) -->
+    <script th:src="@{/js/instructions/InstructionsSummaryViewController.js}"></script>
+    <script th:src="@{/js/instructions/InstructionSetViewController.js}"></script>
+    <script th:src="@{/js/instructions/InstructionsViewController.js}"></script>
+
+    <!-- Controladores de vista de servidor (/js/server/*) -->
+    <script th:src="@{/js/server/ServerViewController.js}"></script>
+
+    <!-- Controlador principal de la aplicación -->
     <script th:src="@{/js/app.js}"></script>
+
 </head>
 
 <body class="p-1 h-100 dayi-body">

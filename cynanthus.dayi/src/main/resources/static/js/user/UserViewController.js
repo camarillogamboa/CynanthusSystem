@@ -1,4 +1,4 @@
-class UsersViewController extends Service {
+class UsersViewController extends Controller {
 
     constructor(viewLoader) {
         super();

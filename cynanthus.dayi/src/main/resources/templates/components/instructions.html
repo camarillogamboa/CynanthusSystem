@@ -24,7 +24,7 @@
         <div sec:authorize="hasRole('ADMIN')" class="col-xs">
             <button id="addSetButton" type="button" class="btn btn-primary" data-toggle="modal"
                     data-target="#addSetDialog">
-                <i class="fas fa-plus"></i><span id="addSetButton-text" th:text="'Agregar nuevo conjunto'"></span>
+                <i class="fas fa-plus"></i> <span id="addSetButton-text" th:text="'Agregar nuevo conjunto'"></span>
             </button>
         </div>
 
@@ -139,8 +139,7 @@
                 th:replace="~{this::saveInstructionDialog('addInstructionDialog','Agregar instrucción','',${emptyInstruction})}"></section>
         <section
                 th:replace="~{this::saveInstructionSetDialog('updateCurrentSetDialog','Actualizar conjunto',${currentSet})}"></section>
-        <section
-                th:replace="~{components/modals::deleteDialog('deleteCurrentSetDialog','',*{id},*{name})}"></section>
+        <section th:replace="~{components/modals::deleteDialog('deleteCurrentSetDialog','',*{id},*{name})}"></section>
     </th:block>
 
 </div>
@@ -182,6 +181,7 @@
                 >
                     <span><i class="fas fa-eye"></i></span>
                 </button>
+                <section th:replace="~{this::showVector(${rowId}+'-show',${instruction})}"></section>
             </td>
             <th:block sec:authorize="hasRole('ADMIN')">
                 <td class="p-2 text-center align-middle w-auto">
@@ -194,8 +194,8 @@
                     >
                         <span><i class="fas fa-pen"></i></span>
                     </button>
-
-
+                    <section
+                            th:replace="~{this::saveInstructionDialog(${rowId}+'-update','Editar instrucción','update-list',${instruction})}"></section>
                 </td>
                 <td class="p-2 text-center align-middle w-auto">
                     <button
@@ -207,13 +207,9 @@
                     >
                         <span><i class="fas fa-trash"></i></span>
                     </button>
+                    <section
+                            th:replace="~{components/modals::deleteDialog(${rowId}+'-delete','delete-list',*{id},*{name})}"></section>
                 </td>
-
-                <section th:replace="~{this::showVector(${rowId}+'-show',${instruction})}"></section>
-                <section
-                        th:replace="~{this::saveInstructionDialog(${rowId}+'-update','Editar instrucción','update-list',${instruction})}"></section>
-                <section
-                        th:replace="~{components/modals::deleteDialog(${rowId}+'-delete','delete-list',*{id},*{name})}"></section>
             </th:block>
         </tr>
         </tbody>

@@ -79,6 +79,7 @@
             <th:block th:if="!${isStorageServer}" th:switch="*{serverType.name}">
                 <li th:case="'STREAM_DATA'" class="nav-item">
                     <a
+                            id="sensingNodesLink"
                             class="nav-link"
                             href="#"
                             th:text="'Nodos de sensado'"
@@ -87,6 +88,7 @@
                 </li>
                 <li th:case="'CONTROL'" class="nav-item">
                     <a
+                            id="controlNodesLink"
                             class="nav-link"
                             href="#"
                             th:text="'Nodos de control'"
@@ -98,6 +100,7 @@
             <!-- Opción de vista de propiedades (disponible para todos los servidores) -->
             <li class="nav-item">
                 <a
+                        id="propertiesLink"
                         class="nav-link"
                         href="#"
                         th:text="'Propiedades'"
@@ -108,6 +111,7 @@
             <!-- Opción de vista de registro de eventos -->
             <li class="nav-item">
                 <a
+                        id="logLink"
                         class="nav-link"
                         href="#"
                         th:text="'Registro del servidor'"
@@ -315,7 +319,7 @@
                 <div th:replace="~{this::nodePane}"></div>
             </div>
             <div class="row flex-fill m-0">
-                <div class="container-fluid h-100 p-0">
+                <div id="subViewContainer" class="container-fluid h-100 p-0">
                     <div th:replace="~{this::loadingView}"></div>
                 </div>
             </div>
@@ -331,7 +335,7 @@
                 <div th:replace="~{this::nodePane}"></div>
             </div>
             <div class="row flex-fill m-0">
-                <div class="container-fluid h-100 p-0">
+                <div id="subViewContainer" class="container-fluid h-100 p-0">
                     <div th:replace="~{this::loadingView}"></div>
                 </div>
             </div>

@@ -9,6 +9,9 @@ import edu.cynanthus.domain.Instruction;
 import edu.cynanthus.domain.InstructionSet;
 import edu.cynanthus.domain.ServerInfo;
 import edu.cynanthus.domain.ServerType;
+import edu.cynanthus.domain.config.LatiroConfig;
+import edu.cynanthus.domain.config.SordidusConfig;
+import edu.cynanthus.domain.config.StrisConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,6 +97,26 @@ public class DayiController extends CommonController {
         serverInfo = auriSession.serverInfoService().delete(serverInfo);
 
         System.out.println("Se eliminó " + serverInfo);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/sordidus/{id:\\d+}")
+    public ResponseEntity<?> updateSordidusProperties(ServerInfo serverInfo, @RequestBody SordidusConfig sordidusConfig) {
+        Boolean done = auriSession.sordidusServerService().updateConfigOf(serverInfo, sordidusConfig);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/latiro/{id:\\d+}")
+    public ResponseEntity<?> updateLatiroProperties(ServerInfo serverInfo, @RequestBody LatiroConfig sordidusConfig) {
+        Boolean done = auriSession.latiroServerService().updateConfigOf(serverInfo, sordidusConfig);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/stris/{id:\\d+}")
+    public ResponseEntity<?> updateStrisProperties(ServerInfo serverInfo, @RequestBody StrisConfig strisConfig) {
+        Boolean done = auriSession.strisServerService().updateConfigOf(serverInfo, strisConfig);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -27,8 +27,13 @@
 
 <!-- Diálogo para eliminación de elementos -->
 <section th:fragment="deleteDialog(dialogId,class,elementId,elementName)">
-    <div th:id="${dialogId}" class="modal fade" th:classappend="${class}"
-         th:attrappend="data-element-id=|${elementId}|">
+
+    <div
+            th:id="${dialogId}"
+            class="modal fade"
+            th:classappend="${class}"
+            th:attrappend="data-element-id=|${elementId}|"
+    >
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                 <div th:replace="~{this::modalHeader(${dialogId},'Eliminar '+${elementName})}"></div>
