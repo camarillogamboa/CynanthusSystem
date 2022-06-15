@@ -7,7 +7,7 @@ class ServerViewControllerChild extends Controller {
         this.#parent = parent;
     }
 
-    get parent(){
+    get parent() {
         return this.#parent;
     }
 
@@ -62,8 +62,8 @@ class PropertiesViewController extends ServerViewControllerChild {
     updateProperties(form) {
         let serverAlias = this.parent.serverType.alias;
 
-        httpClient.POST(`/${serverAlias}/${this.parent.serverId}`,serializeForm(form))
-            .then(()=> this.parent.loadPropertiesView($(`#propertiesLink`)[0]))
+        httpClient.POST(`/${serverAlias}/${this.parent.serverId}`, serializeForm(form))
+            .then(() => this.parent.loadPropertiesView($(`#propertiesLink`)[0]))
             .catch(error => console.log(error));
     }
 
@@ -130,8 +130,8 @@ class ServerViewController extends DelegationAndNavegationController {
 
     get serverType() {
         return {
-            type:"NONE",
-            alias:"none"
+            type: "NONE",
+            alias: "none"
         };
     }
 
@@ -240,9 +240,9 @@ class StorageServerViewController extends ServerViewController {
     constructor(viewLoader, serverId) {
         super(viewLoader, serverId);
 
-        this.#serverType={
+        this.#serverType = {
             type: "STORAGE",
-            alias:"sordidus"
+            alias: "sordidus"
         };
     }
 
@@ -260,8 +260,8 @@ class StreamDataServerViewController extends ServerViewController {
         super(viewLoader, serverId);
 
         this.#serverType = {
-            type:"STREAM_DATA",
-            alias:"latiro"
+            type: "STREAM_DATA",
+            alias: "latiro"
         }
     }
 
@@ -285,8 +285,8 @@ class ControlServerViewController extends ServerViewController {
     constructor(viewLoader, serverId) {
         super(viewLoader, serverId);
         this.#serverType = {
-            type:"CONTROL",
-            alias:"stris"
+            type: "CONTROL",
+            alias: "stris"
         }
     }
 

@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @RestControllerAdvice
-public class WebExceptionHandler extends ResponseEntityExceptionHandler {
+public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<Object> handleSQLException(

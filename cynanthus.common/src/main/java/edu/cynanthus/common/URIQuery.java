@@ -9,12 +9,13 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * El tipo Uri query.
+ * La clase URIQuery provee de métodos estáticos que permitan la codificación
+ * y decodificación de objetos en parametros pertenecientes a una URI.
  */
 public final class URIQuery {
 
     /**
-     * Instancia un nuevo Uri query.
+     * Esta clase no permite creación de instancias.
      */
     private URIQuery() {}
 
@@ -32,7 +33,10 @@ public final class URIQuery {
     }
 
     /**
-     * Parse.
+     * Analiza un cadena de parámetros de URI como param1=val1&param2=val2&param3=val3...
+     * y construye un mapa tomando el nombre de parámetro como clave e introduciendo el valor como un objeto.
+     * Algunos nombres de parametros suelen repetirse, en estos casos, los valores son asignados a una misma clave,
+     * pero son insertados como una lista.
      *
      * @param query      el query
      * @param parameters el parameters
@@ -67,7 +71,10 @@ public final class URIQuery {
     }
 
     /**
-     * Query to json string.
+     * Convierte una cadena de parametros de URI en un objeto JSON simple,
+     * tomando los nombres de parametros como nombres de campo.
+     *
+     * Si la cadena contiene un solo valor, este es convertido en una cadena simple.
      *
      * @param query el query
      * @return el string

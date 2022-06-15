@@ -1,7 +1,8 @@
 package edu.cynanthus.auri.api;
 
 /**
- * La interface Data service.
+ * La interface CrudService expone las 4 operaciones CRUD que pueden ser
+ * ejecutadas sobre un recurso en especifico.
  *
  * @param <T> el parámetro de tipo
  */

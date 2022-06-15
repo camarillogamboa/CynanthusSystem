@@ -5,7 +5,7 @@ import edu.cynanthus.bean.Bean;
 import java.util.List;
 
 /**
- * La interface Bean service.
+ * La interface Bean service
  *
  * @param <T> el parámetro de tipo
  */

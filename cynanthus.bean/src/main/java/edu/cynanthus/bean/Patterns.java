@@ -20,6 +20,6 @@ public interface Patterns {
      */
     String NAME = "[a-zA-Z_$][a-zA-Z\\s\\d_$]*";
 
-    String CODE_VECTOR = "[0-5]*";
+    String CODE_VECTOR = "[0-3]*";
 
 }

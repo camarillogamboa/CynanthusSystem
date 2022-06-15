@@ -5,30 +5,37 @@ import java.util.Iterator;
 import java.util.Objects;
 
 /**
- * El tipo Ssv.
+ * STRING SEPARATED VALUES es una clase de utilidad estática que concatena cadenas
+ * seperando cada valor con otras cadenas. Se trata básicamente de un formateador
+ * CSV (Comma Separated Values) con la diferencia que con esta herramienta se puede elegir
+ * que simbolos separaran a los valores.
+ *
  */
 public final class SSV {
 
     /**
-     * Instancia un nuevo Ssv.
+     * No se pueden crear instancias de esta clase
      */
     private SSV() {
     }
 
     /**
-     * To ssv format string.
+     * Itera el arreglo pasado por parametro, obtiene la representación String de cada objeto
+     * y los concatena utilizando el separador.
      *
      * @param <T>       el parámetro de tipo
-     * @param values    el values
-     * @param separator el separator
-     * @return el string
+     * @param values    el arreglo de tipo T
+     * @param separator el simbolo o cadena separadora de valores
+     * @return el string SSV
      */
     public static <T> String toSSVFormat(T[] values, String separator) {
         return toSSVFormat(new ArrayIterator<>(values), separator);
     }
 
     /**
-     * To ssv format string.
+     * Toma un iterable el cual es recorrido a traves de su iterador para obtener la representación String de
+     * cada objeto para despues concatenarlo junto a los otros utilizando el separador
+     * proporcionado.
      *
      * @param iterable  el iterable
      * @param separator el separator
@@ -54,7 +61,8 @@ public final class SSV {
     }
 
     /**
-     * El tipo Builder.
+     * El tipo Builder construye una representación SSV utilizando un
+     * separador pasado al constructor del objeto
      */
     public static final class Builder implements Appendable, Flushable {
 

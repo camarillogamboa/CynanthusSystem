@@ -8,23 +8,20 @@ public enum ControlCode {
     /**
      * Code zero control code.
      */
-    CODE_ZERO(9600),
+    CODE_ZERO(9000),
     /**
      * Code one control code.
      */
-    CODE_ONE(4600),
+    CODE_ONE(4400),
     /**
      * Code two control code.
      */
-    CODE_TWO(4000),
+    CODE_TWO(560),
     /**
      * Code three control code.
      */
-    CODE_THREE(400),
-    /**
-     * Code four control code.
-     */
-    CODE_FOUR(10);
+    CODE_THREE(1600);
+
     /**
      * El Code.
      */
