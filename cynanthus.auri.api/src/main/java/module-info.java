@@ -1,3 +1,7 @@
+/**
+ * Define el conjunto de interfaces y clases abstractas que exponen un API
+ * de intercambio de información basada en POJOS
+ */
 open module cynanthus.auri.api {
 
     requires cynanthus.bean;

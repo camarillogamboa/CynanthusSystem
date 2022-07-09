@@ -8,7 +8,11 @@ import javax.validation.constraints.*;
 import java.util.Objects;
 
 /**
- * El tipo Control config.
+ * Contiene las propiedades de funcionamiento del sistema para una
+ * aplicación que funge como nodo de control.
+ * El nodo de control puede ser simulado o implementado en una aplicación Java,
+ * cuando ese es el caso, las propiedades definidas como campos de esta clase son utiles
+ * para modelar y transportar los datos de la aplicación.
  */
 public class ControlConfig implements Config {
 

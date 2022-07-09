@@ -110,7 +110,6 @@ public class DayiController extends CommonController {
     @PostMapping("/latiro/{id:\\d+}")
     public ResponseEntity<?> updateLatiroProperties(ServerInfo serverInfo, @RequestBody LatiroConfig sordidusConfig) {
         Boolean done = auriSession.latiroServerService().updateConfigOf(serverInfo, sordidusConfig);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

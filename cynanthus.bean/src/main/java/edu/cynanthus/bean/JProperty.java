@@ -6,44 +6,47 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * La interface J property.
+ * JProperty pretente recopilar información adicional para un campo, como un alias, valor por defecto
+ * información adicional entre otros.
+ *
+ * @author L.G. Camarillo
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JProperty {
 
     /**
-     * Alias string.
+     * Contiene un alias para el campo anotado, este dato no es obligatorio.
      *
-     * @return el string
+     * @return el alias del campo
      */
     String alias() default "";
 
     /**
-     * Default value string.
+     * Contiene el valor por defecto para el campo anotado, este dato no es obligatorio.
      *
-     * @return el string
+     * @return el valor por defecto del campo
      */
     String defaultValue() default "";
 
     /**
-     * Info string.
+     * Contiene información adicional del campo, este dato no es obligatorio.
      *
-     * @return el string
+     * @return información adicional del campo
      */
     String info() default "";
 
     /**
-     * Permite obtener method.
+     * Contiene el nombre completo del método get del campo anotado
      *
-     * @return el method
+     * @return el nombre del método get para el campo
      */
     String getMethod() default "";
 
     /**
-     * Permite establecer method.
+     * Contiene el nombre completo del método set del campo anotado
      *
-     * @return el method
+     * @return el nombre del método set para el campo
      */
     String setMethod() default "";
 

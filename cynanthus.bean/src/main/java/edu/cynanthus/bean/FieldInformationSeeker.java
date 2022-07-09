@@ -4,46 +4,31 @@ import java.lang.reflect.Field;
 import java.util.function.Function;
 
 /**
- * El tipo Field information seeker.
+ * Permite la identificación de campos con metainformación contenida a través
+ * de la anotación JProperty.
+ *
+ * @author L.G. Camarillo
+ * @see edu.cynanthus.bean.JProperty
  */
-public final class FieldInformationSeeker implements Function<Field, String[]> {
+public enum FieldInformationSeeker implements Function<Field, String[]> {
+
+    INSTANCE();
 
     /**
-     * La constante ALIAS.
-     */
-    public static final int ALIAS = 0;
-    /**
-     * La constante DEFAULT_VALUE.
-     */
-    public static final int DEFAULT_VALUE = 1;
-    /**
-     * La constante INFO.
-     */
-    public static final int INFO = 2;
-    /**
-     * La constante GET_METHOD.
-     */
-    public static final int GET_METHOD = 3;
-    /**
-     * La constante SET_METHOD.
-     */
-    public static final int SET_METHOD = 4;
-
-    /**
-     * La constante INSTANCE.
-     */
-    public static final FieldInformationSeeker INSTANCE = new FieldInformationSeeker();
-
-    /**
-     * Instancia un nuevo Field information seeker.
-     */
-    private FieldInformationSeeker() {}
-
-    /**
-     * Apply string [ ].
+     * Evalúa un campo de clase en busca de la anotación JProperty, si el campo se encuentra anotado
+     * se obtiene la instancia de la anotación y se procede a obtener la información contenida en ella.
+     * Los datos obtenidos son almacenados en un arreglo, en total son 5 datos dispuestos de la siguiente manera
      *
-     * @param field el field
-     * @return el string [ ]
+     * <ul>
+     *     <li>0 - Alias del campo</li>
+     *     <li>1 - Valor por defecto para el campo</li>
+     *     <li>2 - Descripción del campo</li>
+     *     <li>3 - Nombre del método get para el campo</li>
+     *     <li>4 - Nombre del método set para el campo</li>
+     * </ul>
+     *
+     * @param field el campo a evaluar
+     * @return el arreglo con la metainformación encontrada
      */
     @Override
     public String[] apply(Field field) {

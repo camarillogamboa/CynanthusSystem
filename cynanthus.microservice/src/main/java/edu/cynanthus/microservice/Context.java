@@ -14,48 +14,53 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 /**
- * La interface Context.
+ * La interface {@code Context} crea un contexto de aplicación con la información
+ * implicada en la ejecución de la misma.
+ *
  */
 public interface Context {
 
     /**
-     * Permite obtener name.
+     * Permite obtener el nombre del contexto que en aplicaciones de un solo contexto es
+     * equivalente al nombre de la aplicación.
      *
-     * @return el name
+     * @return el nombre del contexto
      */
     String getName();
 
     /**
-     * Permite obtener config class.
+     * Permite obtener el tipo de clase que transporta el estado de las propieades.
      *
-     * @return el config class
+     * @return la clase de configuración del contexto
      */
     Class<? extends Config> getConfigClass();
 
     /**
-     * Load properties boolean.
+     * Realiza la carga de las propieadades desde el recurso subyacente al contexto.
      *
-     * @return el boolean
+     * @return true si se cargaron correctamente las propiedades, false en caso contrario
      */
     boolean loadMetaProperties();
 
     /**
-     * Save properties boolean.
+     * Guarda el conjunto de propieades administrados por el contexto sobre un recurso subyacente.
      *
-     * @return el boolean
+     * @return true si se guardaron correctamente las propiedades, false en caso contrario
      */
     boolean saveMetaProperties();
 
     /**
-     * Load properties properties.
+     * Carga propiedades no administradas por el contexto, obteniendolas desde un recurso dentro
+     * del alcance del contexto en forma de un objeto de la clase {@code java.util.Properties}
      *
-     * @param name el name
-     * @return el properties
+     * @param name el nombre del recurso que contiene las propieades a cargar
+     * @return el objeto java.util.Properties con las propiedades encontradas en el recurso especificado
      */
     Properties loadProperties(String name);
 
     /**
-     * Save properties boolean.
+     * Guarda las propiedades suministradas en el objeto {@code java.util.Properties} para escribirlas como un recurso
+     * del contexto con el nombre proporcionado
      *
      * @param properties el properties
      * @param name       el name
@@ -64,15 +69,16 @@ public interface Context {
     boolean saveProperties(Properties properties, String name);
 
     /**
-     * Permite obtener property.
+     * Permite obtener la propiedad especificada por el parámetro {@code key}, si la propieadad
+     * no se encuentra simplemente retorna null.
      *
-     * @param key el key
-     * @return el property
+     * @param key la llave de la propiedad a obtener
+     * @return la propiedad especificada
      */
     MetaProperty getMetaProperty(String key);
 
     /**
-     * Put property.
+     * Coloca una propiedad sobre .
      *
      * @param key          el key
      * @param metaProperty el meta property
@@ -152,7 +158,8 @@ public interface Context {
     <T> T loadObject(String name, Type type);
 
     /**
-     * Save object boolean.
+     * Guarda el estado de un objeto en el recurso con nombre especificado.
+     * Es responsabilidad de la implementación el definir el formato de representación del objeto.
      *
      * @param name   el name
      * @param object el object
@@ -161,21 +168,26 @@ public interface Context {
     boolean saveObject(String name, Object object);
 
     /**
-     * Permite obtener user management.
+     * Permite obtener el administrador de usuarios del contexto
      *
-     * @return el user management
+     * @return el objeto SystemUserManagement del contexto
      */
     SystemUserManagement getUserManagement();
 
     /**
-     * Permite obtener messages.
+     * Permite obtener el mapa de mensajes del contexto, los mensajes estan organizados por idiomas
+     * según el estandar de internacionalización y son cargados a partir de un recurso con nombre messages.properties
      *
-     * @return el messages
+     * @return el mapa de mensajes del contexto
      */
     Map<String, ? extends Map<?, ?>> getMessages();
 
     /**
-     * Permite obtener logger.
+     * Permite obtener un registrador de eventos a partir del nombre especificado.
+     * La estrategia para obtener el registrador se basa en la especificada en el API java.logging,
+     * con la diferencia que todos los registradores obtenidos en este método son desendientes directos del registrador
+     * de la clase que implementa esta interface, por lo que se hereda la mayor parte de la configuración desde
+     * ese registrador.
      *
      * @param name el name
      * @return el logger
