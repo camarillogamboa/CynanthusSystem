@@ -14,7 +14,7 @@ public class NodeInfo extends Host {
      * El Id.
      */
     @NotNull(groups = IdCandidate.class, message = "#{NotNull.nodeInfo.id}")
-    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "#{Positive.nodeinfo.id}")
+    @Min(value = 0, groups = {IdCandidate.class, ValidInfo.class}, message = "#{Min.nodeinfo.id}")
     @JProperty
     private Integer id;
 
@@ -31,7 +31,7 @@ public class NodeInfo extends Host {
      * El Id server info.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.nodeInfo.idServerInfo}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.nodeInfo.idServerInfo}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.nodeInfo.idServerInfo}")
     @JProperty
     private Integer idServerInfo;
 
@@ -39,7 +39,7 @@ public class NodeInfo extends Host {
      * El Id set.
      */
     @NotEmpty(message = "#{NotEmpty.nodeInfo.idset}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.nodeInfo.idSet}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.nodeInfo.idSet}")
     @JProperty
     private Integer idSet;
 

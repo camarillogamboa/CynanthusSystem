@@ -5,8 +5,8 @@ import edu.cynanthus.bean.IdCandidate;
 import edu.cynanthus.bean.Required;
 import edu.cynanthus.bean.ValidInfo;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 /**
@@ -18,7 +18,7 @@ public class Role implements Bean {
      * El Id.
      */
     @NotNull(groups = IdCandidate.class, message = "#{NotNull.role.id}")
-    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "#{Positive.role.id}")
+    @Min(value = 0, groups = {IdCandidate.class, ValidInfo.class}, message = "#{Min.role.id}")
     private Integer id;
 
     /**

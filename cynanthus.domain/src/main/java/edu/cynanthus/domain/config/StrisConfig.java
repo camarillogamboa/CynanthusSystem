@@ -5,8 +5,8 @@ import edu.cynanthus.bean.JProperty;
 import edu.cynanthus.bean.ValidInfo;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 /**
@@ -18,7 +18,7 @@ public class StrisConfig implements Config {
      * El Web server port.
      */
     @NotNull(message = "#{NotNull.strisConfig.webServerPort}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.strisConfig.webServerPort}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.strisConfig.webServerPort}")
     @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.strisConfig.webServerPort}")
     @JProperty(
         alias = "cynanthus.stris.webServer.port",
@@ -31,7 +31,7 @@ public class StrisConfig implements Config {
      * El Tcp server port.
      */
     @NotNull(message = "#{NotNull.strisConfig.tcpServerPort}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.strisConfig.tcpServerPort}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.strisConfig.tcpServerPort}")
     @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.strisConfig.tcpServerPort}")
     @JProperty(
         alias = "cynanthus.stris.tcpServer.port",

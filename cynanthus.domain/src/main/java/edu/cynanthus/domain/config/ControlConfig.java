@@ -13,11 +13,15 @@ import java.util.Objects;
  * El nodo de control puede ser simulado o implementado en una aplicación Java,
  * cuando ese es el caso, las propiedades definidas como campos de esta clase son utiles
  * para modelar y transportar los datos de la aplicación.
+ * <p>
+ * Un nodo de control pone en ejecución un cliente tcp que se comunica con un servidor tcp
+ *
+ * @author L.G. Camarillo
  */
 public class ControlConfig implements Config {
 
     /**
-     * El Server name.
+     * Contiene el nombre del servidor a
      */
     @NotEmpty(message = "#{NotEmpty.controlConfig.serverName}")
     @Size(min = 6, groups = ValidInfo.class, message = "#{Size.controlConfig.serverName}")
@@ -32,7 +36,7 @@ public class ControlConfig implements Config {
      * El Server port.
      */
     @NotNull(message = "#{NotNull.controlConfig.serverPort}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.controlConfig.serverPort}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.controlConfig.serverPort}")
     @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.controlConfig.serverPort}")
     @JProperty(
         alias = "cynanthus.control.connector.serverPort",

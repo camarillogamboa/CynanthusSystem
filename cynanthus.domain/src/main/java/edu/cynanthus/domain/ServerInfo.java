@@ -14,7 +14,7 @@ public class ServerInfo implements Bean {
      * El Id.
      */
     @NotNull(groups = IdCandidate.class, message = "#{NotNull.serverInfo.id}")
-    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "#{Positive.serverInfo.id}")
+    @Min(value = 0, groups = {IdCandidate.class, ValidInfo.class}, message = "#{Min.serverInfo.id}")
     @JProperty
     private Integer id;
 
@@ -47,7 +47,7 @@ public class ServerInfo implements Bean {
      * El Port.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.serverInfo.port}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.serverInfo.port}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.serverInfo.port}")
     @Max(value = 65536, groups = {Required.class, ValidInfo.class}, message = "#{Max.serverInfo.port}")
     @JProperty
     private Integer port;

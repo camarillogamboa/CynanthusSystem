@@ -6,8 +6,8 @@ import edu.cynanthus.bean.Required;
 import edu.cynanthus.bean.ValidInfo;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -20,7 +20,7 @@ public class SampleSet implements Bean {
      * El Initial mark.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sampleSet.initialMark}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sampleSet.initialMark}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.sampleSet.initialMark}")
     @JProperty
     private Long initialMark;
 
@@ -28,7 +28,7 @@ public class SampleSet implements Bean {
      * El End mark.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sampleSet.endMark}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sampleset.endMark}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.sampleset.endMark}")
     @JProperty
     private Long endMark;
 

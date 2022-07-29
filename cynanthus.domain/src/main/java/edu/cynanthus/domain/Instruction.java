@@ -14,7 +14,7 @@ public class Instruction implements Bean {
      * El Id.
      */
     @NotNull(groups = IdCandidate.class, message = "#{NotNull.instrucction.id}")
-    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "#{Positive.instruction.id}")
+    @Min(value = 0, groups = {IdCandidate.class, ValidInfo.class}, message = "#{Min.instruction.id}")
     @JProperty
     private Integer id;
 

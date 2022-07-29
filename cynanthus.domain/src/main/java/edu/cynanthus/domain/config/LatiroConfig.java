@@ -16,7 +16,7 @@ public class LatiroConfig implements Config {
      * El Port.
      */
     @NotNull(message = "#{NotNull.latiroConfig.port}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.latiroConfig.port}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.latiroConfig.port}")
     @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.latiroConfig.port}")
     @JProperty(
         alias = "cynanthus.latiro.webServer.port",
@@ -43,7 +43,7 @@ public class LatiroConfig implements Config {
      * El Server port.
      */
     @NotNull(message = "#{NotNull.latiroConfig.serverPort}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.latiroConfig.serverPort}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.latiroConfig.serverPort}")
     @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.latiroConfig.serverPort}")
     @JProperty(
         alias = "cynanthus.latiro.sender.serverPort",
@@ -56,7 +56,7 @@ public class LatiroConfig implements Config {
      * El Buffering time.
      */
     @NotNull(message = "#{NotNull.latiroConfig.bufferingTime}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.latiroConfig.bufferingTime}")
+    @Min(value = 500, groups = ValidInfo.class, message = "#{Min.latiroConfig.bufferingTime}")
     @JProperty(
         alias = "cynanthus.latiro.sender.bufferingTime",
         defaultValue = "15000",
@@ -70,7 +70,7 @@ public class LatiroConfig implements Config {
      * El Time out.
      */
     @NotNull(message = "#{NotNull.latiroConfig.timeOut}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.latiroConfig.timeOut}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.latiroConfig.timeOut}")
     @JProperty(
         alias = "cynanthus.latiro.sender.timeOut",
         defaultValue = "1000",
@@ -83,7 +83,7 @@ public class LatiroConfig implements Config {
      * El Send attemps.
      */
     @NotNull(message = "#{NotNull.latiroConfig.sendAttemps}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.latiroConfig.sendAttemps}")
+    @Min(value = 1, groups = ValidInfo.class, message = "#{Min.latiroConfig.sendAttemps}")
     @Max(value = 20, groups = ValidInfo.class, message = "#{Max.latiroConfig.sendAttemps}")
     @JProperty(
         alias = "cynanthus.latiro.requester.sendAttemps",
@@ -98,7 +98,7 @@ public class LatiroConfig implements Config {
      * El Wait time between attempts.
      */
     @NotNull(message = "#{NotNull.latiroConfig.waitTimeBetweenAttempts}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.latiroConfig.waitTimeBetweenAttempts}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.latiroConfig.waitTimeBetweenAttempts}")
     @JProperty(
         alias = "cynanthus.latiro.requester.waitTimeBetweenAttempts",
         defaultValue = "500",
@@ -129,7 +129,7 @@ public class LatiroConfig implements Config {
      * El Sensor time out.
      */
     @NotNull(message = "#{NotNull.latiroConfig.sensorTimeOut}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.latiroConfig.sensorTimeOut}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.latiroConfig.sensorTimeOut}")
     @JProperty(
         alias = "cynanthus.latiro.sensorManager.timeOut",
         defaultValue = "500",
@@ -142,7 +142,7 @@ public class LatiroConfig implements Config {
      * El Sensor sampling time.
      */
     @NotNull(message = "#{NotNull.latiroConfig.sensorSamplingTime}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.latiroConfig.sensorSamplingTime}")
+    @Min(value = 500, groups = ValidInfo.class, message = "#{Min.latiroConfig.sensorSamplingTime}")
     @JProperty(
         alias = "cynanthus.latiro.sensorManager.samplingTime",
         defaultValue = "5000",

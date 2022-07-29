@@ -1,7 +1,7 @@
 package edu.cynanthus.auri.api.exception;
 
 /**
- * El tipo Invalid argument exception.
+ * Excepción diseñada para
  */
 public class InvalidArgumentException extends ServiceException {
 

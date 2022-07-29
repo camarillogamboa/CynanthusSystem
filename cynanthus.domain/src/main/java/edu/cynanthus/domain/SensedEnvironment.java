@@ -5,8 +5,8 @@ import edu.cynanthus.bean.JProperty;
 import edu.cynanthus.bean.Required;
 import edu.cynanthus.bean.ValidInfo;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 /**
@@ -18,7 +18,7 @@ public class SensedEnvironment implements Bean {
      * El Temp.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.temp}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.temp}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.sensedEnvironment.temp}")
     @JProperty(alias = "temp")
     private Float temp;
 
@@ -26,7 +26,7 @@ public class SensedEnvironment implements Bean {
      * El North laps.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.northLaps}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.northLaps}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.sensedEnvironment.northLaps}")
     @JProperty(alias = "vueltas_norte")
     private Integer northLaps;
 
@@ -34,7 +34,7 @@ public class SensedEnvironment implements Bean {
      * El East laps.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.eastLaps}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.eastLaps}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.sensedEnvironment.eastLaps}")
     @JProperty(alias = "vueltas_este")
     private Integer eastLaps;
 
@@ -42,7 +42,7 @@ public class SensedEnvironment implements Bean {
      * El South laps.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.southLaps}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.southLaps}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.sensedEnvironment.southLaps}")
     @JProperty(alias = "vueltas_sur")
     private Integer southLaps;
 
@@ -50,7 +50,7 @@ public class SensedEnvironment implements Bean {
      * El West laps.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.westLaps}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.westLaps}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.sensedEnvironment.westLaps}")
     @JProperty(alias = "vueltas_oeste")
     private Integer westLaps;
 
@@ -58,7 +58,7 @@ public class SensedEnvironment implements Bean {
      * El Sampling time.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.samplingTime}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.samplingTime}")
+    @Min(value = 500, groups = {Required.class, ValidInfo.class}, message = "#{Min.sensedEnvironment.samplingTime}")
     @JProperty(alias = "tiempo_muestreo")
     private Long samplingTime;
 
@@ -66,7 +66,7 @@ public class SensedEnvironment implements Bean {
      * El Co 2.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.co2}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.co2}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.sensedEnvironment.co2}")
     @JProperty(alias = "co2")
     private Float co2;
 
@@ -74,7 +74,7 @@ public class SensedEnvironment implements Bean {
      * El Hum.
      */
     @NotNull(groups = Required.class, message = "#{NotNull.sensedEnvironment.hum}")
-    @Positive(groups = {Required.class, ValidInfo.class}, message = "#{Positive.sensedEnvironment.hum}")
+    @Min(value = 0, groups = {Required.class, ValidInfo.class}, message = "#{Min.sensedEnvironment.hum}")
     @JProperty(alias = "hum")
     private Float hum;
 

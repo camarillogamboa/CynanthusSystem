@@ -4,8 +4,8 @@ import edu.cynanthus.bean.JProperty;
 import edu.cynanthus.bean.Required;
 import edu.cynanthus.bean.ValidInfo;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 /**
@@ -24,7 +24,7 @@ public class SensingNode extends Sample implements RuntimeNode {
      * El Last connection.
      */
     @NotNull(message = "#{NotNull.sensingNode.lastConnection}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.sensingNode.lastConnection}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.sensingNode.lastConnection}")
     @JProperty
     private Long lastConnection;
 

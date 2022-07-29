@@ -16,7 +16,7 @@ public class SordidusConfig implements Config {
      * El Port.
      */
     @NotNull(message = "#{NotNull.sordidusConfig.port}")
-    @Positive(groups = ValidInfo.class, message = "#{Positive.sordidusConfig.port}")
+    @Min(value = 0, groups = ValidInfo.class, message = "#{Min.sordidusConfig.port}")
     @Max(value = 65536, groups = ValidInfo.class, message = "#{Max.sordidusConfig.port}")
     @JProperty(
         alias = "cynanthus.sordidus.webServer.port",

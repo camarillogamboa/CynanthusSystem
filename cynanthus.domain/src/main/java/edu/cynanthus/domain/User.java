@@ -15,7 +15,7 @@ public class User implements Bean {
      * El Id.
      */
     @NotNull(groups = IdCandidate.class, message = "#{NotNull.user.id}")
-    @Positive(groups = {IdCandidate.class, ValidInfo.class}, message = "#{Positive.user.id}")
+    @Min(value = 0, groups = {IdCandidate.class, ValidInfo.class}, message = "#{Min.user.id}")
     @JProperty
     private Integer id;
 
