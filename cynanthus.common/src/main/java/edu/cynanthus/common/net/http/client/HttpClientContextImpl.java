@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -106,6 +107,8 @@ final class HttpClientContextImpl extends HttpHostAddressImpl implements HttpCli
         for (Map.Entry<String, String[]> header : headers.entrySet()) {
             builder = builder.header(header.getKey(), SSV.toSSVFormat(header.getValue(), " "));
         }
+
+        builder.timeout(Duration.ofSeconds(10));
 
         HttpResponse<T> httpResponse = httpClient.send(builder.build(), bodyHandler);
         return Response.create(httpResponse.statusCode(), httpResponse.body());
