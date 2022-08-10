@@ -44,10 +44,9 @@ public class CentralizedStringProperty extends CentralizedProperty<String>
     /**
      * As read only byte property read only property.
      *
-     * @param value el value
      * @return el read only property
      */
-    public final ReadOnlyProperty<Byte> asReadOnlyByteProperty(byte value) {
+    public final ReadOnlyProperty<Byte> asReadOnlyByteProperty() {
         return asOtherReadOnlyProperty(Byte::parseByte);
     }
 
